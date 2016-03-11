@@ -22,7 +22,7 @@ function varargout = testfigure_2(varargin)
 
 % Edit the above text to modify the response to help testfigure_2
 
-% Last Modified by GUIDE v2.5 11-Mar-2016 00:30:07
+% Last Modified by GUIDE v2.5 11-Mar-2016 17:50:17
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -180,5 +180,12 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 % --- Otherwise, executes on mouse press in 5 pixel border or over pushbutton3.
 function pushbutton3_ButtonDownFcn(hObject, eventdata, handles)
 % hObject    handle to pushbutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton4.
+function pushbutton4_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
