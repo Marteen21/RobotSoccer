@@ -18,7 +18,14 @@ classdef Vector2
         function d = Distance(this,other)   
             d = sqrt((other.X-this.X)^2+(other.Y-this.Y)^2);
         end
-        
+        %Return the class as a Matlab 1x2 Matrix
+        function v = RowForm(this)      
+            v = [this.X,this.Y];
+        end
+        %Returns the class as a Matlab 2x1 Matrix
+        function v = ColumnForm(this)    
+            v = [this.X;this.Y];
+        end        
     end
 end
 
