@@ -101,32 +101,36 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+  pos = get(handles.popupmenu1,'Position')
+  
+  
   contents = get(handles.popupmenu1,'String'); 
   popupmenu2value = contents{get(handles.popupmenu1,'Value')};
   switch popupmenu2value
       case '1'
         %msgbox('Number: 1')
-        pos = get(handles.popupmenu1,'Position')
-        r = uicontrol(testfigure_2,'Style','pushbutton',...
+        pushbutton(1) = uicontrol(testfigure_2,'Style','pushbutton',...
                 'String','Indent nested functions.',...
                 'Value',1,'Position',[pos(1) pos(2)-25 pos(3) pos(4)]);
         set(handles.pushbutton2,'Enable','inactive');
+        
       case '2'
         %msgbox('Number: 2')
-        pos = get(handles.popupmenu1,'Position')
+        set(handles.uipanel1,'Position',[pos(1) pos(2)-25 pos(3) str2double(popupmenu2value)*pos(4)])
+        get(handles.uipanel1,'Position')
         str2double(popupmenu2value)
-        for i = 1:str2double(popupmenu2value)    
+        for i = 1:str2double(popupmenu2value)   
+             
              pushbutton(i) = uicontrol(testfigure_2,'Style','pushbutton',...
+                           'Parent',uipanel1,...
                            'String','Robots',...
                            'Tag',strcat('pushbutton0',num2str(i)),...
-                           'Value',1,'Position',[pos(1) pos(2)-i*25 pos(3) pos(4)]);
+                           'Callback',@temp_pushbutton_callback,...
+                           'Value',1,'Position',[pos(1) pos(2)-i*50 pos(3) pos(4)]);
         end
-        pushbutton
-        set(handles.pushbutton2,'Enable','inactive');
+        
       case '3'
         %msgbox('Number: 3')
-        pos = get(handles.popupmenu1,'Position')
         str2double(popupmenu2value)
         for i = 1:str2double(popupmenu2value)    
              pushbutton(i) = uicontrol(testfigure_2,'Style','pushbutton',...
@@ -134,12 +138,15 @@ function pushbutton2_Callback(hObject, eventdata, handles)
                            'Tag',strcat('pushbutton0',num2str(i)),...
                            'Value',1,'Position',[pos(1) pos(2)-i*25 pos(3) pos(4)]);
         end
-        set(handles.pushbutton2,'Enable','inactive');
+        
       otherwise
           warndlg('Invalid select')
-          set(handles.pushbutton2,'Enable','inactive');
   end
 
+
+function temp_pushbutton_callback(hObject, eventdata )
+        hObject.String
+        
 
 % --- If Enable == 'on', executes on mouse press in 5 pixel border.
 % --- Otherwise, executes on mouse press in 5 pixel border or over pushbutton2.
@@ -166,10 +173,8 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-set(handles.pushbutton2,'Enable','on');
-value = get(handles.popupmenu1,'Value');
-value
-delete(pushbutton(value-1).handles.pushbutton02);
+
+
 
 % --- If Enable == 'on', executes on mouse press in 5 pixel border.
 % --- Otherwise, executes on mouse press in 5 pixel border or over pushbutton3.
