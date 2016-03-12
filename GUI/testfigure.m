@@ -22,7 +22,7 @@ function varargout = testfigure(varargin)
 
 % Edit the above text to modify the response to help testfigure
 
-% Last Modified by GUIDE v2.5 11-Mar-2016 21:26:46
+% Last Modified by GUIDE v2.5 12-Mar-2016 14:17:46
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -55,15 +55,79 @@ function testfigure_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for testfigure
 handles.output = hObject;
 
+%Animation plot
+h=findobj('Type','axes','Tag','axes1');
+axes(h)               
+plot(1,0,'O')
+hold on
+
+ball =  plot(0,0,'mo','MarkerFaceColor','m',...
+                       'YDataSource','Y',...
+                       'XDataSource','X'); 
+                   
+Y=0;
+
+for i=0:0
+    dist = linspace(0,1,100);
+    for j=1:length(dist)
+        X = dist(j)
+        refreshdata(h,'caller');
+        drawnow;
+        pause(.01);     
+        if (X == dist(end))
+            for k=length(dist):-1:1
+                X = dist(k)
+                refreshdata(h,'caller');
+                drawnow;
+                pause(.01);
+            end
+        end
+    end
+end
+
+
+%Animation example2            
+
+% for p=0:40
+% 	p
+% 	for x=-20:50
+% 		y(x+21)=(x-2)^2-3;
+% 		y2(x+21)=2*x^3-4*x^2+3*x+15;
+% 		y3(x+21)=3*x^2+5*x+130*sin(x+p);
+% 	end
+% 	y4=-y3
+% 	plot(y,'bo-','linewidth',3,'markersize',5)
+% 	hold on
+% 	plot(y2,'rp-','linewidth',3,'markersize',5)
+% 	plot(y3,'kd-','linewidth',3,'markersize',5)
+% 	plot(y4,'kd-','linewidth',3,'markersize',5)
+% 	grid on
+% % 	if p==0
+% % 		% Enlarge figure to full screen.
+% % 		set(gcf, 'Units', 'Normalized', 'OuterPosition', [0 0 1 1]);
+% % 	end
+% 	ylim([-1000,1400])
+% 	caption=sprintf('%d',p);
+% 	title(caption,'fontsize',25);
+% 	legend('y1','y2','y3','y4')
+% 	drawnow
+% 	pause(0.1)
+% 	hold off
+% end
+
+
+
 %Magic happens here
-handles.peaks = peaks(35);
-handles.membrane = membrane;
-[x, y] = meshgrid(-8:0.5:8);
-r = sqrt(x.^2+y.^2) + eps;
-sinc = sin(r)./r;
-handles.sinc = sinc;
-handles.current_data = handles.peaks;
-surf (handles.current_data);
+% handles.peaks = peaks(35);
+% handles.membrane = membrane;
+% [x, y] = meshgrid(-8:0.5:8);
+% r = sqrt(x.^2+y.^2) + eps;
+% sinc = sin(r)./r;
+% handles.sinc = sinc;
+% handles.current_data = handles.peaks;
+% surf (handles.current_data);
+
+
 % Update handles structure
 guidata(hObject, handles);
 
@@ -95,3 +159,12 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes during object creation, after setting all properties.
+function axes1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to axes1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: place code in OpeningFcn to populate axes1
