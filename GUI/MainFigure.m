@@ -22,7 +22,7 @@ function varargout = MainFigure(varargin)
 
 % Edit the above text to modify the response to help MainFigure
 
-% Last Modified by GUIDE v2.5 12-Mar-2016 01:08:19
+% Last Modified by GUIDE v2.5 15-Mar-2016 18:49:04
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -89,6 +89,14 @@ function btn_simsettings_Callback(hObject, eventdata, handles)
 % hObject    handle to btn_simsettings (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+user_response = SimulationSettingsFigure('Title','Simulation Settings');
+switch user_response
+case 'Cancel'
+	% take no action
+case 'Save'
+	% Prepare to close application window
+	% TODO Save Settings
+end
 
 
 % --- Executes on selection change in popupmenu2.
@@ -112,3 +120,10 @@ function popupmenu2_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in pushbutton3.
+function pushbutton3_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
