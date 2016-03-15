@@ -57,13 +57,17 @@ handles.output = hObject;
 
 %Animation plot
 h=findobj('Type','axes','Tag','axes1');
-axes(h)               
+              
 plot(1,0,'O')
+axes(h) 
 hold on
 
 ball =  plot(0,0,'mo','MarkerFaceColor','m',...
                        'YDataSource','Y',...
                        'XDataSource','X'); 
+ball2 = plot(0,1,'mo','MarkerFaceColor','y',...
+                       'YDataSource','Y2',...
+                       'XDataSource','X2');                    
                    
 Y=0;
 
@@ -71,17 +75,29 @@ for i=0:0
     dist = linspace(0,1,100);
     for j=1:length(dist)
         X = dist(j)
-        refreshdata(h,'caller');
-        drawnow;
-        pause(.01);     
+        X2 = dist(j)
+        
         if (X == dist(end))
             for k=length(dist):-1:1
                 X = dist(k)
-                refreshdata(h,'caller');
+%                 X2 = dist(k)
+%                 Y2 = 
+                refreshdata(ball,'caller');
+                set(handles.axes1,'XLim',[0 1])
+                set(handles.axes1,'YLim',[-1 1])
                 drawnow;
                 pause(.01);
             end
         end
+        if (X2 > dist((length(dist)/2)))
+                Y2 = -1 + 4*(X2-dist((length(dist)/2)))
+        else Y2 = 1 - 4*X2
+        end
+        refreshdata(h,'caller');
+        set(handles.axes1,'XLim',[0 1])
+        set(handles.axes1,'YLim',[-1 1])
+        drawnow;
+        pause(.01);     
     end
 end
 
