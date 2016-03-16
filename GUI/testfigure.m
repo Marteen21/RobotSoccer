@@ -69,10 +69,13 @@ ball2 = plot(0,1,'mo','MarkerFaceColor','y',...
                        'YDataSource','Y2',...
                        'XDataSource','X2');                    
                    
-Y=0;
-
+Y = 0;
+k = 1;
+Y2 = 1;
+l = 1;
+dist = linspace(0,1,100);
+collision = 1;
 for i=0:0
-    dist = linspace(0,1,100);
     for j=1:length(dist)
         X = dist(j)
         X2 = dist(j)
@@ -80,8 +83,6 @@ for i=0:0
         if (X == dist(end))
             for k=length(dist):-1:1
                 X = dist(k)
-%                 X2 = dist(k)
-%                 Y2 = 
                 refreshdata(ball,'caller');
                 set(handles.axes1,'XLim',[0 1])
                 set(handles.axes1,'YLim',[-1 1])
@@ -89,9 +90,25 @@ for i=0:0
                 pause(.01);
             end
         end
-        if (X2 > dist((length(dist)/2)))
-                Y2 = -1 + 4*(X2-dist((length(dist)/2)))
-        else Y2 = 1 - 4*X2
+%         if (X2 > dist((length(dist)/2)))
+%                 Y2 = -1 + 4*(X2-dist((length(dist)/2)))
+%         else Y2 = 1 - 4*X2
+%         end
+        if (round(Y2,1)== Y)
+            collision = 0;
+            k=3;
+        end
+        if (round(Y2,1)==1)
+            collision = 1
+            if (k==3)
+                l=3
+            end
+        end
+        
+        if (collision == 1) 
+                Y2 = 1*k - 4*X2
+        else
+                Y2 = -1*l + 4*X2
         end
         refreshdata(h,'caller');
         set(handles.axes1,'XLim',[0 1])
