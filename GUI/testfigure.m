@@ -61,7 +61,9 @@ h=findobj('Type','axes','Tag','axes1');
 plot(1,0,'O')
 axes(h) 
 hold on
-
+set(handles.axes1,'XLim',[0 1])
+set(handles.axes1,'YLim',[0 1])
+                
 ball =  plot(0,0,'mo','MarkerFaceColor','m',...
                        'YDataSource','Y',...
                        'XDataSource','X'); 
@@ -69,31 +71,37 @@ ball2 = plot(0,1,'mo','MarkerFaceColor','y',...
                        'YDataSource','Y2',...
                        'XDataSource','X2');                    
                    
+r = 0.05;
 Y = 0;
-k = 1;
+X = 0;
+X2 = 0;
 Y2 = 1;
+
+k = 1;
 l = 1;
 dist = linspace(0,1,100);
+ball_dist = 1;
 collision = 1;
 for i=0:0
     for j=1:length(dist)
         X = dist(j)
         X2 = dist(j)
+        ball_dist = (X-X2)+(Y-Y2);
+        
+%         if ((2*r)>(d-1))
+%             collision = 0;
         
         if (X == dist(end))
             for k=length(dist):-1:1
                 X = dist(k)
+                X2 = dist(k)
                 refreshdata(ball,'caller');
-                set(handles.axes1,'XLim',[0 1])
-                set(handles.axes1,'YLim',[-1 1])
+%                 set(handles.axes1,'XLim',[0 1])
+%                 set(handles.axes1,'YLim',[-1 1])
                 drawnow;
                 pause(.01);
             end
         end
-%         if (X2 > dist((length(dist)/2)))
-%                 Y2 = -1 + 4*(X2-dist((length(dist)/2)))
-%         else Y2 = 1 - 4*X2
-%         end
         if (round(Y2,1)== Y)
             collision = 0;
             k=3;
@@ -104,19 +112,24 @@ for i=0:0
                 l=3
             end
         end
+%         if round(ball_dist,1) == 0
+%             msgbox('Ball collision')
+%         end
         
         if (collision == 1) 
                 Y2 = 1*k - 4*X2
         else
                 Y2 = -1*l + 4*X2
         end
-        refreshdata(h,'caller');
-        set(handles.axes1,'XLim',[0 1])
-        set(handles.axes1,'YLim',[-1 1])
+        refreshdata(ball,'caller');
+        refreshdata(ball2,'caller');
+%         set(handles.axes1,'XLim',[0 1])
+%         set(handles.axes1,'YLim',[-1 1])
         drawnow;
         pause(.01);     
     end
 end
+
 
 
 %Animation example2            
