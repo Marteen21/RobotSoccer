@@ -6,6 +6,7 @@ classdef SimulationData
     %   method, due to matlab restrictions)
     properties
         Speed;  %Vector2 property to store Speed X and Speed Y values
+        Mass;   %Scalar propery to store Mass value
     end
     
     methods (Static)
