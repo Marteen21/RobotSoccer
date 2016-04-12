@@ -39,8 +39,19 @@ classdef Vector2
             alpha = SIncidentAngle(this,other);
             theta = sign(alpha(3))*(pi-2*abs(alpha(3)));
         end
-        
-        
+        function nvector = D2NVector(this)
+            nvector = Vector2(this.Y,-this.X);
+        end
+        function result = minus (this, other)
+            result = Vector2(this.X-other.X, this.Y-other.Y);
+        end
+        function result = plus (this, other)
+            result = Vector2(this.X+other.X, this.Y+other.Y);
+        end
+        function result = times(this, c)    %Times a constant
+           result.X = this.X*c;
+           result.Y = this.Y*c;
+        end
     end
 end
 
