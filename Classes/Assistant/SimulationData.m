@@ -21,9 +21,17 @@ classdef SimulationData
             end
             out = Var;
         end
+        function out = sampleTime(data)   %Static Friction property
+            persistent Var;
+            if nargin
+                Var = data;
+            end
+            out = Var;
+        end
     end
     methods
         %Class constructor
+<<<<<<< Updated upstream
         function this = SimulationData(xLim,yLim,goalPos_x,goalPos_y,goalLength)   
             switch nargin
                 
@@ -49,6 +57,12 @@ classdef SimulationData
         end
         
         
+=======
+        function this = SimulationData(aX,aY,aMass)   
+            this.Speed = Vector2(aX,aY);
+            this.Mass = aMass;
+        end
+>>>>>>> Stashed changes
     end
     
 end
