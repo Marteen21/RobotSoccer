@@ -55,110 +55,82 @@ function testfigure_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for testfigure
 handles.output = hObject;
 
-%Animation plot
-h=findobj('Type','axes','Tag','axes1');
-              
-plot(1,0,'O')
-axes(h) 
-hold on
-set(handles.axes1,'XLim',[0 1])
-set(handles.axes1,'YLim',[0 1])
-                
-ball =  plot(0,0,'mo','MarkerFaceColor','m',...
-                       'YDataSource','Y',...
-                       'XDataSource','X'); 
-ball2 = plot(0,1,'mo','MarkerFaceColor','y',...
-                       'YDataSource','Y2',...
-                       'XDataSource','X2');                    
-                   
-r = 0.05;
-Y = 0;
-X = 0;
-X2 = 0;
-Y2 = 1;
+environment = SimulationData(100,100,0,50,20);
+environment.CreatField();
 
-k = 1;
-l = 1;
-dist = linspace(0,1,100);
-ball_dist = 1;
-collision = 1;
-for i=0:0
-    for j=1:length(dist)
-        X = dist(j)
-        X2 = dist(j)
-        ball_dist = (X-X2)+(Y-Y2);
-        
-%         if ((2*r)>(d-1))
-%             collision = 0;
-        
-        if (X == dist(end))
-            for k=length(dist):-1:1
-                X = dist(k)
-                X2 = dist(k)
-                refreshdata(ball,'caller');
-%                 set(handles.axes1,'XLim',[0 1])
-%                 set(handles.axes1,'YLim',[-1 1])
-                drawnow;
-                pause(.01);
-            end
-        end
-        if (round(Y2,1)== Y)
-            collision = 0;
-            k=3;
-        end
-        if (round(Y2,1)==1)
-            collision = 1
-            if (k==3)
-                l=3
-            end
-        end
-%         if round(ball_dist,1) == 0
-%             msgbox('Ball collision')
+% %Animation plot
+% h=findobj('Type','axes','Tag','axes1');
+%               
+% plot(1,0,'O')
+% axes(h) 
+% hold on
+% set(handles.axes1,'XLim',[0 1])
+% set(handles.axes1,'YLim',[0 1])
+%                 
+% ball =  plot(0,0,'mo','MarkerFaceColor','m',...
+%                        'YDataSource','Y',...
+%                        'XDataSource','X'); 
+% ball2 = plot(0,1,'mo','MarkerFaceColor','y',...
+%                        'YDataSource','Y2',...
+%                        'XDataSource','X2');                    
+%                    
+% r = 0.05;
+% Y = 0;
+% X = 0;
+% X2 = 0;
+% Y2 = 1;
+% 
+% k = 1;
+% l = 1;
+% dist = linspace(0,1,100);
+% ball_dist = 1;
+% collision = 1;
+% for i=0:0
+%     for j=1:length(dist)
+%         X = dist(j)
+%         X2 = dist(j)
+%         ball_dist = (X-X2)+(Y-Y2);
+%         
+% %         if ((2*r)>(d-1))
+% %             collision = 0;
+%         
+%         if (X == dist(end))
+%             for k=length(dist):-1:1
+%                 X = dist(k)
+%                 X2 = dist(k)
+%                 refreshdata(ball,'caller');
+% %                 set(handles.axes1,'XLim',[0 1])
+% %                 set(handles.axes1,'YLim',[-1 1])
+%                 drawnow;
+%                 pause(.01);
+%             end
 %         end
-        
-        if (collision == 1) 
-                Y2 = 1*k - 4*X2
-        else
-                Y2 = -1*l + 4*X2
-        end
-        refreshdata(ball,'caller');
-        refreshdata(ball2,'caller');
-%         set(handles.axes1,'XLim',[0 1])
-%         set(handles.axes1,'YLim',[-1 1])
-        drawnow;
-        pause(.01);     
-    end
-end
-
-
-
-%Animation example2            
-
-% for p=0:40
-% 	p
-% 	for x=-20:50
-% 		y(x+21)=(x-2)^2-3;
-% 		y2(x+21)=2*x^3-4*x^2+3*x+15;
-% 		y3(x+21)=3*x^2+5*x+130*sin(x+p);
-% 	end
-% 	y4=-y3
-% 	plot(y,'bo-','linewidth',3,'markersize',5)
-% 	hold on
-% 	plot(y2,'rp-','linewidth',3,'markersize',5)
-% 	plot(y3,'kd-','linewidth',3,'markersize',5)
-% 	plot(y4,'kd-','linewidth',3,'markersize',5)
-% 	grid on
-% % 	if p==0
-% % 		% Enlarge figure to full screen.
-% % 		set(gcf, 'Units', 'Normalized', 'OuterPosition', [0 0 1 1]);
-% % 	end
-% 	ylim([-1000,1400])
-% 	caption=sprintf('%d',p);
-% 	title(caption,'fontsize',25);
-% 	legend('y1','y2','y3','y4')
-% 	drawnow
-% 	pause(0.1)
-% 	hold off
+%         if (round(Y2,1)== Y)
+%             collision = 0;
+%             k=3;
+%         end
+%         if (round(Y2,1)==1)
+%             collision = 1
+%             if (k==3)
+%                 l=3
+%             end
+%         end
+% %         if round(ball_dist,1) == 0
+% %             msgbox('Ball collision')
+% %         end
+%         
+%         if (collision == 1) 
+%                 Y2 = 1*k - 4*X2
+%         else
+%                 Y2 = -1*l + 4*X2
+%         end
+%         refreshdata(ball,'caller');
+%         refreshdata(ball2,'caller');
+% %         set(handles.axes1,'XLim',[0 1])
+% %         set(handles.axes1,'YLim',[-1 1])
+%         drawnow;
+%         pause(.01);     
+%     end
 % end
 
 
