@@ -1,11 +1,13 @@
 classdef Environment
     %ENVIRONMENT Summary of this class goes here
-    %   Detailed explanation goes here
+    %   This class stores the data of the environment
+    %   length and width of the play field, center postion of the goal
+    %   and the width of the goal
     
     properties
     end
     methods (Static)
-        function out = xLim(data)
+        function out = xLim(data)   %Static xLim property
             persistent Var
             if nargin
                 Var = data;
@@ -13,7 +15,7 @@ classdef Environment
             out = Var;
         end
         
-        function out = yLim(data)
+        function out = yLim(data)   %Static yLim property
             persistent Var
             if nargin
                 Var = data;
@@ -21,7 +23,7 @@ classdef Environment
             out = Var;
         end
         
-        function out = goalPos(data)
+        function out = goalPos(data)    %Static goalPos property
             persistent Var
             if nargin
                 Var = data;
@@ -29,7 +31,7 @@ classdef Environment
             out = Var;
         end
         
-        function out = goalLength(data)
+        function out = goalLength(data) %Static goalLength property
             persistent Var
             if nargin
                 Var = data;
