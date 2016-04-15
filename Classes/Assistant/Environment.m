@@ -9,18 +9,36 @@ classdef Environment
         goalLength;
     end
     methods (Static)
-        function [xLim yLim goalPos goalLength] = CreatField(in_xLim, in_yLim, in_goalPos, in_goalLength)
-            persistent t_xlim t_ylim t_gP t_gL
-            if (nargin == 4)
-                t_xlim = in_xLim;
-                t_ylim = in_yLim;
-                t_gP = in_goalPos;
-                t_gL = in_goalLength;
+        function out = set_xLim(data)
+            persistent Var
+            if nargin
+                Var = data;
             end
-            xLim = t_xlim;
-            yLim = t_ylim;
-            goalPos = t_gP;
-            goalLength = t_gL;
+            out = Var;
+        end
+        
+        function out = set_yLim(data)
+            persistent Var
+            if nargin
+                Var = data;
+            end
+            out = Var;
+        end
+        
+        function out = set_goalPos(data)
+            persistent Var
+            if nargin
+                Var = data;
+            end
+            out = Var;
+        end
+        
+        function out = set_goalLength(data)
+            persistent Var
+            if nargin
+                Var = data;
+            end
+            out = Var;
         end
     end
     methods
