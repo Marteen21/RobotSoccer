@@ -3,13 +3,9 @@ classdef Environment
     %   Detailed explanation goes here
     
     properties
-        xLim;
-        yLim;
-        goalPos;
-        goalLength;
     end
     methods (Static)
-        function out = set_xLim(data)
+        function out = xLim(data)
             persistent Var
             if nargin
                 Var = data;
@@ -17,7 +13,7 @@ classdef Environment
             out = Var;
         end
         
-        function out = set_yLim(data)
+        function out = yLim(data)
             persistent Var
             if nargin
                 Var = data;
@@ -25,7 +21,7 @@ classdef Environment
             out = Var;
         end
         
-        function out = set_goalPos(data)
+        function out = goalPos(data)
             persistent Var
             if nargin
                 Var = data;
@@ -33,7 +29,7 @@ classdef Environment
             out = Var;
         end
         
-        function out = set_goalLength(data)
+        function out = goalLength(data)
             persistent Var
             if nargin
                 Var = data;
