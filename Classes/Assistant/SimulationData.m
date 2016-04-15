@@ -5,8 +5,12 @@ classdef SimulationData
     %   friction, drag etc as a static property (implemented as static
     %   method, due to matlab restrictions)
     properties
-        Speed;  %Vector2 property to store Speed X and Speed Y values
-        Mass;   %Scalar propery to store Mass value
+        goalPos;    %Vector2 property to store the position of the goal
+        goalLength; %Length of the goal
+        xLim;       %the "length" of the field
+        yLim;       %the "width" of the field
+        Speed;      %Vector2 property to store Speed X and Speed Y values
+        Mass;       %Scalar propery to store Mass value
     end
     
     methods (Static)
@@ -20,9 +24,30 @@ classdef SimulationData
     end
     methods
         %Class constructor
-        function this = SimulationData(aX,aY)   
-            this.Speed = Vector2(aX,aY);
+        function this = SimulationData(xLim,yLim,goalPos_x,goalPos_y,goalLength)   
+            switch nargin
+                
+%                 case 2 
+%                     this.Speed = Vector2(aX,aY);
+                case 5
+                    this.goalPos = Vector2(goalPos_x,goalPos_y);
+                    this.xLim = xLim;
+                    this.yLim = yLim;
+                    this.goalLength = goalLength;
+                    ...
+                otherwise
+                    error('Parameter list not good ');
+            end
         end
+        %Creating the environment
+        function CreatField(this)
+           axis([0,this.xLim,0,this.yLim]);
+           plot(this.goalPos.X, this.goalPos.Y - (this.goalLength/2), 'O');
+           hold on
+           plot(this.goalPos.X, this.goalPos.Y + (this.goalLength/2), 'O');
+           axis([0,this.xLim,0,this.yLim]);
+        end
+        
         
     end
     
