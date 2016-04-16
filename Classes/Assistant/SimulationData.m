@@ -27,16 +27,19 @@ classdef SimulationData
     end
     methods
         %Class constructor
-<<<<<<< Updated upstream
-        function this = SimulationData(aX,aY)   
-            this.Speed = Vector2(aX,aY);
+%<<<<<<< Updated upstream
+        function this = SimulationData(aX,aY,aMass)  
+            switch nargin
+                case 2
+                    this.Speed = Vector2(aX,aY);
+                case 3
+                this.Speed = Vector2(aX,aY);
+                this.Mass = aMass;
+                otherwise 
+                    error('SimulationData input arguments error!')
+            end
         end
-=======
-        function this = SimulationData(aX,aY,aMass)   
-            this.Speed = Vector2(aX,aY);
-            this.Mass = aMass;
-        end
->>>>>>> Stashed changes
+%>>>>>>> Stashed changes
     end
     
 end
