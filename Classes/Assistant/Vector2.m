@@ -52,7 +52,7 @@ classdef Vector2
         end
         %Gives back the reflected vector from wall
         function result = TotalReflectionFrom(this, wall)
-            e = wall.RowForm()/norm(wall.RowFom());
+            e = wall.RowForm()/norm(wall.RowForm());
             n1 = this.RowForm()/norm(this.RowForm());
             n2 = 2*(dot(n1,e))*e-n1;
             result = Vector2(n2*norm(this.RowForm()));
@@ -81,6 +81,13 @@ classdef Vector2
                 error('This operator is not defined for this two classes.');
             end
             
+        end
+        function result = eq(this,other)
+            if(this.X == other.X && this.Y == other.Y)
+                result = true;
+            else
+                result = false;
+            end
         end
     end
 end

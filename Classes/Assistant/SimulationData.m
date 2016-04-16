@@ -39,7 +39,13 @@ classdef SimulationData
                     error('SimulationData input arguments error!')
             end
         end
-%>>>>>>> Stashed changes
+        function result = eq(this,other)
+            if(this.Speed == other.Speed && this.Mass== other.Mass)
+                result = true;
+            else
+                result=false;
+            end
+        end
     end
     
 end

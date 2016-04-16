@@ -62,7 +62,24 @@ classdef Line2
             t1 = (d-this.b)/(this.m);
             t2 = (-d-this.b)/(this.m);
             results = [t1;t2];
+            if(this.m == 0)
+                if(this.b == d)
+                    results(1) = Inf;
+                    results(2) = Inf;
+                    error('Not yet implemented');
+                else
+                    results(1) = NaN;
+                    results(2) = NaN;
+                end
+            end
+            if(t1<0 || t1>SimulationData.sampleTime)
+                results(1) = NaN;
+            end
+            if(t2<0 || t2>SimulationData.sampleTime)
+                results(2) = NaN;
+            end
         end
+
     end
     
 end

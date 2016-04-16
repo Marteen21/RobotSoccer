@@ -1,21 +1,13 @@
-%% Outdated methods to calculate the new speed vector after collision, see Vector2.TotalReflectionFrom(this,wall) to see the newer function
-% function [ new_orientation ] = Collision( Pos1, Ori1, Pos2, Ori2 )
-% %COLLISION Summary of this function goes here
-% %   Calculate new orientation from the current orientatoin and position
-% P = Rodriguez(0.5*pi)*(Pos1 - Pos2);
-% angP = asin((Pos1(1)-Pos2(1))/(sqrt((-(Pos1(2)-Pos2(2)))^2 + (Pos1(1)-Pos2(1))^2)))
-% if (Pos1(2) < Pos2(2))
-%     theta_new = 2*angP - pi
-% else
-%     if (Pos1(2) > Pos2(2))
-%         theta_new = -1*(2*angP - pi)
-%     else
-%         theta_new = -pi
-%     end
-% end
-% 
-% new_orientation(1) = Rodriguez(theta_new)*Ori1;
-% new_orientation(2) = Rodriguez(theta_new)*Ori2;
-% 
-% end
-
+myball = Ball(5,5,3,1);
+myState = SimState(0,myball,[]);
+c = [myState];
+plot (0,0,'o');
+plot (100,100,'o');
+hold on
+for i = 1:6000
+    c(end+1) = c(end).NextState();
+    plot(c(end).ball.Position.X,c(end).ball.Position.Y,'o');
+    if(mod(i,100)==0)
+        disp(c(end).ball.Position.X);
+    end
+end
