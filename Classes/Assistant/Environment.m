@@ -23,10 +23,10 @@ classdef Environment
             out = Var;
         end
         
-        function out = goalPos(data)    %Static goalPos property
+        function out = goalPos(dataX,dataY)    %Static Vector2 goalPos property
             persistent Var
             if nargin
-                Var = data;
+                Var = Vector2(dataX,dataY);
             end
             out = Var;
         end
