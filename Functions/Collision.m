@@ -18,7 +18,7 @@ for i=1:300
     sampleTime = c(i+1).time-c(i).time
     
     t = timer('TimerFcn', 'stat=false; disp(''Timer!'')',... 
-                 'StartDelay',sampleTime);
+                 'StartDelay',sampleTime-0.011);
     start(t)
     tic
     X = c(i).ball.Position.X;     
