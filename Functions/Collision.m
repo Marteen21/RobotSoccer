@@ -12,8 +12,12 @@ hold on
 for i = 1:3000
     c(end+1) = c(end).NextState();
     %plot(c(end).ball.Position.X,c(end).ball.Position.Y,'o');
-    X = c(end).ball.Position.X;
-    Y = c(end).ball.Position.Y;
+    
+end
+
+for i = 1:3000
+    X = c(i).ball.Position.X;
+    Y = c(i).ball.Position.Y;
     axis([0, Environment.xLim, 0, Environment.yLim]);
     refreshdata(balli,'caller')
     drawnow;
