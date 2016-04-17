@@ -12,15 +12,15 @@ hold on
 for i = 1:3000
     c(end+1) = c(end).NextState();
 end
-t_temp = zeros(1,300)
-for i=1:300
+
+for i=1:3000
     
     sampleTime = c(i+1).time-c(i).time
     
     t = timer('TimerFcn', 'stat=false; disp(''Timer!'')',... 
-                 'StartDelay',sampleTime-0.011);
+                 'StartDelay',sampleTime-0.0077);
     start(t)
-    tic
+    
     X = c(i).ball.Position.X;     
     Y = c(i).ball.Position.Y;
     axis([0, Environment.xLim, 0, Environment.yLim]);
@@ -28,7 +28,5 @@ for i=1:300
     drawnow;
 
     waitfor(t)
-    t_temp(i)=toc;
 end
-plot(t_temp)
 delete(t);
