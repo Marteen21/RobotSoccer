@@ -22,7 +22,7 @@ function varargout = testfigure(varargin)
 
 % Edit the above text to modify the response to help testfigure
 
-% Last Modified by GUIDE v2.5 12-Mar-2016 14:17:46
+% Last Modified by GUIDE v2.5 18-Apr-2016 16:07:22
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -55,8 +55,7 @@ function testfigure_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for testfigure
 handles.output = hObject;
 
-environment = SimulationData(100,100,0,50,20);
-environment.CreatField();
+
 
 % %Animation plot
 % h=findobj('Type','axes','Tag','axes1');
@@ -169,7 +168,10 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-testfigure_2
+%testfigure_2
+Initializer
+
+Collision
 
 
 % --- Executes on button press in pushbutton2.
@@ -186,3 +188,11 @@ function axes1_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 
 % Hint: place code in OpeningFcn to populate axes1
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over pushbutton1.
+function pushbutton1_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to pushbutton1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
