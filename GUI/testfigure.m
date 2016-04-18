@@ -22,7 +22,7 @@ function varargout = testfigure(varargin)
 
 % Edit the above text to modify the response to help testfigure
 
-% Last Modified by GUIDE v2.5 18-Apr-2016 16:07:22
+% Last Modified by GUIDE v2.5 18-Apr-2016 18:25:44
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -55,7 +55,7 @@ function testfigure_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for testfigure
 handles.output = hObject;
 
-
+set(handles.edit1,'string','0');
 
 % %Animation plot
 % h=findobj('Type','axes','Tag','axes1');
@@ -169,9 +169,30 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 %testfigure_2
+set(handles.edit1,'string','555555')
 Initializer
-
 Collision
+c=getappdata(0,'Collision');
+set(handles.edit1,'string',num2str(c(end).time))
+
+for i=1:300
+    
+    sampleTime = c(i+1).time-c(i).time
+    set(handles.edit1,'string',num2str(c(i).time))
+    t = timer('TimerFcn', 'stat=false;',... 
+                 'StartDelay',sampleTime-0.0077);
+    start(t)
+    X = c(i).ball.Position.X;     
+    Y = c(i).ball.Position.Y;
+    axis([0, Environment.xLim, 0, Environment.yLim]);
+    set(gca,'xtick',[],'ytick',[])
+    refreshdata(balli,'caller')
+    drawnow;
+
+    waitfor(t)
+end
+delete(t);
+
 
 
 % --- Executes on button press in pushbutton2.
@@ -196,3 +217,26 @@ function pushbutton1_ButtonDownFcn(hObject, eventdata, handles)
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+
+function edit1_Callback(hObject, eventdata, handles)
+% hObject    handle to edit1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit1 as text
+%        str2double(get(hObject,'String')) returns contents of edit1 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
