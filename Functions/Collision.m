@@ -1,15 +1,13 @@
-myball = Ball(5,5,3,1);
-myState = SimState(0,myball,[]);
-c = [myState];
-plot (0,0,'o');
-balli =  plot(0,0,'mo','MarkerFaceColor','m',...
-                        'YDataSource','Y',...
-                        'XDataSource','X'); 
-X = 0;
-Y = 0;
-%plot (100,100,'o');
-hold on
-for i = 1:3000
-    c(end+1) = c(end).NextState();
+function this = Collision(aX,aY)
+    % Collision function
+    % gives back the a Robor Postion Time vector nad get the 
+    % start point of the robot
+    myball = Ball(aX,aY,3,1);
+    myState = SimState(0,myball,[]);
+    c = [myState];
+    hold on
+    for i = 1:3000
+        c(end+1) = c(end).NextState();
+    end
+    this = c;
 end
-setappdata(0,'Collision',c)
