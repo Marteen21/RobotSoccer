@@ -169,16 +169,18 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 %testfigure_2
-set(handles.edit1,'string','555555')
-Initializer
-Collision
-c=getappdata(0,'Collision');
-set(handles.edit1,'string',num2str(c(end).time))
 
-for i=1:300
+Initializer                                         %set the global variables
+c = Collision(5,5);                                 %running the simulation
+balli =  plot(0,0,'mo','MarkerFaceColor','m',...    %define a ball 
+                            'YDataSource','Y',...
+                            'XDataSource','X'); 
+sample = 0;                        
+for i=1:3000
     
     sampleTime = c(i+1).time-c(i).time
-    set(handles.edit1,'string',num2str(c(i).time))
+    sample = sample + sampleTime;
+    set(handles.edit1,'string',num2str(sample));
     t = timer('TimerFcn', 'stat=false;',... 
                  'StartDelay',sampleTime-0.0077);
     start(t)
