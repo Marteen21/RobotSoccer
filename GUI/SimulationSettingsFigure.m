@@ -22,7 +22,7 @@ function varargout = SimulationSettingsFigure(varargin)
 
 % Edit the above text to modify the response to help SimulationSettingsFigure
 
-% Last Modified by GUIDE v2.5 15-Mar-2016 20:04:53
+% Last Modified by GUIDE v2.5 04-May-2016 17:02:24
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -74,13 +74,13 @@ varargout{1} = handles.output;
 delete(handles.figure1);
 
 
-function edittxt_friction_Callback(hObject, eventdata, handles)
-% hObject    handle to edittxt_friction (see GCBO)
+function editTxt_Friction_Callback(hObject, eventdata, handles)
+% hObject    handle to editTxt_Friction (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edittxt_friction as text
-%        str2double(get(hObject,'String')) returns contents of edittxt_friction as a double
+% Hints: get(hObject,'String') returns contents of editTxt_Friction as text
+%        str2double(get(hObject,'String')) returns contents of editTxt_Friction as a double
 str=get(hObject,'String');
 if isempty(str2num(str)) || str2num(str)>1 || str2num(str)<0
     set(hObject,'String','0');
@@ -90,8 +90,8 @@ set(handles.sldr_friction,'Value',str2num(get(hObject,'String')))
 
 
 % --- Executes during object creation, after setting all properties.
-function edittxt_friction_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edittxt_friction (see GCBO)
+function editTxt_Friction_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to editTxt_Friction (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -132,6 +132,13 @@ function btn_save_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 handles.output = get(hObject,'String');
 
+
+%Global SampleTime setup
+SimulationData.sampleTime(str2double(get(handles.editTxt_SampleTime,'string')));
+
+%Global Friction setup
+SimulationData.friction(str2double(get(handles.editTxt_Friction,'string')));
+
 % Update handles structure
 guidata(hObject, handles);
 
@@ -161,7 +168,7 @@ function sldr_friction_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-set(handles.edittxt_friction,'String',get(hObject,'Value'))
+set(handles.editTxt_Friction,'String',get(hObject,'Value'))
 
 % --- Executes during object creation, after setting all properties.
 function sldr_friction_CreateFcn(hObject, eventdata, handles)
@@ -196,3 +203,26 @@ guidata(hObject, handles);
 % Use UIRESUME instead of delete because the OutputFcn needs
 % to get the updated handles structure.
 uiresume(handles.figure1);
+
+
+
+function editTxt_SampleTime_Callback(hObject, eventdata, handles)
+% hObject    handle to editTxt_SampleTime (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of editTxt_SampleTime as text
+%        str2double(get(hObject,'String')) returns contents of editTxt_SampleTime as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function editTxt_SampleTime_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to editTxt_SampleTime (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

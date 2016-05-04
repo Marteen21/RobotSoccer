@@ -22,7 +22,7 @@ function varargout = testfigure(varargin)
 
 % Edit the above text to modify the response to help testfigure
 
-% Last Modified by GUIDE v2.5 18-Apr-2016 18:25:44
+% Last Modified by GUIDE v2.5 04-May-2016 16:46:43
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -175,7 +175,13 @@ c = Collision(5,5);                                 %running the simulation
 balli =  plot(0,0,'mo','MarkerFaceColor','m',...    %define a ball 
                             'YDataSource','Y',...
                             'XDataSource','X'); 
-sample = 0;                        
+sample = 0;    
+plot(Environment.goalPos.X,Environment.goalPos.Y - Environment.goalLength,'>','Color',[0,0,0]);
+plot(Environment.goalPos.X,Environment.goalPos.Y + Environment.goalLength,'>','Color',[0,0,0]);
+
+plot(Environment.goalPos.X+Environment.xLim,Environment.goalPos.Y - Environment.goalLength,'<','Color',[0,0,0]);
+plot(Environment.goalPos.X+Environment.xLim,Environment.goalPos.Y + Environment.goalLength,'<','Color',[0,0,0]);
+
 for i=1:3000
     
     sampleTime = c(i+1).time-c(i).time
@@ -242,3 +248,12 @@ function edit1_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in pushbutton3.
+function pushbutton3_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+user_response = SimulationSettingsFigure('Title','Simulation Settings');
