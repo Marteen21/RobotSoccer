@@ -22,7 +22,7 @@ function varargout = testfigure(varargin)
 
 % Edit the above text to modify the response to help testfigure
 
-% Last Modified by GUIDE v2.5 04-May-2016 16:46:43
+% Last Modified by GUIDE v2.5 07-May-2016 13:17:57
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -258,3 +258,4 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 user_response = SimulationSettingsFigure('Title','Simulation Settings');
+set(handles.pushbutton1,'Enable','on');
