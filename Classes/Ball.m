@@ -1,4 +1,4 @@
-classdef Ball
+classdef Ball < handle
     %BALL Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -37,31 +37,22 @@ classdef Ball
         function cTime = CollisionTimeWithXWall(this,xLim)
             nextPositionX = this.Position.X + this.Simulation.Speed.X*SimulationData.sampleTime;
             dist = Line2(abs(this.Position.X-xLim),abs(nextPositionX-xLim),0,SimulationData.sampleTime);
-            cTime = CollisionData(min(dist.TfromD(this.Radius)),this,Vector2([0,1]));
+            cTime = min(dist.TfromD(this.Radius));
+            if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime))
+                this.Simulation.CollisionTime = double(cTime);
+                this.Simulation.CollisionVector = Vector2([0,1]);
+            end
         end
         function cTime = CollisionTimeWithYWall(this,yLim)
             nextPositionY = this.Position.Y + this.Simulation.Speed.Y*SimulationData.sampleTime;
             dist = Line2(abs(this.Position.Y-yLim),abs(nextPositionY-yLim),0,SimulationData.sampleTime);
-            cTime = CollisionData(min(dist.TfromD(this.Radius)),this,Vector2([1,0]));
+            cTime = min(dist.TfromD(this.Radius));
+            if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime))
+                this.Simulation.CollisionTime = double(cTime);
+                this.Simulation.CollisionVector = Vector2([1,0]);
+            end
         end
         
-        %         function nextBall = Stepwithoutcollision(this)
-        %             cTimes = []
-        %             cTimes(end+1) = CollisionTimeWithXWall(this,0);
-        %             cTimes(end+1) = CollisionTimeWithYWall(this,0);
-        %             cTimes(end+1) = CollisionTimeWithXWall(this,Enviroment.xLim);
-        %             cTimes(end+1) = CollisionTimeWithYWall(this,Enviroment.yLim);
-        %             if(~this.isColliding(cTimes))   %no collision
-        %                 nextPositionX = this.Position.X + this.Simulation.Speed.X*SimulationData.sampleTime;
-        %                 nextPositionY = this.Position.Y + this.Simulation.Speed.Y*SimulationData.sampleTime;
-        %                 nextSpeedX = this.Simulation.Speed.X;
-        %                 nextSpeedY = this.Simulation.Speed.Y;
-        %                 nextMass = this.Simulation.Mass;
-        %                 nextBall = Ball(nextPositionX,nextPositionY, nextSpeedX, nextSpeedY, nextMass);
-        %             else    %collision
-        %                 error('Not implemented yet');
-        %             end
-        %         end
         function nextBall = Stepwithoutcollision(this,time)
             switch nargin
                 case 1
@@ -92,6 +83,17 @@ classdef Ball
                 nextSpeed = this.Simulation.Speed.TotalReflectionFrom(cData.colliderB);
             elseif(cData.colliderB == this)
                 nextSpeed = this.Simulation.Speed.TotalReflectionFrom(cData.colliderA);
+            else
+                nextSpeed = Vector2(this.Simulation.Speed.X,this.Simulation.Speed.Y);
+            end
+            nextBall = Ball(nextPositionX,nextPositionY, nextSpeed.X, nextSpeed.Y, nextMass);
+        end
+        function nextBall = Step(this, cTime)
+            nextPositionX = this.Position.X + this.Simulation.Speed.X*cTime;
+            nextPositionY = this.Position.Y + this.Simulation.Speed.Y*cTime;
+            nextMass = this.Simulation.Mass;
+            if (isa(this.Simulation.CollisionVector,'Vector2') && cTime == this.Simulation.CollisionTime)
+                nextSpeed = this.Simulation.Speed.TotalReflectionFrom(this.Simulation.CollisionVector);
             else
                 nextSpeed = Vector2(this.Simulation.Speed.X,this.Simulation.Speed.Y);
             end

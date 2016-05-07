@@ -7,6 +7,8 @@ classdef SimulationData
     properties
         Speed;      %Vector2 property to store Speed X and Speed Y values
         Mass;       %Scalar propery to store Mass value
+        CollisionTime;  %
+        CollisionVector;    %
     end
     
     methods (Static)
@@ -42,6 +44,8 @@ classdef SimulationData
                 case 3
                 this.Speed = Vector2(aX,aY);
                 this.Mass = aMass;
+                this.CollisionTime = nan;
+                this.CollisionVector = nan;
                 otherwise 
                     error('SimulationData input arguments error!')
             end

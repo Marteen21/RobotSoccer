@@ -172,7 +172,7 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 
 Initializer                                         %set the global variables
 
-c = Collision(5,5);                                 %running the simulation
+c = Collision(110,5);                                 %running the simulation
 balli =  plot(0,0,'mo','MarkerFaceColor','m',...    %define a ball 
                             'YDataSource','Y',...
                             'XDataSource','X'); 

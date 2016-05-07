@@ -1,4 +1,4 @@
-classdef SimState
+classdef SimState < handle
     %SIMULATOR Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -15,7 +15,8 @@ classdef SimState
             obj.robots = op3;
         end
         function nextState = NextState(this)
-            bcTimes = [CollisionData(NaN)];
+            bcTimes = [];
+            bcTimes(1) = NaN;
             bcTimes(end+1) = this.ball.CollisionTimeWithXWall(0);
             bcTimes(end+1) = this.ball.CollisionTimeWithYWall(0);
             bcTimes(end+1) = this.ball.CollisionTimeWithXWall(Environment.xLim);
@@ -26,24 +27,23 @@ classdef SimState
                 %bcTimes(end+1) = tempLine.TfromD(this.ball.Radius+this.robots(i).Radius);
             end
             collisionHappened = false;
-            nextCollision = CollisionData(SimulationData.sampleTime*2,NaN,NaN);
+            nextCollisionTime = SimulationData.sampleTime*2;
             for j = 1 : length(bcTimes)
-                if(~isnan(bcTimes(j).collisionTime) && nextCollision.collisionTime > bcTimes(j).collisionTime)
-                    nextCollision = bcTimes(j);
+                if(~isnan(bcTimes(j)) && nextCollisionTime > bcTimes(j) && bcTimes(j)>0)
+                    nextCollisionTime = bcTimes(j);
                     collisionHappened = true;
                 end
             end
             if(collisionHappened)
-                nextT = this.time+nextCollision.collisionTime + 0.01;
-                nextB = this.ball.Collide(nextCollision);
-                nextB = nextB.Stepwithoutcollision(0.01);
+                nextT = this.time+nextCollisionTime;
+                nextB = this.ball.Step(nextCollisionTime);
                 nextR = [];
                 for i = 1 : length(this.robots)
                     error('Not yet implemented');
                 end
             else
-                nextB = this.ball.Stepwithoutcollision();
                 nextT = this.time+SimulationData.sampleTime;
+                nextB = this.ball.Step(SimulationData.sampleTime);
                 nextR = [];
                 for i = 1 : length(this.robots)
                     error('Not yet implemented');
