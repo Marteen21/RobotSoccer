@@ -166,8 +166,8 @@ guidata(hObject, handles);
 % Use UIRESUME instead of delete because the OutputFcn needs
 % to get the updated handles structure.
 if (get(handles.popupmenu2,'Value')==1)    
-    msgbox('Select a simulation speed!');
-    error('Select a simulation speed!');
+    msgbox('Select a simulation speed!','Error','error');
+    %error('Select a simulation speed!');
 else uiresume(handles.figure2);
 end
 % uiresume(handles.figure2);
