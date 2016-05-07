@@ -24,6 +24,13 @@ classdef SimulationData
             end
             out = Var;
         end
+        function out = simSpeed(data)   %Static Friction property
+            persistent Var;
+            if nargin
+                Var = data;
+            end
+            out = Var;
+        end
     end
     methods
         %Class constructor

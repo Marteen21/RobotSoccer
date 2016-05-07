@@ -22,7 +22,7 @@ function varargout = SimulationSettingsFigure(varargin)
 
 % Edit the above text to modify the response to help SimulationSettingsFigure
 
-% Last Modified by GUIDE v2.5 04-May-2016 17:02:24
+% Last Modified by GUIDE v2.5 07-May-2016 11:13:19
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -56,9 +56,9 @@ handles.output = 'Cancel';
 
 % Update handles structure
 guidata(hObject, handles);
-set(handles.figure1,'WindowStyle','modal')
+set(handles.figure2,'WindowStyle','modal')
 % UIWAIT makes SimulationSettingsFigure wait for user response (see UIRESUME)
-uiwait(handles.figure1);
+uiwait(handles.figure2);
 
 
 % --- Outputs from this function are returned to the command line.
@@ -71,7 +71,7 @@ function varargout = SimulationSettingsFigure_OutputFcn(hObject, eventdata, hand
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 % The figure can be deleted now
-delete(handles.figure1);
+delete(handles.figure2);
 
 
 function editTxt_Friction_Callback(hObject, eventdata, handles)
@@ -132,6 +132,27 @@ function btn_save_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 handles.output = get(hObject,'String');
 
+%Save simulation speed
+contents = get(handles.popupmenu2,'String')
+popupmenu2value = contents{get(handles.popupmenu2,'Value')}
+ValueHandle = get(handles.popupmenu2,'Value')
+switch popupmenu2value
+    case '1x'
+        SimulationData.simSpeed(get(handles.popupmenu2,'Value'));
+        disp('Set this shit 1x')
+    case '2x'
+        SimulationData.simSpeed(get(handles.popupmenu2,'Value'));
+        disp('Set this shit 2x')
+    case '3x'
+        SimulationData.simSpeed(get(handles.popupmenu2,'Value'));
+        disp('Set this shit 3x')
+    case '4x'
+        SimulationData.simSpeed(get(handles.popupmenu2,'Value'));
+        disp('Set this shit 4x')
+    otherwise
+end
+
+
 
 %Global SampleTime setup
 SimulationData.sampleTime(str2double(get(handles.editTxt_SampleTime,'string')));
@@ -144,7 +165,7 @@ guidata(hObject, handles);
 
 % Use UIRESUME instead of delete because the OutputFcn needs
 % to get the updated handles structure.
-uiresume(handles.figure1);
+uiresume(handles.figure2);
 
 % --- Executes on button press in btn_cancel.
 function btn_cancel_Callback(hObject, eventdata, handles)
@@ -158,7 +179,7 @@ guidata(hObject, handles);
 
 % Use UIRESUME instead of delete because the OutputFcn needs
 % to get the updated handles structure.
-uiresume(handles.figure1);
+uiresume(handles.figure2);
 
 % --- Executes on slider movement.
 function sldr_friction_Callback(hObject, eventdata, handles)
@@ -183,8 +204,8 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
     set(hObject,'Max',1.0);
 end
 
-function figure1_CloseRequestFcn(hObject, eventdata, handles)
-% hObject    handle to figure1 (see GCBO)
+function figure2_CloseRequestFcn(hObject, eventdata, handles)
+% hObject    handle to figure2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
@@ -202,7 +223,7 @@ guidata(hObject, handles);
 
 % Use UIRESUME instead of delete because the OutputFcn needs
 % to get the updated handles structure.
-uiresume(handles.figure1);
+uiresume(handles.figure2);
 
 
 
@@ -222,6 +243,29 @@ function editTxt_SampleTime_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 
 % Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in popupmenu2.
+function popupmenu2_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu2 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu2
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');

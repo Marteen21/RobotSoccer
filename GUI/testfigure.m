@@ -171,6 +171,7 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 %testfigure_2
 
 Initializer                                         %set the global variables
+
 c = Collision(5,5);                                 %running the simulation
 balli =  plot(0,0,'mo','MarkerFaceColor','m',...    %define a ball 
                             'YDataSource','Y',...
@@ -188,7 +189,7 @@ for i=1:3000
     sample = sample + sampleTime;
     set(handles.edit1,'string',num2str(sample));
     t = timer('TimerFcn', 'stat=false;',... 
-                 'StartDelay',sampleTime-0.0077);
+                 'StartDelay',(sampleTime-0.0077)/(SimulationData.simSpeed-1));
     start(t)
     X = c(i).ball.Position.X;     
     Y = c(i).ball.Position.Y;
