@@ -27,13 +27,10 @@ classdef Ball < handle
                     ...
                 otherwise
                 error('Ball class: Invalid number of arguments');
-                
             end
         end
         %% Functions
-        function isCollided = isColliding(this)
-            isCollided = false;
-        end
+
         function cTime = CollisionTimeWithXWall(this,xLim)
             nextPositionX = this.Position.X + this.Simulation.Speed.X*SimulationData.sampleTime;
             dist = Line2(abs(this.Position.X-xLim),abs(nextPositionX-xLim),0,SimulationData.sampleTime);
@@ -52,53 +49,21 @@ classdef Ball < handle
                 this.Simulation.CollisionVector = Vector2([1,0]);
             end
         end
-        
-        function nextBall = Stepwithoutcollision(this,time)
-            switch nargin
-                case 1
-                    nextPositionX = this.Position.X + this.Simulation.Speed.X*SimulationData.sampleTime;
-                    nextPositionY = this.Position.Y + this.Simulation.Speed.Y*SimulationData.sampleTime;
-                case 2
-                    nextPositionX = this.Position.X + this.Simulation.Speed.X*time;
-                    nextPositionY = this.Position.Y + this.Simulation.Speed.Y*time;
+        function cTime = CollisionTimeWithRobot(this,r)
+            Ap0 = this.Position;
+            Bp0 = r.Position;
+            ApT = this.Position + this.Simulation.Speed.*SimulationData.sampleTime;
+            BpT = r.Position + r.Simulation.Speed.*SimulationData.sampleTime;
+            time0 = 0;
+            timeT = SimulationData.sampleTime;
+            dist = Line2(Ap0,Bp0,ApT,BpT,time0,timeT);
+            cTime = min(dist.TfromD(this.Radius+r.Radius));
+            if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime))
+                this.Simulation.CollisionTime = double(cTime);
+                this.Simulation.CollisionVector = CalculateCollVector(this,r,cTime);
             end
-            nextSpeedX = this.Simulation.Speed.X;
-            nextSpeedY = this.Simulation.Speed.Y;
-            nextMass = this.Simulation.Mass;
-            nextBall = Ball(nextPositionX,nextPositionY, nextSpeedX, nextSpeedY, nextMass);
-            
         end
-        function nextBall = CollideWith(this,cTime,e)
-            nextPositionX = this.Position.X + this.Simulation.Speed.X*cTime;
-            nextPositionY = this.Position.Y + this.Simulation.Speed.Y*cTime;
-            nextSpeed = this.Simulation.Speed.TotalReflectionFrom(e);
-            nextMass = this.Simulation.Mass;
-            nextBall = Ball(nextPositionX,nextPositionY, nextSpeed.X, nextSpeed.Y, nextMass);
-        end
-        function nextBall = Collide(this, cData)
-            nextPositionX = this.Position.X + this.Simulation.Speed.X*cData.collisionTime;
-            nextPositionY = this.Position.Y + this.Simulation.Speed.Y*cData.collisionTime;
-            nextMass = this.Simulation.Mass;
-            if(cData.colliderA == this)
-                nextSpeed = this.Simulation.Speed.TotalReflectionFrom(cData.colliderB);
-            elseif(cData.colliderB == this)
-                nextSpeed = this.Simulation.Speed.TotalReflectionFrom(cData.colliderA);
-            else
-                nextSpeed = Vector2(this.Simulation.Speed.X,this.Simulation.Speed.Y);
-            end
-            nextBall = Ball(nextPositionX,nextPositionY, nextSpeed.X, nextSpeed.Y, nextMass);
-        end
-        function nextBall = Step(this, cTime)
-            nextPositionX = this.Position.X + this.Simulation.Speed.X*cTime;
-            nextPositionY = this.Position.Y + this.Simulation.Speed.Y*cTime;
-            nextMass = this.Simulation.Mass;
-            if (isa(this.Simulation.CollisionVector,'Vector2') && cTime == this.Simulation.CollisionTime)
-                nextSpeed = this.Simulation.Speed.TotalReflectionFrom(this.Simulation.CollisionVector);
-            else
-                nextSpeed = Vector2(this.Simulation.Speed.X,this.Simulation.Speed.Y);
-            end
-            nextBall = Ball(nextPositionX,nextPositionY, nextSpeed.X, nextSpeed.Y, nextMass);
-        end
+
         %% Operators
         function result = eq(this,other)
             if (this.Position == other.Position && this.Simulation == other.Simulation && this.Radius == other.Radius)

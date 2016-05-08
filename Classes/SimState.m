@@ -22,9 +22,16 @@ classdef SimState < handle
             bcTimes(end+1) = this.ball.CollisionTimeWithXWall(Environment.xLim);
             bcTimes(end+1) = this.ball.CollisionTimeWithYWall(Environment.yLim);
             for i = 1 : length(this.robots)
-                error('Not yet implemented');
-                %tempLine = Line2(this.ball.Position,this.ball.Position+this.ball.Simulation.Speed.*SimulationData.sampleTime,this.robots(i).Position,this.robots(i).Position+this.robots(i).Simulation.Speed.*SimulationData.sampleTime,0,SimulationData.sampleTime);
-                %bcTimes(end+1) = tempLine.TfromD(this.ball.Radius+this.robots(i).Radius);
+                bcTimes(end+1) = this.robots(i).CollisionTimeWithXWall(0);
+                bcTimes(end+1) = this.robots(i).CollisionTimeWithYWall(0);
+                bcTimes(end+1) = this.robots(i).CollisionTimeWithXWall(Environment.xLim);
+                bcTimes(end+1) = this.robots(i).CollisionTimeWithYWall(Environment.yLim);
+                bcTimes(end+1) = this.ball.CollisionTimeWithRobot(this.robots(i));
+                for j = 1: length(this.robots)
+                    if (j ~= i)
+                        bcTimes(end+1) = this.robots(i).CollisionTimeWithRobot(this.robots(j));
+                    end
+                end
             end
             collisionHappened = false;
             nextCollisionTime = SimulationData.sampleTime*2;
@@ -37,16 +44,16 @@ classdef SimState < handle
             if(collisionHappened)
                 nextT = this.time+nextCollisionTime;
                 nextB = this.ball.Step(nextCollisionTime);
-                nextR = [];
+                nextR = Robot.empty;
                 for i = 1 : length(this.robots)
-                    error('Not yet implemented');
+                    nextR(i) = this.robots(i).Step(nextCollisionTime);
                 end
             else
                 nextT = this.time+SimulationData.sampleTime;
                 nextB = this.ball.Step(SimulationData.sampleTime);
-                nextR = [];
+                nextR = Robot.empty;
                 for i = 1 : length(this.robots)
-                    error('Not yet implemented');
+                    nextR(i) = this.robots(i).Step(SimulationData.sampleTime);
                 end
             end
             nextState = SimState(nextT, nextB, nextR);
