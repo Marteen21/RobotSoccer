@@ -20,7 +20,7 @@ classdef Ball < handle
                     SimulationData.friction(fric);  %Set global friction
                 case 4
                     obj.Position = Vector2(pX,pY);  %Set position
-                    obj.Simulation = SimulationData (vX,vY,1);%Set speed with default 1 mass
+                    obj.Simulation = SimulationData (vX,vY,0.01);%Set speed with default 1 mass
                 case 5
                     obj.Position = Vector2(pX,pY);  %Set position
                     obj.Simulation = SimulationData (vX,vY,mass);%Set speed
@@ -33,7 +33,8 @@ classdef Ball < handle
 
         function cTime = CollisionTimeWithXWall(this,xLim)
             nextPositionX = this.Position.X + this.Simulation.Speed.X*SimulationData.sampleTime;
-            dist = Line2(abs(this.Position.X-xLim),abs(nextPositionX-xLim),0,SimulationData.sampleTime);
+%             dist = Line2(abs(this.Position.X-xLim),abs(nextPositionX-xLim),0,SimulationData.sampleTime);
+            dist = Line2(Vector2(this.Position.X,0),Vector2(xLim,0),Vector2(nextPositionX,0),Vector2(xLim,0),0,SimulationData.sampleTime);
             cTime = min(dist.TfromD(this.Radius));
             if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime))
                 this.Simulation.CollisionTime = double(cTime);
@@ -42,7 +43,8 @@ classdef Ball < handle
         end
         function cTime = CollisionTimeWithYWall(this,yLim)
             nextPositionY = this.Position.Y + this.Simulation.Speed.Y*SimulationData.sampleTime;
-            dist = Line2(abs(this.Position.Y-yLim),abs(nextPositionY-yLim),0,SimulationData.sampleTime);
+%           dist = Line2(abs(this.Position.Y-yLim),abs(nextPositionY-yLim),0,SimulationData.sampleTime);
+            dist = Line2(Vector2(0,this.Position.Y),Vector2(0,yLim),Vector2(0,nextPositionY),Vector2(0,yLim),0,SimulationData.sampleTime);
             cTime = min(dist.TfromD(this.Radius));
             if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime))
                 this.Simulation.CollisionTime = double(cTime);
@@ -64,13 +66,19 @@ classdef Ball < handle
             end
         end
         function nextBall = Step(this, cTime)
-            nextPositionX = this.Position.X + this.Simulation.Speed.X*cTime;
-            nextPositionY = this.Position.Y + this.Simulation.Speed.Y*cTime;
+            mySpeed = this.Simulation.Speed.*cTime;
+            nextPositionX = this.Position.X + mySpeed.X;
+            nextPositionY = this.Position.Y + mySpeed.Y;
             nextMass = this.Simulation.Mass;
             if (isa(this.Simulation.CollisionVector,'Vector2') && cTime == this.Simulation.CollisionTime)
                 nextSpeed = this.Simulation.Speed.TotalReflectionFrom(this.Simulation.CollisionVector);
             else
                 nextSpeed = Vector2(this.Simulation.Speed.X,this.Simulation.Speed.Y);
+            end
+            if(norm(nextSpeed.RowForm())<SimulationData.friction)
+                nextSpeed = Vector2(0,0);
+            else
+                nextSpeed = Vector2(nextSpeed.RowForm() / norm(nextSpeed.RowForm())*(norm(nextSpeed.RowForm())-SimulationData.friction*0.05*(0.9+rand/10)));
             end
             nextBall = Ball(nextPositionX,nextPositionY, nextSpeed.X, nextSpeed.Y, nextMass);
         end

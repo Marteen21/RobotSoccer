@@ -6,10 +6,11 @@ classdef Robot < handle
         Orientation;    %Vector2
         Simulation;     %SimulationData
         Radius;         %Radius of the simulated robot
+        Owner;
     end
     
     methods
-        function obj = Robot(pX,pY,vX,vY,mass)
+        function obj = Robot(pX,pY,vX,vY,ownr,mass)
             obj.Radius = 5;
             switch nargin
                 case 2
@@ -17,12 +18,14 @@ classdef Robot < handle
                 case 3
                     obj.Position = Vector2(pX,pY);  %Set position
                     SimulationData.friction(fric);  %Set global friction
-                case 4
-                    obj.Position = Vector2(pX,pY);  %Set position
-                    obj.Simulation = SimulationData (vX,vY,1);%Set speed with default 1 mass
                 case 5
                     obj.Position = Vector2(pX,pY);  %Set position
+                    obj.Simulation = SimulationData (vX,vY,1);%Set speed with default 1 mass
+                    obj.Owner = ownr;
+                case 6
+                    obj.Position = Vector2(pX,pY);  %Set position
                     obj.Simulation = SimulationData (vX,vY,mass);%Set speed
+                    obj.Owner = ownr;
                     ...
                 otherwise
                 error('Robot class: Invalid number of arguments');
@@ -30,7 +33,7 @@ classdef Robot < handle
         end
         function cTime = CollisionTimeWithXWall(this,xLim)
             nextPositionX = this.Position.X + this.Simulation.Speed.X*SimulationData.sampleTime;
-            dist = Line2(abs(this.Position.X-xLim),abs(nextPositionX-xLim),0,SimulationData.sampleTime);
+            dist = Line2(Vector2(this.Position.X,0),Vector2(xLim,0),Vector2(nextPositionX,0),Vector2(xLim,0),0,SimulationData.sampleTime);
             cTime = min(dist.TfromD(this.Radius));
             if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime))
                 this.Simulation.CollisionTime = double(cTime);
@@ -39,7 +42,7 @@ classdef Robot < handle
         end
         function cTime = CollisionTimeWithYWall(this,yLim)
             nextPositionY = this.Position.Y + this.Simulation.Speed.Y*SimulationData.sampleTime;
-            dist = Line2(abs(this.Position.Y-yLim),abs(nextPositionY-yLim),0,SimulationData.sampleTime);
+            dist = Line2(Vector2(0,this.Position.Y),Vector2(0,yLim),Vector2(0,nextPositionY),Vector2(0,yLim),0,SimulationData.sampleTime);
             cTime = min(dist.TfromD(this.Radius));
             if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime))
                 this.Simulation.CollisionTime = double(cTime);
@@ -74,17 +77,18 @@ classdef Robot < handle
                 this.Simulation.CollisionVector = CalculateCollVector(this,r,cTime);
             end
         end
-        function nextRobot = Step(this, cTime)
-            nextPositionX = this.Position.X + this.Simulation.Speed.X*cTime;
-            nextPositionY = this.Position.Y + this.Simulation.Speed.Y*cTime;
-            nextMass = this.Simulation.Mass;
-            if (isa(this.Simulation.CollisionVector,'Vector2') && cTime == this.Simulation.CollisionTime)
-                nextSpeed = this.Simulation.Speed.TotalReflectionFrom(this.Simulation.CollisionVector);
-            else
-                nextSpeed = Vector2(this.Simulation.Speed.X,this.Simulation.Speed.Y);
+            function nextRobot = Step(this, cTime)
+                nextPositionX = this.Position.X + this.Simulation.Speed.X*cTime;
+                nextPositionY = this.Position.Y + this.Simulation.Speed.Y*cTime;
+                nextMass = this.Simulation.Mass;
+                nextOwner = this.Owner;
+                if (isa(this.Simulation.CollisionVector,'Vector2') && cTime == this.Simulation.CollisionTime)
+                    nextSpeed = this.Simulation.Speed.TotalReflectionFrom(this.Simulation.CollisionVector);
+                else
+                    nextSpeed = Vector2(this.Simulation.Speed.X,this.Simulation.Speed.Y);
+                end
+                nextRobot = Robot(nextPositionX,nextPositionY, nextSpeed.X, nextSpeed.Y, nextMass, nextOwner);
             end
-            nextRobot = Robot(nextPositionX,nextPositionY, nextSpeed.X, nextSpeed.Y, nextMass);
-        end
     end
 end
 
