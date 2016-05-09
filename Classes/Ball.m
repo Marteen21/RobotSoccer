@@ -63,7 +63,17 @@ classdef Ball < handle
                 this.Simulation.CollisionVector = CalculateCollVector(this,r,cTime);
             end
         end
-
+        function nextBall = Step(this, cTime)
+            nextPositionX = this.Position.X + this.Simulation.Speed.X*cTime;
+            nextPositionY = this.Position.Y + this.Simulation.Speed.Y*cTime;
+            nextMass = this.Simulation.Mass;
+            if (isa(this.Simulation.CollisionVector,'Vector2') && cTime == this.Simulation.CollisionTime)
+                nextSpeed = this.Simulation.Speed.TotalReflectionFrom(this.Simulation.CollisionVector);
+            else
+                nextSpeed = Vector2(this.Simulation.Speed.X,this.Simulation.Speed.Y);
+            end
+            nextBall = Ball(nextPositionX,nextPositionY, nextSpeed.X, nextSpeed.Y, nextMass);
+        end
         %% Operators
         function result = eq(this,other)
             if (this.Position == other.Position && this.Simulation == other.Simulation && this.Radius == other.Radius)
