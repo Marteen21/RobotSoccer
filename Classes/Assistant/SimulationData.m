@@ -47,7 +47,7 @@ classdef SimulationData
                 this.Mass = aMass;
                 this.CollisionTime = nan;
                 this.CollisionVector = nan;
-                this.SpeedGain = Vector2([0;0]);
+                this.SpeedGain = SpeedGains(BodyType.None,Vector2([0;0]));
                 otherwise 
                     error('SimulationData input arguments error!')
             end

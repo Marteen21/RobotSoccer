@@ -6,6 +6,7 @@ function SimulationData = Simulate( startState, noSteps )
        c(end+1) = c(end).NextState();
        c(end) = Referee.fixMyState(c(end));
        c(end) = TeamA.controlMyState(c(end));
+       c(end) = TeamB.controlMyState(c(end));
        if(i==89)
        end
     end

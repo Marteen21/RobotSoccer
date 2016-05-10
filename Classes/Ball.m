@@ -62,6 +62,11 @@ classdef Ball < handle
             cTime = min(dist.TfromD(this.Radius+r.Radius));
             if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime))
                 this.Simulation.CollisionTime = double(cTime);
+                if(~isnan(cTime))
+                this.Simulation.SpeedGain = SpeedGains(BodyType.Robot,r.Simulation.Speed.*0.5);
+                else
+                    this.Simulation.SpeedGain = SpeedGains(BodyType.None,Vector2([0;0]));
+                end
                 this.Simulation.CollisionVector = CalculateCollVector(this,r,cTime);
             end
         end
@@ -72,13 +77,16 @@ classdef Ball < handle
             nextMass = this.Simulation.Mass;
             if (isa(this.Simulation.CollisionVector,'Vector2') && cTime == this.Simulation.CollisionTime)
                 nextSpeed = this.Simulation.Speed.TotalReflectionFrom(this.Simulation.CollisionVector);
+                if(this.Simulation.SpeedGain.collidedWith == BodyType.Robot)
+                    nextSpeed = nextSpeed + this.Simulation.SpeedGain.gain;
+                end
             else
                 nextSpeed = Vector2(this.Simulation.Speed.X,this.Simulation.Speed.Y);
             end
             if(norm(nextSpeed.RowForm())<SimulationData.friction)
                 nextSpeed = Vector2(0,0);
             else
-                nextSpeed = Vector2(nextSpeed.RowForm() / norm(nextSpeed.RowForm())*(norm(nextSpeed.RowForm())-SimulationData.friction*0.05*(0.9+rand/10)));
+                nextSpeed = Vector2(nextSpeed.RowForm() / norm(nextSpeed.RowForm())*(norm(nextSpeed.RowForm())-SimulationData.friction*0.2*(0.9+rand/10)));
             end
             nextBall = Ball(nextPositionX,nextPositionY, nextSpeed.X, nextSpeed.Y, nextMass);
         end

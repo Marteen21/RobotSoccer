@@ -38,6 +38,8 @@ classdef Robot < handle
             if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime))
                 this.Simulation.CollisionTime = double(cTime);
                 this.Simulation.CollisionVector = Vector2([0,1]);
+                this.Simulation.SpeedGain = SpeedGains(BodyType.Wall,Vector2([0;0]));
+                
             end
         end
         function cTime = CollisionTimeWithYWall(this,yLim)
@@ -47,6 +49,7 @@ classdef Robot < handle
             if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime))
                 this.Simulation.CollisionTime = double(cTime);
                 this.Simulation.CollisionVector = Vector2([1,0]);
+                this.Simulation.SpeedGain = SpeedGains(BodyType.Wall,Vector2([0;0]));
             end
         end
         function cTime = CollisionTimeWithRobot(this,r)
@@ -61,9 +64,9 @@ classdef Robot < handle
             if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime))
                 this.Simulation.CollisionTime = double(cTime);
                 if(~isnan(cTime))
-                    this.Simulation.SpeedGain = r.Simulation.Speed.*0.1;
+                    this.Simulation.SpeedGain = SpeedGains(BodyType.Robot,r.Simulation.Speed.*0.2);
                 else
-                    this.Simulation.SpeedGain = Vector2([0;0]);
+                    this.Simulation.SpeedGain = SpeedGains(BodyType.None,Vector2([0;0]));
                 end
                 this.Simulation.CollisionVector = CalculateCollVector(this,r,cTime);
             end
@@ -79,22 +82,29 @@ classdef Robot < handle
             cTime = min(dist.TfromD(this.Radius+r.Radius));
             if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime))
                 this.Simulation.CollisionTime = double(cTime);
+                if(~isnan(cTime))
+                    this.Simulation.SpeedGain = SpeedGains(BodyType.Ball,r.Simulation.Speed*0.2);
+                else
+                    this.Simulation.SpeedGain = SpeedGains(BodyType.None,Vector2([0;0]));
+                end
                 this.Simulation.CollisionVector = CalculateCollVector(this,r,cTime);
             end
         end
-            function nextRobot = Step(this, cTime)
-                nextPositionX = this.Position.X + this.Simulation.Speed.X*cTime;
-                nextPositionY = this.Position.Y + this.Simulation.Speed.Y*cTime;
-                nextMass = this.Simulation.Mass;
-                nextOwner = this.Owner;
-                if (isa(this.Simulation.CollisionVector,'Vector2') && cTime == this.Simulation.CollisionTime)
-                    nextSpeed = this.Simulation.Speed.TotalReflectionFrom(this.Simulation.CollisionVector);
-                    nextSpeed = nextSpeed.*0.5 + this.Simulation.SpeedGain;
-                else
-                    nextSpeed = Vector2(this.Simulation.Speed.X,this.Simulation.Speed.Y);
+        function nextRobot = Step(this, cTime)
+            nextPositionX = this.Position.X + this.Simulation.Speed.X*cTime;
+            nextPositionY = this.Position.Y + this.Simulation.Speed.Y*cTime;
+            nextMass = this.Simulation.Mass;
+            nextOwner = this.Owner;
+            if (isa(this.Simulation.CollisionVector,'Vector2') && cTime == this.Simulation.CollisionTime)
+                nextSpeed = this.Simulation.Speed.TotalReflectionFrom(this.Simulation.CollisionVector);
+                if(this.Simulation.SpeedGain.collidedWith == BodyType.Wall || this.Simulation.SpeedGain.collidedWith == BodyType.Robot)
+                    nextSpeed = nextSpeed.*0.5 + this.Simulation.SpeedGain.gain;
                 end
-                nextRobot = Robot(nextPositionX,nextPositionY, nextSpeed.X, nextSpeed.Y, nextOwner, nextMass);
+            else
+                nextSpeed = Vector2(this.Simulation.Speed.X,this.Simulation.Speed.Y);
             end
+            nextRobot = Robot(nextPositionX,nextPositionY, nextSpeed.X, nextSpeed.Y, nextOwner, nextMass);
+        end
     end
 end
 
