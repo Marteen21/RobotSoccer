@@ -22,7 +22,7 @@ function varargout = testfigure(varargin)
 
 % Edit the above text to modify the response to help testfigure
 
-% Last Modified by GUIDE v2.5 07-May-2016 13:17:57
+% Last Modified by GUIDE v2.5 10-May-2016 15:32:23
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -171,15 +171,16 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 %testfigure_2
 
 Initializer                                         %set the global variables
-
+set(handles.editTeamA,'String',0);
+set(handles.editTeamB,'String',0);
 % c = Collision(110,5);                                 %running the simulation
 % balli =  plot(0,0,'mo','MarkerFaceColor','m',...    %define a ball 
 %                             'YDataSource','Y',...
 %                             'XDataSource','X'); 
 
 %-------------New simulation with robots----------------
-Steps = 1500;
-myball = Ball(12,20,-10,-10);
+Steps = 1000;
+myball = Ball(71.149857097948540,50.145860501244364,-13.950047634017205,-2.323174622935383);
 myrobot = Robot(30,28,0,0,'TeamA');
 myrobot2 = Robot(10,10,0,0,'TeamB');
 myState = SimState(0,myball,[myrobot,myrobot2]);
@@ -236,10 +237,34 @@ for i=1:Steps
 
     axis([0, Environment.xLim, 0, Environment.yLim]);
     set(gca,'xtick',[],'ytick',[]);
+    
+%     if (((c(i).ball.Position.X - c(i).ball.Radius) <= 0.1) && (Environment.goalPos.Y-Environment.goalLength/2 <= c(i).ball.Position.Y) && (c(i).ball.Position.Y <= Environment.goalPos.Y + Environment.goalLength/2))
+%         Referee.ScoreB(Referee.ScoreB + 1);
+%         set(handles.editTeamB,'String',num2str(Referee.ScoreB));
+%     elseif (((c(i).ball.Position.X + c(i).ball.Radius) >= Environment.xLim-0.1) && (Environment.goalPos.Y-Environment.goalLength/2 <= c(i).ball.Position.Y) && (c(i).ball.Position.Y <= Environment.goalPos.Y + Environment.goalLength/2))
+%         Referee.ScoreA(Referee.ScoreA + 1);
+%         set(handles.editTeamA,'String',num2str(Referee.ScoreA));
+%     end
+
+%     if (~isempty(Referee.ScoreA))
+%         for j=1:length(Referee.ScoreA)
+%             if (Referee.ScoreA(j) == c(i).time)
+%                 set(handles.editTeamA,'String',num2str(str2double(get(handles.editTeamA,'String')+1)))
+%             end
+%         end
+%     end
+%     if(~isempty(Referee.ScoreB))
+%         for j=1:length(Referee.ScoreB)
+%             if (Referee.ScoreB(j) == c(i).time)
+%               set(handles.editTeamB,'String',num2str(str2double(get(handles.editTeamB,'String')+1)))
+%             end
+%         end
+%     end
 
     drawnow;
     
     waitfor(t);
+    
 end
 delete(t);
 
@@ -300,3 +325,49 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 
 user_response = SimulationSettingsFigure('Title','Simulation Settings');
 set(handles.pushbutton1,'Enable','on');
+
+
+
+function editTeamA_Callback(hObject, eventdata, handles)
+% hObject    handle to editTeamA (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of editTeamA as text
+%        str2double(get(hObject,'String')) returns contents of editTeamA as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function editTeamA_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to editTeamA (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function editTeamB_Callback(hObject, eventdata, handles)
+% hObject    handle to editTeamB (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of editTeamB as text
+%        str2double(get(hObject,'String')) returns contents of editTeamB as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function editTeamB_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to editTeamB (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

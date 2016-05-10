@@ -4,9 +4,9 @@ function SimulationData = Simulate( startState, noSteps )
     c = [startState];
     for i = 1:noSteps
        c(end+1) = c(end).NextState();
-       c(end) = Referee(c(end));
+       c(end) = Referee.fixMyState(c(end));
        disp(i)
-       if(i==27)
+       if(i==350)
        end
     end
     SimulationData = c;

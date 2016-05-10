@@ -55,17 +55,30 @@ classdef SimState < handle
                 end
                 if(collisionHappened)
                     nextT = this.time+nextCollisionTime;
-                    nextB = this.ball.Step(nextCollisionTime);
-                    nextR = Robot.empty;
-                    for i = 1 : length(this.robots)
+                    %Referee in progress
+                    goal = Referee.isGoal(this);
+                    if (goal)
+                        [nextB, nextR] = Referee.Reset(this.ball,this.robots)
+                    else
+                        nextB = this.ball.Step(nextCollisionTime);
+                        nextR = Robot.empty;
+                        
+                        for i = 1 : length(this.robots)
                         nextR(i) = this.robots(i).Step(nextCollisionTime);
+                        end
                     end
+                    
                 else
                     nextT = this.time+SimulationData.sampleTime;
-                    nextB = this.ball.Step(SimulationData.sampleTime);
-                    nextR = Robot.empty;
-                    for i = 1 : length(this.robots)
-                        nextR(i) = this.robots(i).Step(SimulationData.sampleTime);
+                    goal = Referee.isGoal(this);
+                    if (goal)
+                        [nextB, nextR] = Referee.Reset(this.ball,this.robots);
+                    else
+                        nextB = this.ball.Step(SimulationData.sampleTime);
+                        nextR = Robot.empty;
+                     for i = 1 : length(this.robots)
+                         nextR(i) = this.robots(i).Step(SimulationData.sampleTime);
+                     end
                     end
                 end
                 nextState = SimState(nextT, nextB, nextR, collisionHappened);
