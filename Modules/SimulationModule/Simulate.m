@@ -5,8 +5,8 @@ function SimulationData = Simulate( startState, noSteps )
     for i = 1:noSteps
        c(end+1) = c(end).NextState();
        c(end) = Referee.fixMyState(c(end));
-       disp(i)
-       if(i==350)
+       c(end) = TeamA.controlMyState(c(end));
+       if(i==89)
        end
     end
     SimulationData = c;

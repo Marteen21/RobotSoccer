@@ -60,6 +60,11 @@ classdef Robot < handle
             cTime = min(dist.TfromD(this.Radius+r.Radius));
             if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime))
                 this.Simulation.CollisionTime = double(cTime);
+                if(~isnan(cTime))
+                    this.Simulation.SpeedGain = r.Simulation.Speed.*0.1;
+                else
+                    this.Simulation.SpeedGain = Vector2([0;0]);
+                end
                 this.Simulation.CollisionVector = CalculateCollVector(this,r,cTime);
             end
         end
@@ -84,10 +89,11 @@ classdef Robot < handle
                 nextOwner = this.Owner;
                 if (isa(this.Simulation.CollisionVector,'Vector2') && cTime == this.Simulation.CollisionTime)
                     nextSpeed = this.Simulation.Speed.TotalReflectionFrom(this.Simulation.CollisionVector);
+                    nextSpeed = nextSpeed.*0.5 + this.Simulation.SpeedGain;
                 else
                     nextSpeed = Vector2(this.Simulation.Speed.X,this.Simulation.Speed.Y);
                 end
-                nextRobot = Robot(nextPositionX,nextPositionY, nextSpeed.X, nextSpeed.Y, nextMass, nextOwner);
+                nextRobot = Robot(nextPositionX,nextPositionY, nextSpeed.X, nextSpeed.Y, nextOwner, nextMass);
             end
     end
 end

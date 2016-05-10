@@ -66,7 +66,6 @@ classdef Line2
                 if(this.b == d)
                     results(1) = Inf;
                     results(2) = Inf;
-                    error('Not yet implemented');
                 else
                     results(1) = NaN;
                     results(2) = NaN;

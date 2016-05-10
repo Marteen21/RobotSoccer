@@ -230,11 +230,13 @@ for i=1:Steps
 %     drawnow;
 %     ---------------------------------
     
-    
+    try
     Robot1.Position = [c(i).robots(1).Position.X-c(i).robots(1).Radius,c(i).robots(1).Position.Y-c(i).robots(1).Radius, 2*c(i).robots(1).Radius, 2*c(i).robots(1).Radius];
     Robot2.Position = [c(i).robots(2).Position.X-c(i).robots(2).Radius,c(i).robots(2).Position.Y-c(i).robots(2).Radius, 2*c(i).robots(2).Radius, 2*c(i).robots(2).Radius];
     BallDraw.Position = [c(i).ball.Position.X-c(i).ball.Radius,c(i).ball.Position.Y-c(i).ball.Radius, 2*c(i).ball.Radius, 2*c(i).ball.Radius];
-
+    catch
+        error('myerror');
+    end
     axis([0, Environment.xLim, 0, Environment.yLim]);
     set(gca,'xtick',[],'ytick',[]);
     
