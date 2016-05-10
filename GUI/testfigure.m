@@ -245,22 +245,8 @@ for i=1:Steps
 %         Referee.ScoreA(Referee.ScoreA + 1);
 %         set(handles.editTeamA,'String',num2str(Referee.ScoreA));
 %     end
-
-%     if (~isempty(Referee.ScoreA))
-%         for j=1:length(Referee.ScoreA)
-%             if (Referee.ScoreA(j) == c(i).time)
-%                 set(handles.editTeamA,'String',num2str(str2double(get(handles.editTeamA,'String')+1)))
-%             end
-%         end
-%     end
-%     if(~isempty(Referee.ScoreB))
-%         for j=1:length(Referee.ScoreB)
-%             if (Referee.ScoreB(j) == c(i).time)
-%               set(handles.editTeamB,'String',num2str(str2double(get(handles.editTeamB,'String')+1)))
-%             end
-%         end
-%     end
-
+    set(handles.editTeamA,'String',num2str(c(i).teamScore(1)))
+    set(handles.editTeamB,'String',num2str(c(i).teamScore(2)))
     drawnow;
     
     waitfor(t);

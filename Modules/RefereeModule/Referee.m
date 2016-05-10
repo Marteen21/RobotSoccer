@@ -1,4 +1,4 @@
-classdef Referee
+classdef Referee < handle
     
     properties
     
@@ -27,13 +27,13 @@ classdef Referee
                 end
             end
             if(originalState.ball.Position.X < 0+originalState.ball.Radius)
-                originalState.ball.Position.X = originalState.ball.Radius;
+                originalState.ball.Position.X = originalState.ball.Radius*1.1;
             elseif (originalState.ball.Position.X > Environment.xLim - originalState.ball.Radius)
-                originalState.ball.Position.X = Environment.xLim-originalState.ball.Radius;
+                originalState.ball.Position.X = Environment.xLim-originalState.ball.Radius*1.1;
             elseif (originalState.ball.Position.Y < 0+originalState.ball.Radius)
-                originalState.ball.Position.Y = originalState.ball.Radius;
+                originalState.ball.Position.Y = originalState.ball.Radius*1.1;
             elseif (originalState.ball.Position.Y > Environment.yLim - originalState.ball.Radius)
-                originalState.ball.Position.Y = Environment.yLim-originalState.ball.Radius;
+                originalState.ball.Position.Y = Environment.yLim-originalState.ball.Radius*1.1;
             end
             fixedState = originalState;
         end
@@ -56,16 +56,17 @@ classdef Referee
         function goalState = isGoal(mySimState)
             if (((mySimState.ball.Position.X - mySimState.ball.Radius) <= 0.1) && (Environment.goalPos.Y-Environment.goalLength/2 <= mySimState.ball.Position.Y) && (mySimState.ball.Position.Y <= Environment.goalPos.Y + Environment.goalLength/2))
                 goalState = true;
+                mySimState.teamScore(2)=mySimState.teamScore(2)+1;
                 Referee.ScoreB(mySimState.time);
 %                 disp('<------------------GOAL---------------GO TEAM B------------>');
             elseif (((mySimState.ball.Position.X + mySimState.ball.Radius) >= Environment.xLim-0.1) && (Environment.goalPos.Y-Environment.goalLength/2 <= mySimState.ball.Position.Y) && (mySimState.ball.Position.Y <= Environment.goalPos.Y + Environment.goalLength/2))
                 goalState = true;
                 Referee.ScoreA(mySimState.time);
+                mySimState.teamScore(1)=mySimState.teamScore(1)+1;
 %                 disp('<------------------GOAL---------------GO TEAM A------------>');
             else
                 goalState = false;
             end
-            
         end
     end
     

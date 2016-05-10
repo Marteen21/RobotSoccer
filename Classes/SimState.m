@@ -6,7 +6,7 @@ classdef SimState < handle
         time;   %float
         ball;   %ball
         robots; %[] robot with k elements
-        disableCol;
+        teamScore;
     end
     
     methods
@@ -16,12 +16,12 @@ classdef SimState < handle
                     obj.time = op1;
                     obj.ball = op2;
                     obj.robots = op3;
-                    obj.disableCol = false;
+                    obj.teamScore = [0;0];  %[TeamAScore;TeamBScore]
                 case 4
                     obj.time = op1;
                     obj.ball = op2;
                     obj.robots = op3;
-                    obj.disableCol = op4;
+                    obj.teamScore = op4;
             end
                     
             end
@@ -46,7 +46,6 @@ classdef SimState < handle
                 end
                 collisionHappened = false;
                 nextCollisionTime = SimulationData.sampleTime*2;
-                disp(this.disableCol);
                 for j = 1 : length(bcTimes)
                     if(~isnan(bcTimes(j)) && nextCollisionTime > bcTimes(j) && bcTimes(j)>0.001)% &&) %~this.disableCol)
                         nextCollisionTime = bcTimes(j);
@@ -81,7 +80,7 @@ classdef SimState < handle
                      end
                     end
                 end
-                nextState = SimState(nextT, nextB, nextR, collisionHappened);
+                nextState = SimState(nextT, nextB, nextR, this.teamScore);
             end
         end
     end
