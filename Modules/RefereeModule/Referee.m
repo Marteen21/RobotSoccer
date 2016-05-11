@@ -62,13 +62,13 @@ classdef Referee < handle
             myBall.Position.Y = Environment.yLim/2;
             myBall.Simulation.Speed = Vector2([0,0]);
             for i=1:length(myRobots)
-                myRobots(i).Simulation.Speed = Vector2([0,0]);
+                myRobots(i).Simulation.Speed = Vector2([0,-1]);
                 if (strcmp(myRobots(i).Owner,'TeamA'))
                     myRobots(i).Position.X = Environment.xLim/2 - 2*myRobots(i).Radius;
-                    myRobots(i).Position.Y = Environment.yLim/2;
+                    myRobots(i).Position.Y = Environment.yLim/2 + Environment.yLim/40;
                 else
                     myRobots(i).Position.X = Environment.xLim/2 + 2*myRobots(i).Radius;
-                    myRobots(i).Position.Y = Environment.yLim/2;
+                    myRobots(i).Position.Y = Environment.yLim/2 - Environment.yLim/40;
                 end
             end
             BallReset = myBall;

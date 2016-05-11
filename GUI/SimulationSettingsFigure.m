@@ -133,26 +133,27 @@ function btn_save_Callback(hObject, eventdata, handles)
 handles.output = get(hObject,'String');
 
 %Save simulation speed
-contents = get(handles.popupmenu2,'String')
-popupmenu2value = contents{get(handles.popupmenu2,'Value')}
-ValueHandle = get(handles.popupmenu2,'Value')
+contents = get(handles.popupmenu2,'String');
+popupmenu2value = contents{get(handles.popupmenu2,'Value')};
+ValueHandle = get(handles.popupmenu2,'Value');
 switch popupmenu2value
     case '1x'
         SimulationData.simSpeed(get(handles.popupmenu2,'Value'));
-        disp('Set this shit 1x')
+        disp('Simulation speed 1x')
     case '2x'
         SimulationData.simSpeed(get(handles.popupmenu2,'Value'));
-        disp('Set this shit 2x')
+        disp('Simulation speed 2x')
     case '3x'
         SimulationData.simSpeed(get(handles.popupmenu2,'Value'));
-        disp('Set this shit 3x')
+        disp('Simulation speed 3x')
     case '4x'
         SimulationData.simSpeed(get(handles.popupmenu2,'Value'));
-        disp('Set this shit 4x')
+        disp('Simulation speed 4x')
     otherwise
 end
 
-
+disp('Simulatin friction: ');
+disp(get(handles.editTxt_Friction,'String'));
 
 %Global SampleTime setup
 SimulationData.sampleTime(str2double(get(handles.editTxt_SampleTime,'string')));
