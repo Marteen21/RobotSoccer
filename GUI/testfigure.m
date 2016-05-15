@@ -180,9 +180,9 @@ set(handles.editTeamB,'String',0);
 
 %-------------New simulation with robots----------------
 Steps = 1000;
-myball = Ball(71.149857097948540,50.145860501244364,-13.950047634017205,-2.323174622935383);
-myrobot = Robot(30,28,0,0,'TeamA');
-myrobot2 = Robot(10,10,0,0,'TeamB');
+myball = Ball(Environment.xLim/2,Environment.yLim/2,0,0);
+myrobot = Robot(Environment.xLim/2 - 2*myRobots(i).Radius,Environment.yLim/2 + Environment.yLim/40,0,0,'TeamA');
+myrobot2 = Robot(Environment.xLim/2 + 2*myRobots(i).Radius,Environment.yLim/2 - Environment.yLim/40,0,0,'TeamB');
 myState = SimState(0,myball,[myrobot,myrobot2]);
 c = Simulate(myState, Steps);
 
