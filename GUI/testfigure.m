@@ -181,8 +181,8 @@ set(handles.editTeamB,'String',0);
 %-------------New simulation with robots----------------
 Steps = 1000;
 myball = Ball(Environment.xLim/2,Environment.yLim/2,0,0);
-myrobot = Robot(Environment.xLim/2 - 2*myRobots(i).Radius,Environment.yLim/2 + Environment.yLim/40,0,0,'TeamA');
-myrobot2 = Robot(Environment.xLim/2 + 2*myRobots(i).Radius,Environment.yLim/2 - Environment.yLim/40,0,0,'TeamB');
+myrobot = Robot(Environment.xLim/2 - 2*4,Environment.yLim/2 + Environment.yLim/40,0,0,'TeamA');
+myrobot2 = Robot(Environment.xLim/2 + 2*4,Environment.yLim/2 - Environment.yLim/40,0,0,'TeamB');
 myState = SimState(0,myball,[myrobot,myrobot2]);
 c = Simulate(myState, Steps);
 
@@ -203,11 +203,11 @@ plot(Environment.goalPos.X+Environment.xLim,Environment.goalPos.Y + Environment.
 
 %---------Rectangles-------------
 Robot1 = rectangle('Position',[c(1).robots(1).Position.X-c(1).robots(1).Radius,c(1).robots(1).Position.Y-c(1).robots(1).Radius, 2*c(1).robots(1).Radius, 2*c(1).robots(1).Radius],...
-'Curvature',[1,1], 'FaceColor','r');
+'Curvature',[1,1], 'FaceColor','g');
 Robot2 = rectangle('Position',[c(1).robots(2).Position.X-c(1).robots(2).Radius,c(1).robots(2).Position.Y-c(1).robots(2).Radius, 2*c(1).robots(2).Radius, 2*c(1).robots(2).Radius],...
 'Curvature',[1,1], 'FaceColor','r');
 BallDraw = rectangle('Position',[c(1).ball.Position.X-c(1).ball.Radius,c(1).ball.Position.Y-c(1).ball.Radius, 2*c(1).ball.Radius, 2*c(1).ball.Radius],...
-'Curvature',[1,1], 'FaceColor','r');
+'Curvature',[1,1], 'FaceColor','y');
 
 
 axis([0, Environment.xLim, 0, Environment.yLim]);
