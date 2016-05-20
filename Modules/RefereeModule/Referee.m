@@ -64,10 +64,10 @@ classdef Referee < handle
             for i=1:length(myRobots)
                 myRobots(i).Simulation.Speed = Vector2([0,-1]);
                 if (strcmp(myRobots(i).Owner,'TeamA'))
-                    myRobots(i).Position.X = Environment.xLim/2 - 2*myRobots(i).Radius;
+                    myRobots(i).Position.X = Environment.xLim/2 - 30;
                     myRobots(i).Position.Y = Environment.yLim/2 + Environment.yLim/40;
                 else
-                    myRobots(i).Position.X = Environment.xLim/2 + 2*myRobots(i).Radius;
+                    myRobots(i).Position.X = Environment.xLim/2 + 30;
                     myRobots(i).Position.Y = Environment.yLim/2 - Environment.yLim/40;
                 end
             end
@@ -81,7 +81,7 @@ classdef Referee < handle
                 mySimState.teamScore(2)=mySimState.teamScore(2)+1;
                 Referee.ScoreB(mySimState.time);
                 %                 disp('<------------------GOAL---------------GO TEAM B------------>');
-            elseif (((mySimState.ball.Position.X + mySimState.ball.Radius) >= Environment.xLim-0.1) && (Environment.goalPos.Y-Environment.goalLength/2 <= mySimState.ball.Position.Y) && (mySimState.ball.Position.Y <= Environment.goalPos.Y + Environment.goalLength/2))
+            elseif (((mySimState.ball.Position.X + mySimState.ball.Radius) >= (Environment.xLim-0.2)) && (mySimState.ball.Position.Y >= (Environment.goalPos.Y-Environment.goalLength/2) ) && (mySimState.ball.Position.Y <= (Environment.goalPos.Y + Environment.goalLength/2)))
                 goalState = true;
                 Referee.ScoreA(mySimState.time);
                 mySimState.teamScore(1)=mySimState.teamScore(1)+1;

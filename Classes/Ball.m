@@ -63,7 +63,7 @@ classdef Ball < handle
             if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime))
                 this.Simulation.CollisionTime = double(cTime);
                 if(~isnan(cTime))
-                this.Simulation.SpeedGain = SpeedGains(BodyType.Robot,r.Simulation.Speed.*0.5);
+                this.Simulation.SpeedGain = SpeedGains(BodyType.Robot,r.Simulation.Speed.*1.1);
                 else
                     this.Simulation.SpeedGain = SpeedGains(BodyType.None,Vector2([0;0]));
                 end
