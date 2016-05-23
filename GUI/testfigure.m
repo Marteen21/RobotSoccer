@@ -57,93 +57,6 @@ handles.output = hObject;
 
 set(handles.edit1,'string','0');
 
-% %Animation plot
-% h=findobj('Type','axes','Tag','axes1');
-%               
-% plot(1,0,'O')
-% axes(h) 
-% hold on
-% set(handles.axes1,'XLim',[0 1])
-% set(handles.axes1,'YLim',[0 1])
-%                 
-% ball =  plot(0,0,'mo','MarkerFaceColor','m',...
-%                        'YDataSource','Y',...
-%                        'XDataSource','X'); 
-% ball2 = plot(0,1,'mo','MarkerFaceColor','y',...
-%                        'YDataSource','Y2',...
-%                        'XDataSource','X2');                    
-%                    
-% r = 0.05;
-% Y = 0;
-% X = 0;
-% X2 = 0;
-% Y2 = 1;
-% 
-% k = 1;
-% l = 1;
-% dist = linspace(0,1,100);
-% ball_dist = 1;
-% collision = 1;
-% for i=0:0
-%     for j=1:length(dist)
-%         X = dist(j)
-%         X2 = dist(j)
-%         ball_dist = (X-X2)+(Y-Y2);
-%         
-% %         if ((2*r)>(d-1))
-% %             collision = 0;
-%         
-%         if (X == dist(end))
-%             for k=length(dist):-1:1
-%                 X = dist(k)
-%                 X2 = dist(k)
-%                 refreshdata(ball,'caller');
-% %                 set(handles.axes1,'XLim',[0 1])
-% %                 set(handles.axes1,'YLim',[-1 1])
-%                 drawnow;
-%                 pause(.01);
-%             end
-%         end
-%         if (round(Y2,1)== Y)
-%             collision = 0;
-%             k=3;
-%         end
-%         if (round(Y2,1)==1)
-%             collision = 1
-%             if (k==3)
-%                 l=3
-%             end
-%         end
-% %         if round(ball_dist,1) == 0
-% %             msgbox('Ball collision')
-% %         end
-%         
-%         if (collision == 1) 
-%                 Y2 = 1*k - 4*X2
-%         else
-%                 Y2 = -1*l + 4*X2
-%         end
-%         refreshdata(ball,'caller');
-%         refreshdata(ball2,'caller');
-% %         set(handles.axes1,'XLim',[0 1])
-% %         set(handles.axes1,'YLim',[-1 1])
-%         drawnow;
-%         pause(.01);     
-%     end
-% end
-
-
-
-%Magic happens here
-% handles.peaks = peaks(35);
-% handles.membrane = membrane;
-% [x, y] = meshgrid(-8:0.5:8);
-% r = sqrt(x.^2+y.^2) + eps;
-% sinc = sin(r)./r;
-% handles.sinc = sinc;
-% handles.current_data = handles.peaks;
-% surf (handles.current_data);
-
 
 % Update handles structure
 guidata(hObject, handles);
@@ -173,17 +86,16 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 Initializer                                         %set the global variables
 set(handles.editTeamA,'String',0);
 set(handles.editTeamB,'String',0);
-% c = Collision(110,5);                                 %running the simulation
-% balli =  plot(0,0,'mo','MarkerFaceColor','m',...    %define a ball 
-%                             'YDataSource','Y',...
-%                             'XDataSource','X'); 
+
 
 %-------------New simulation with robots----------------
 Steps = 1000;
 myball = Ball(Environment.xLim/2,Environment.yLim/2,0,0);
 myrobot = Robot(Environment.xLim/2 - 30,Environment.yLim/2 + Environment.yLim/40,0,0,'TeamA');
 myrobot2 = Robot(Environment.xLim/2 + 30,Environment.yLim/2 - Environment.yLim/40,0,0,'TeamB');
-myState = SimState(0,myball,[myrobot,myrobot2]);
+myrobot3 = Robot(Environment.xLim/2 - 60,Environment.yLim/2 - Environment.yLim/40,0,0,'TeamA');
+myrobot4 = Robot(Environment.xLim/2 + 60,Environment.yLim/2 - Environment.yLim/40,0,0,'TeamB');
+myState = SimState(0,myball,[myrobot,myrobot2,myrobot3,myrobot4]);
 c = Simulate(myState, Steps);
 
 
@@ -197,14 +109,15 @@ plot(Environment.goalPos.X,Environment.goalPos.Y + Environment.goalLength,'>','C
 plot(Environment.goalPos.X+Environment.xLim,Environment.goalPos.Y - Environment.goalLength,'<','Color',[0,0,0]);
 plot(Environment.goalPos.X+Environment.xLim,Environment.goalPos.Y + Environment.goalLength,'<','Color',[0,0,0]);
 
-% Robot1 = viscircles([c(1).robots(1).Position.X c(1).robots(1).Position.Y],c(1).robots(1).Radius);
-% Robot2 = viscircles([c(1).robots(2).Position.X c(1).robots(2).Position.Y],c(1).robots(2).Radius);
-% BallDraw = viscircles([c(1).ball.Position.X c(1).ball.Position.Y],c(1).ball.Radius);
 
 %---------Rectangles-------------
 Robot1 = rectangle('Position',[c(1).robots(1).Position.X-c(1).robots(1).Radius,c(1).robots(1).Position.Y-c(1).robots(1).Radius, 2*c(1).robots(1).Radius, 2*c(1).robots(1).Radius],...
 'Curvature',[1,1], 'FaceColor','g');
 Robot2 = rectangle('Position',[c(1).robots(2).Position.X-c(1).robots(2).Radius,c(1).robots(2).Position.Y-c(1).robots(2).Radius, 2*c(1).robots(2).Radius, 2*c(1).robots(2).Radius],...
+'Curvature',[1,1], 'FaceColor','r');
+Robot3 = rectangle('Position',[c(1).robots(3).Position.X-c(1).robots(3).Radius,c(1).robots(3).Position.Y-c(1).robots(3).Radius, 2*c(1).robots(3).Radius, 2*c(1).robots(3).Radius],...
+'Curvature',[1,1], 'FaceColor','g');
+Robot4 = rectangle('Position',[c(1).robots(4).Position.X-c(1).robots(4).Radius,c(1).robots(4).Position.Y-c(1).robots(4).Radius, 2*c(1).robots(4).Radius, 2*c(1).robots(4).Radius],...
 'Curvature',[1,1], 'FaceColor','r');
 BallDraw = rectangle('Position',[c(1).ball.Position.X-c(1).ball.Radius,c(1).ball.Position.Y-c(1).ball.Radius, 2*c(1).ball.Radius, 2*c(1).ball.Radius],...
 'Curvature',[1,1], 'FaceColor','y');
@@ -221,17 +134,14 @@ for i=1:Steps
                  'StartDelay',(sampleTime)/(SimulationData.simSpeed-1));
     start(t);
     
-%     Old Showoff--------    
-%     X = c(i).ball.Position.X;     
-%     Y = c(i).ball.Position.Y;
-%     axis([0, Environment.xLim, 0, Environment.yLim]);
-%     set(gca,'xtick',[],'ytick',[])
-%     refreshdata(balli,'caller')
-%     drawnow;
-%     ---------------------------------
     
     try
+%     for k=1:length(Robotdraw)
+%         RobotDraw(k).Position = [c(i).robots(k).Position.X-c(i).robots(k).Radius,c(i).robots(k).Position.Y-c(i).robots(k).Radius, 2*c(i).robots(k).Radius, 2*c(i).robots(k).Radius];
+%     end
     Robot1.Position = [c(i).robots(1).Position.X-c(i).robots(1).Radius,c(i).robots(1).Position.Y-c(i).robots(1).Radius, 2*c(i).robots(1).Radius, 2*c(i).robots(1).Radius];
+    Robot3.Position = [c(i).robots(3).Position.X-c(i).robots(3).Radius,c(i).robots(3).Position.Y-c(i).robots(3).Radius, 2*c(i).robots(3).Radius, 2*c(i).robots(3).Radius];
+    Robot4.Position = [c(i).robots(4).Position.X-c(i).robots(4).Radius,c(i).robots(4).Position.Y-c(i).robots(4).Radius, 2*c(i).robots(4).Radius, 2*c(i).robots(4).Radius];
     Robot2.Position = [c(i).robots(2).Position.X-c(i).robots(2).Radius,c(i).robots(2).Position.Y-c(i).robots(2).Radius, 2*c(i).robots(2).Radius, 2*c(i).robots(2).Radius];
     BallDraw.Position = [c(i).ball.Position.X-c(i).ball.Radius,c(i).ball.Position.Y-c(i).ball.Radius, 2*c(i).ball.Radius, 2*c(i).ball.Radius];
     catch
@@ -240,13 +150,7 @@ for i=1:Steps
     axis([0, Environment.xLim, 0, Environment.yLim]);
     set(gca,'xtick',[],'ytick',[]);
     
-%     if (((c(i).ball.Position.X - c(i).ball.Radius) <= 0.1) && (Environment.goalPos.Y-Environment.goalLength/2 <= c(i).ball.Position.Y) && (c(i).ball.Position.Y <= Environment.goalPos.Y + Environment.goalLength/2))
-%         Referee.ScoreB(Referee.ScoreB + 1);
-%         set(handles.editTeamB,'String',num2str(Referee.ScoreB));
-%     elseif (((c(i).ball.Position.X + c(i).ball.Radius) >= Environment.xLim-0.1) && (Environment.goalPos.Y-Environment.goalLength/2 <= c(i).ball.Position.Y) && (c(i).ball.Position.Y <= Environment.goalPos.Y + Environment.goalLength/2))
-%         Referee.ScoreA(Referee.ScoreA + 1);
-%         set(handles.editTeamA,'String',num2str(Referee.ScoreA));
-%     end
+
     set(handles.editTeamA,'String',num2str(c(i).teamScore(1)))
     set(handles.editTeamB,'String',num2str(c(i).teamScore(2)))
     drawnow;
