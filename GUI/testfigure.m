@@ -101,7 +101,7 @@ c = Simulate(myState, Steps);
 
 sample = 0;  
 
-%Alapállás felvétele------
+%-----Environment setup------
 plot(Environment.goalPos.X,Environment.goalPos.Y - Environment.goalLength,'>','Color',[0,0,0]);
 hold on
 plot(Environment.goalPos.X,Environment.goalPos.Y + Environment.goalLength,'>','Color',[0,0,0]);
@@ -111,13 +111,13 @@ plot(Environment.goalPos.X+Environment.xLim,Environment.goalPos.Y + Environment.
 
 
 %---------Rectangles-------------
-Robot1 = rectangle('Position',[c(1).robots(1).Position.X-c(1).robots(1).Radius,c(1).robots(1).Position.Y-c(1).robots(1).Radius, 2*c(1).robots(1).Radius, 2*c(1).robots(1).Radius],...
+RobotDraw(1) = rectangle('Position',[c(1).robots(1).Position.X-c(1).robots(1).Radius,c(1).robots(1).Position.Y-c(1).robots(1).Radius, 2*c(1).robots(1).Radius, 2*c(1).robots(1).Radius],...
 'Curvature',[1,1], 'FaceColor','g');
-Robot2 = rectangle('Position',[c(1).robots(2).Position.X-c(1).robots(2).Radius,c(1).robots(2).Position.Y-c(1).robots(2).Radius, 2*c(1).robots(2).Radius, 2*c(1).robots(2).Radius],...
+RobotDraw(2) = rectangle('Position',[c(1).robots(2).Position.X-c(1).robots(2).Radius,c(1).robots(2).Position.Y-c(1).robots(2).Radius, 2*c(1).robots(2).Radius, 2*c(1).robots(2).Radius],...
 'Curvature',[1,1], 'FaceColor','r');
-Robot3 = rectangle('Position',[c(1).robots(3).Position.X-c(1).robots(3).Radius,c(1).robots(3).Position.Y-c(1).robots(3).Radius, 2*c(1).robots(3).Radius, 2*c(1).robots(3).Radius],...
+RobotDraw(3) = rectangle('Position',[c(1).robots(3).Position.X-c(1).robots(3).Radius,c(1).robots(3).Position.Y-c(1).robots(3).Radius, 2*c(1).robots(3).Radius, 2*c(1).robots(3).Radius],...
 'Curvature',[1,1], 'FaceColor','g');
-Robot4 = rectangle('Position',[c(1).robots(4).Position.X-c(1).robots(4).Radius,c(1).robots(4).Position.Y-c(1).robots(4).Radius, 2*c(1).robots(4).Radius, 2*c(1).robots(4).Radius],...
+RobotDraw(4) = rectangle('Position',[c(1).robots(4).Position.X-c(1).robots(4).Radius,c(1).robots(4).Position.Y-c(1).robots(4).Radius, 2*c(1).robots(4).Radius, 2*c(1).robots(4).Radius],...
 'Curvature',[1,1], 'FaceColor','r');
 BallDraw = rectangle('Position',[c(1).ball.Position.X-c(1).ball.Radius,c(1).ball.Position.Y-c(1).ball.Radius, 2*c(1).ball.Radius, 2*c(1).ball.Radius],...
 'Curvature',[1,1], 'FaceColor','y');
@@ -136,16 +136,12 @@ for i=1:Steps
     
     
     try
-%     for k=1:length(Robotdraw)
-%         RobotDraw(k).Position = [c(i).robots(k).Position.X-c(i).robots(k).Radius,c(i).robots(k).Position.Y-c(i).robots(k).Radius, 2*c(i).robots(k).Radius, 2*c(i).robots(k).Radius];
-%     end
-    Robot1.Position = [c(i).robots(1).Position.X-c(i).robots(1).Radius,c(i).robots(1).Position.Y-c(i).robots(1).Radius, 2*c(i).robots(1).Radius, 2*c(i).robots(1).Radius];
-    Robot3.Position = [c(i).robots(3).Position.X-c(i).robots(3).Radius,c(i).robots(3).Position.Y-c(i).robots(3).Radius, 2*c(i).robots(3).Radius, 2*c(i).robots(3).Radius];
-    Robot4.Position = [c(i).robots(4).Position.X-c(i).robots(4).Radius,c(i).robots(4).Position.Y-c(i).robots(4).Radius, 2*c(i).robots(4).Radius, 2*c(i).robots(4).Radius];
-    Robot2.Position = [c(i).robots(2).Position.X-c(i).robots(2).Radius,c(i).robots(2).Position.Y-c(i).robots(2).Radius, 2*c(i).robots(2).Radius, 2*c(i).robots(2).Radius];
+    for k=1:length(RobotDraw)
+        RobotDraw(k).Position = [c(i).robots(k).Position.X-c(i).robots(k).Radius,c(i).robots(k).Position.Y-c(i).robots(k).Radius, 2*c(i).robots(k).Radius, 2*c(i).robots(k).Radius];
+    end     
     BallDraw.Position = [c(i).ball.Position.X-c(i).ball.Radius,c(i).ball.Position.Y-c(i).ball.Radius, 2*c(i).ball.Radius, 2*c(i).ball.Radius];
     catch
-        error('myerror');
+        error('Rectangle position error');
     end
     axis([0, Environment.xLim, 0, Environment.yLim]);
     set(gca,'xtick',[],'ytick',[]);
