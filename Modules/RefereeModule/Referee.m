@@ -24,6 +24,7 @@ classdef Referee < handle
                 imD = originalState.ball.Radius+originalState.robots(i).Radius;
                 if(realD<imD)
                     originalState.ball.Position = originalState.robots(i).Position+(originalState.robots(i).Position-originalState.ball.Position).*-(imD/realD);
+                    %originalState.ball.Position = originalState.robots(i).Position+(originalState.robots(i).Position-originalState.ball.Position);
                 end
             end
             if(originalState.ball.Position.X < 0+originalState.ball.Radius)

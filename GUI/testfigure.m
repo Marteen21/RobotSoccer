@@ -22,7 +22,7 @@ function varargout = testfigure(varargin)
 
 % Edit the above text to modify the response to help testfigure
 
-% Last Modified by GUIDE v2.5 18-May-2016 14:16:01
+% Last Modified by GUIDE v2.5 24-May-2016 10:52:57
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
