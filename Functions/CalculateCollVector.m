@@ -4,6 +4,6 @@ function CollisionVector = CalculateCollVector( op1,op2,cTime )
     diff = pos1-pos2;
     CollisionVector = diff.D2NVector();
     if(~isnan(cTime))
-        
+        %error('Collvector Error');
     end
 end

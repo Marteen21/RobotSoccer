@@ -9,7 +9,8 @@ classdef TeamB
         function controlledState = controlMyState( originalState)
             for i=1:length(originalState.robots)
                 if(strcmp(originalState.robots(i).Owner,'TeamB'))
-                    targetSpeed = originalState.robots(i).Position-originalState.ball.Position+Vector2([rand-0.5;rand-0.5]);
+                    %targetSpeed = originalState.robots(i).Position-originalState.ball.Position+Vector2([rand-0.5;rand-0.5]);
+                    targetSpeed = originalState.robots(i).Position-originalState.ball.Position;
                     targetSpeed = Vector2(targetSpeed.RowForm()/norm(targetSpeed.RowForm())* 15);
                     diffSpeed = originalState.robots(i).Simulation.Speed-targetSpeed;
                     diffSpeed = Vector2(diffSpeed.RowForm()/norm(diffSpeed.RowForm())* SimulationData.sampleTime* 10);

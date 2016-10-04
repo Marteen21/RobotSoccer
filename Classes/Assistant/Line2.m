@@ -58,7 +58,7 @@ classdef Line2
         function result = minus(this,other)
             result = Line2(this.m-other.m,(this.b-other.b));
         end
-        function results = TfromD(this,d)
+        function results = TfromD(this,d) %time from ditance
             t1 = (d-this.b)/(this.m);
             t2 = (-d-this.b)/(this.m);
             results = [t1;t2];

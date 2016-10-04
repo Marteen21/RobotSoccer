@@ -87,9 +87,11 @@ Initializer                                         %set the global variables
 set(handles.editTeamA,'String',0);
 set(handles.editTeamB,'String',0);
 
+cla
+
 
 %-------------New simulation with robots----------------
-Steps = 1000;
+Steps = 100;
 myball = Ball(Environment.xLim/2,Environment.yLim/2,0,0);
 myrobot = Robot(Environment.xLim/2 - 30,Environment.yLim/2 + Environment.yLim/40,0,0,'TeamA');
 myrobot2 = Robot(Environment.xLim/2 + 30,Environment.yLim/2 - Environment.yLim/40,0,0,'TeamB');
@@ -131,9 +133,14 @@ for i=1:Steps
     sample = sample + sampleTime;
     set(handles.edit1,'string',num2str(sample));
     t = timer('TimerFcn', 'stat=false;',... 
-                 'StartDelay',(sampleTime)/(SimulationData.simSpeed-1));
+                 'StartDelay',(sampleTime)/(SimulationData.simSpeed)); %SimulationData.simSpeed - 1
     start(t);
+%     %DEBUG------
     
+    if (i == 10)
+        
+    end
+%     %DEBUG------
     
     try
     for k=1:length(RobotDraw)

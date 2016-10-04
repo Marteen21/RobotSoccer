@@ -86,7 +86,8 @@ classdef Ball < handle
             if(norm(nextSpeed.RowForm())<SimulationData.friction)
                 nextSpeed = Vector2(0,0);
             else
-                nextSpeed = Vector2(nextSpeed.RowForm() / norm(nextSpeed.RowForm())*(norm(nextSpeed.RowForm())-SimulationData.friction*0.2*(0.9+rand/10)));
+                %nextSpeed = Vector2(nextSpeed.RowForm() / norm(nextSpeed.RowForm())*(norm(nextSpeed.RowForm())-SimulationData.friction*0.2*(0.9+rand/10)));
+                nextSpeed = Vector2(nextSpeed.RowForm() / norm(nextSpeed.RowForm())*(norm(nextSpeed.RowForm())-SimulationData.friction*0.2));
             end
             nextBall = Ball(nextPositionX,nextPositionY, nextSpeed.X, nextSpeed.Y, nextMass);
         end
