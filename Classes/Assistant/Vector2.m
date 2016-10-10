@@ -48,7 +48,7 @@ classdef Vector2
         end
         %% Functions
         function nvector = D2NVector(this)
-            nvector = Vector2(this.Y,-this.X);
+            nvector = Vector2(this.Y,-1*this.X);
         end
         %Gives back the reflected vector from wall
         function result = TotalReflectionFrom(this, wall)

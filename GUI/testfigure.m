@@ -137,7 +137,7 @@ for i=1:Steps
     start(t);
 %     %DEBUG------
     
-    if (i == 10)
+    if (i == 1)
         
     end
 %     %DEBUG------
