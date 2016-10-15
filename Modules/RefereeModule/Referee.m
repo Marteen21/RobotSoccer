@@ -32,7 +32,7 @@ classdef Referee < handle
             for i=1:length(originalState.robots)
                 for j=1:length(originalState.robots)
                     if(i~=j)
-                        if(((Distance(originalState.robots(i).Position,originalState.ball.Position)/2)<= originalState.robots(i).Radius+originalState.ball.Radius) && ((Distance(originalState.robots(j).Position,originalState.ball.Position)/2)<=originalState.robots(j).Radius+originalState.ball.Radius) && (cross0(originalState.robots(i).Position-originalState.robots(j).Position,originalState.robots(i).Position-originalState.ball.Position)==0))
+                        if((cross0(originalState.robots(i).Simulation.Speed,originalState.robots(j).Simulation.Speed)==0) && (cross0(originalState.robots(i).Position-originalState.robots(j).Position,originalState.robots(i).Position-originalState.ball.Position)==0) && (abs(originalState.robots(i).Position-originalState.robots(j).Position)>abs(originalState.robots(i).Position-originalState.ball.Position)))
                             disp('Ball Stucked')
                             for k=1:length(originalState.robots)
                                 originalState.robots(k).Simulation.Speed=Vector2(0,0);
