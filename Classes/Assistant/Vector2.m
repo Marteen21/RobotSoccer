@@ -54,6 +54,15 @@ classdef Vector2
         function result = TotalReflectionFrom(this, wall)
             e = wall.RowForm()/norm(wall.RowForm());
             n1 = this.RowForm()/norm(this.RowForm());
+            
+            %!!----e and n1 is not a Vector2 type fix this----!!
+            if ((~isnan(n1)))
+                if (cross0(e,n1)==0)
+                disp('Sliding')
+                end
+            end
+            %------------------------------------
+            
             n2 = 2*(dot(n1,e))*e-n1;
             result = Vector2(n2*norm(this.RowForm()));
             if isnan(result.X) || isnan(result.Y)
