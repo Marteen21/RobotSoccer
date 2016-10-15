@@ -60,7 +60,7 @@ classdef Vector2
                 result = Vector2([0;0]);
             end
         end
-        %% Operators -,+,.*
+        %% Operators -,+,.*,x
         function result = minus (this, other)
             if isa(other,'Vector2')
                 result = Vector2(this.X-other.X, this.Y-other.Y);
@@ -90,6 +90,16 @@ classdef Vector2
                 result = true;
             else
                 result = false;
+            end
+        end
+        function result = cross0(this,other)
+            crossA = [this.X this.Y 0];
+            crossB = [other.X other.Y 0];
+            crossTemp = cross(crossA,crossB);
+            if (crossTemp(1)==0 && crossTemp(2)==0 && crossTemp(3)==0)
+                result = 0;
+            else
+                result = 1;
             end
         end
     end

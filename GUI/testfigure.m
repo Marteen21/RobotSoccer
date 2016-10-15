@@ -91,12 +91,28 @@ cla
 
 
 %-------------New simulation with robots----------------
-Steps = 100;
+Steps = 500;
+
+
+% for i=1:length(myRobots)
+%                 myRobots(i).Simulation.Speed = Vector2([0,-1]);
+%                 if (strcmp(myRobots(i).Owner,'TeamA'))
+%                     myRobots(i).Position.X = Environment.xLim/2 - 20*stepA;
+%                     myRobots(i).Position.Y = Environment.yLim/2 + Environment.yLim/40;
+%                     stepA = stepA+1;
+%                 else
+%                     myRobots(i).Position.X = Environment.xLim/2 + 20*stepB;
+%                     myRobots(i).Position.Y = Environment.yLim/2 - Environment.yLim/40;
+%                     stepB = stepB+1;
+%                 end
+%             end
+
+
 myball = Ball(Environment.xLim/2,Environment.yLim/2,0,0);
-myrobot = Robot(Environment.xLim/2 - 30,Environment.yLim/2 + Environment.yLim/40,0,0,'TeamA');
-myrobot2 = Robot(Environment.xLim/2 + 30,Environment.yLim/2 - Environment.yLim/40,0,0,'TeamB');
-myrobot3 = Robot(Environment.xLim/2 - 60,Environment.yLim/2 - Environment.yLim/40,0,0,'TeamA');
-myrobot4 = Robot(Environment.xLim/2 + 60,Environment.yLim/2 - Environment.yLim/40,0,0,'TeamB');
+myrobot = Robot(Environment.xLim/2 - 20,Environment.yLim/2 + Environment.yLim/40,0,0,'TeamA');
+myrobot2 = Robot(Environment.xLim/2 + 20,Environment.yLim/2 - Environment.yLim/40,0,0,'TeamB');
+myrobot3 = Robot(Environment.xLim/2 - 40,Environment.yLim/2 - Environment.yLim/40,0,0,'TeamA');
+myrobot4 = Robot(Environment.xLim/2 + 40,Environment.yLim/2 - Environment.yLim/40,0,0,'TeamB');
 myState = SimState(0,myball,[myrobot,myrobot2,myrobot3,myrobot4]);
 c = Simulate(myState, Steps);
 

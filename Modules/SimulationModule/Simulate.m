@@ -14,7 +14,7 @@ function SimulationData = Simulate( startState, noSteps )
             Referee.isGoal = false;
         else
         end
-        if(i==89)
+        if(i==498)
         end
     end
     SimulationData = c;

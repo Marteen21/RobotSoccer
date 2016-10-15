@@ -18,6 +18,7 @@ classdef Referee < handle
             end
             out = Var;
         end
+        
         function fixedState = fixMyState( originalState)
             for i=1:length(originalState.robots)
                 realD = originalState.ball.Position.Distance(originalState.robots(i).Position);
@@ -27,14 +28,31 @@ classdef Referee < handle
                     %originalState.ball.Position = originalState.robots(i).Position+(originalState.robots(i).Position-originalState.ball.Position);
                 end
             end
-            if(originalState.ball.Position.X < 0+originalState.ball.Radius*1.1)
-                originalState.ball.Position.X = originalState.ball.Radius;
-            elseif (originalState.ball.Position.X > Environment.xLim - originalState.ball.Radius*1.1)
-                originalState.ball.Position.X = Environment.xLim-originalState.ball.Radius;
-            elseif (originalState.ball.Position.Y < 0+originalState.ball.Radius*1.1)
-                originalState.ball.Position.Y = originalState.ball.Radius;
-            elseif (originalState.ball.Position.Y > Environment.yLim - originalState.ball.Radius*1.1)
-                originalState.ball.Position.Y = Environment.yLim-originalState.ball.Radius;
+            %----------Ball Stucked------------
+            for i=1:length(originalState.robots)
+                for j=1:length(originalState.robots)
+                    if(i~=j)
+                        if(((Distance(originalState.robots(i).Position,originalState.ball.Position)/2)<= originalState.robots(i).Radius+originalState.ball.Radius) && ((Distance(originalState.robots(j).Position,originalState.ball.Position)/2)<=originalState.robots(j).Radius+originalState.ball.Radius) && (cross0(originalState.robots(i).Position-originalState.robots(j).Position,originalState.robots(i).Position-originalState.ball.Position)==0))
+                            disp('Ball Stucked')
+                            for k=1:length(originalState.robots)
+                                originalState.robots(k).Simulation.Speed=Vector2(0,0);
+                            end
+                            originalState.robots(i).Simulation.Speed = Vector2(0,-1);
+                        end
+                    end
+                end
+            end
+            if(originalState.ball.Position.X < 0+originalState.ball.Radius)
+                originalState.ball.Position.X = originalState.ball.Radius*1.1;
+            elseif (originalState.ball.Position.X > Environment.xLim - originalState.ball.Radius)
+                originalState.ball.Position.X = Environment.xLim-originalState.ball.Radius*1.1;
+            elseif (originalState.ball.Position.Y < 0+originalState.ball.Radius)
+                originalState.ball.Position.Y = originalState.ball.Radius*1.1;
+            elseif (originalState.ball.Position.Y > Environment.yLim - originalState.ball.Radius)
+                originalState.ball.Position.Y = Environment.yLim-originalState.ball.Radius*1.1;
+            end
+            if (isnan(originalState.ball.Position.X) || isnan(originalState.ball.Position.Y))
+                originalState.ball.Simulate.Speed = Vector2(0,0);
             end
             for j=1:length(originalState.robots)
                 for i=1:length(originalState.robots)
@@ -81,12 +99,12 @@ classdef Referee < handle
         end
         
         function goalState = isGoal(mySimState)
-            if (((mySimState.ball.Position.X - mySimState.ball.Radius) <= 0.2) && (Environment.goalPos.Y-Environment.goalLength/2 <= mySimState.ball.Position.Y) && (mySimState.ball.Position.Y <= Environment.goalPos.Y + Environment.goalLength/2))
+            if (((mySimState.ball.Position.X - mySimState.ball.Radius) <= 0.2) && (Environment.goalPos.Y-Environment.goalLength <= mySimState.ball.Position.Y) && (mySimState.ball.Position.Y <= Environment.goalPos.Y + Environment.goalLength))
                 goalState = true;
                 mySimState.teamScore(2)=mySimState.teamScore(2)+1;
                 Referee.ScoreB(mySimState.time);
                 %                 disp('<------------------GOAL---------------GO TEAM B------------>');
-            elseif (((mySimState.ball.Position.X + mySimState.ball.Radius) >= (Environment.xLim-0.2)) && (mySimState.ball.Position.Y >= (Environment.goalPos.Y-Environment.goalLength/2) ) && (mySimState.ball.Position.Y <= (Environment.goalPos.Y + Environment.goalLength/2)))
+            elseif (((mySimState.ball.Position.X + mySimState.ball.Radius) >= (Environment.xLim-0.1)) && (mySimState.ball.Position.Y >= (Environment.goalPos.Y-Environment.goalLength) ) && (mySimState.ball.Position.Y <= (Environment.goalPos.Y + Environment.goalLength)))
                 goalState = true;
                 Referee.ScoreA(mySimState.time);
                 mySimState.teamScore(1)=mySimState.teamScore(1)+1;
