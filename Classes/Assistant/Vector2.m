@@ -55,7 +55,7 @@ classdef Vector2
             e = wall.RowForm()/norm(wall.RowForm());
             n1 = this.RowForm()/norm(this.RowForm());
             n2 = 2*(dot(n1,e))*e-n1;
-            result = Vector2(n2*norm(this.RowForm()));
+            result = Vector2(n2*norm(this.RowForm())); %----Vector2(n2*norm(this.RowForm()))
             if isnan(result.X) || isnan(result.Y)
                 result = Vector2([0;0]);
             end

@@ -52,7 +52,7 @@ classdef Ball < handle
                 this.Simulation.CollisionVector = Vector2([1,0]);
             end
         end
-        function cTime = CollisionTimeWithRobot(this,r)
+        function cTime = CollisionTimeWithRobot(this,r,FID)
             Ap0 = this.Position;
             Bp0 = r.Position;
             ApT = this.Position + this.Simulation.Speed.*SimulationData.sampleTime;
@@ -64,12 +64,21 @@ classdef Ball < handle
             if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime))
                 this.Simulation.CollisionTime = double(cTime);
                 if(~isnan(cTime))
-                this.Simulation.SpeedGain = SpeedGains(BodyType.Robot,r.Simulation.Speed.*1.5);
+                this.Simulation.SpeedGain = SpeedGains(BodyType.Robot,r.Simulation.Speed.*0);%----changed 1.5 to 0
                 else
                     this.Simulation.SpeedGain = SpeedGains(BodyType.None,Vector2([0;0]));
                 end
                 this.Simulation.CollisionVector = CalculateCollVector(this,r,cTime);
+                
+                fprintf(FID, 'BallPOS:%d_%d ',this.Position.X,this.Position.Y);
+                fprintf(FID, 'BallSpeed:%d_%d ',this.Simulation.Speed.X,this.Simulation.Speed.Y);
+                fprintf(FID, 'RobotPOS:%d_%d ',r.Position.X,r.Position.Y);
+                fprintf(FID, 'RobotSpeed:%d_%d ',r.Simulation.Speed.X,r.Simulation.Speed.Y);
+                fprintf(FID, 'SpeedGain:%d_%d ',this.Simulation.SpeedGain.gain.X,this.Simulation.SpeedGain.gain.Y);
+                fprintf(FID, 'CollisionVector:%d_%d ',this.Simulation.CollisionVector.X,this.Simulation.CollisionVector.Y);
+                fprintf(FID, 'CollisionTime:%d \n\n',cTime);
             end
+            
         end
         function nextBall = Step(this, cTime)
             mySpeed = this.Simulation.Speed.*cTime;

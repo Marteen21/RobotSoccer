@@ -91,7 +91,7 @@ cla
 
 
 %-------------New simulation with robots----------------
-Steps = 1000;
+Steps = 500;
 
 
 % for i=1:length(myRobots)

@@ -41,7 +41,11 @@ classdef Referee < handle
                         end
                     end
                 end
+                if (abs(originalState.ball.Position.RowForm()-originalState.robots(i).Position.RowForm())<(originalState.ball.Radius+originalState.robots(i).Radius))
+                    originalState.robots(i).Simulation.Speed = Vector2(0,0);
+                end
             end
+            %----------------------------------
             if(originalState.ball.Position.X < 0+originalState.ball.Radius)
                 originalState.ball.Position.X = originalState.ball.Radius*1.1;
             elseif (originalState.ball.Position.X > Environment.xLim - originalState.ball.Radius)
@@ -52,7 +56,7 @@ classdef Referee < handle
                 originalState.ball.Position.Y = Environment.yLim-originalState.ball.Radius*1.1;
             end
             if (isnan(originalState.ball.Position.X) || isnan(originalState.ball.Position.Y))
-                originalState.ball.Simulate.Speed = Vector2(0,0);
+                originalState.ball.Simulation.Speed = Vector2(0,0);
             end
             for j=1:length(originalState.robots)
                 for i=1:length(originalState.robots)

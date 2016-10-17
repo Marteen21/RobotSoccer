@@ -25,7 +25,7 @@ classdef SimState < handle
             end
             
         end
-        function nextState = NextState(this)
+        function nextState = NextState(this,FID)
             bcTimes = [];
             bcTimes(1) = NaN;
             bcTimes(end+1) = this.ball.CollisionTimeWithXWall(0);
@@ -37,7 +37,7 @@ classdef SimState < handle
                 bcTimes(end+1) = this.robots(i).CollisionTimeWithYWall(0);
                 bcTimes(end+1) = this.robots(i).CollisionTimeWithXWall(Environment.xLim);
                 bcTimes(end+1) = this.robots(i).CollisionTimeWithYWall(Environment.yLim);
-                bcTimes(end+1) = this.ball.CollisionTimeWithRobot(this.robots(i));
+                bcTimes(end+1) = this.ball.CollisionTimeWithRobot(this.robots(i),FID);
                 for j = 1: length(this.robots)
                     if (j ~= i)
                         bcTimes(end+1) = this.robots(i).CollisionTimeWithRobot(this.robots(j));
