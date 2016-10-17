@@ -53,6 +53,7 @@ classdef SimState < handle
                 end
             end
             if(collisionHappened)
+                fprintf(FID,'\n CollisionHappened: %d \n\n',this.time);
                 nextT = this.time+nextCollisionTime;
                 
                 nextB = this.ball.Step(nextCollisionTime);
