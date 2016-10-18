@@ -47,13 +47,16 @@ classdef SimState < handle
             collisionHappened = false;
             nextCollisionTime = SimulationData.sampleTime*2;
             for j = 1 : length(bcTimes)
-                if(~isnan(bcTimes(j)) && nextCollisionTime > bcTimes(j) && bcTimes(j)>0.001)% &&) %~this.disableCol)
-                    nextCollisionTime = bcTimes(j);
+                if(~isnan(bcTimes(j)) && nextCollisionTime > bcTimes(j) && bcTimes(j)>0.0001)% &&) %~this.disableCol)
+                    nextCollisionTime = bcTimes(j);                                             %chnged to 0.0001 from 0.001
                     collisionHappened = true;
                 end
             end
             if(collisionHappened)
                 fprintf(FID,'\n CollisionHappened: %d \n\n',this.time);
+                if (round(this.time,6) == 2.011145)
+                    
+                end
                 nextT = this.time+nextCollisionTime;
                 
                 nextB = this.ball.Step(nextCollisionTime);

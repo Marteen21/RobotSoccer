@@ -61,14 +61,16 @@ classdef Ball < handle
             timeT = SimulationData.sampleTime;
             dist = Line2(Ap0,Bp0,ApT,BpT,time0,timeT);
             cTime = min(dist.TfromD(this.Radius+r.Radius));
-            if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime))
+            if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime) && ~isnan(cTime))
                 this.Simulation.CollisionTime = double(cTime);
                 if(~isnan(cTime))
                 this.Simulation.SpeedGain = SpeedGains(BodyType.Robot,r.Simulation.Speed.*1.5);%----changed 1.5 to 0
+                this.Simulation.CollisionVector = CalculateCollVector(this,r,cTime);
                 else
                     this.Simulation.SpeedGain = SpeedGains(BodyType.None,Vector2([0;0]));
                 end
-                this.Simulation.CollisionVector = CalculateCollVector(this,r,cTime);
+                %this.Simulation.CollisionVector = CalculateCollVector(this,r,cTime);
+                % beleraktam az IF-be if(~isnan(cTime))
                 
                 fprintf(FID, 'BallPOS:%d_%d ',this.Position.X,this.Position.Y);
                 fprintf(FID, 'BallSpeed:%d_%d ',this.Simulation.Speed.X,this.Simulation.Speed.Y);

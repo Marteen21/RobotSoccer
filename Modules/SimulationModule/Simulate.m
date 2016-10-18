@@ -9,7 +9,7 @@ function SimulationData = Simulate( startState, noSteps )
     for i = 1:noSteps
         c(end+1) = c(end).NextState(FID);
         goal = Referee.isGoal(c(end));
-        c(end) = Referee.fixMyState(c(end));
+        c(end) = Referee.fixMyState(c(end),FID,i);
         c(end) = TeamA.controlMyState(c(end));
         c(end) = TeamB.controlMyState(c(end));
         
