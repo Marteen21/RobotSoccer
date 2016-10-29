@@ -54,7 +54,7 @@ classdef SimState < handle
             end
             if(collisionHappened)
                 fprintf(FID,'\n CollisionHappened: %d \n\n',this.time);
-                if (round(this.time,6) == 2.011145)
+                if (round(this.time,6) == 1.692277)
                     
                 end
                 nextT = this.time+nextCollisionTime;

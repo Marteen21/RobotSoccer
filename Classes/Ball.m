@@ -62,7 +62,11 @@ classdef Ball < handle
             dist = Line2(Ap0,Bp0,ApT,BpT,time0,timeT);
             cTime = min(dist.TfromD(this.Radius+r.Radius));
             if(cTime < this.Simulation.CollisionTime || isnan(this.Simulation.CollisionTime) && ~isnan(cTime))
-                this.Simulation.CollisionTime = double(cTime);
+                if (cTime > 0.000001)
+                    this.Simulation.CollisionTime = double(cTime);
+                else
+                    cTime = NaN;
+                end
                 if(~isnan(cTime))
                 this.Simulation.SpeedGain = SpeedGains(BodyType.Robot,r.Simulation.Speed.*1.5);%----changed 1.5 to 0
                 this.Simulation.CollisionVector = CalculateCollVector(this,r,cTime);
