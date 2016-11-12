@@ -161,6 +161,7 @@ for i=1:Steps
     try
     for k=1:length(RobotDraw)
         RobotDraw(k).Position = [c(i).robots(k).Position.X-c(i).robots(k).Radius,c(i).robots(k).Position.Y-c(i).robots(k).Radius, 2*c(i).robots(k).Radius, 2*c(i).robots(k).Radius];
+        %plot([c(i).robots(k).Position.X c(i).robots(k).Position.X-c(i).robots(k).Radius/2+norm(cos(c(i).robots(k).Simulation.Speed.RowForm()))],[c(i).robots(k).Position.Y c(i).robots(k).Position.Y-c(i).robots(k).Radius/2+norm(sin(c(i).robots(k).Simulation.Speed.RowForm()))]);
     end     
     BallDraw.Position = [c(i).ball.Position.X-c(i).ball.Radius,c(i).ball.Position.Y-c(i).ball.Radius, 2*c(i).ball.Radius, 2*c(i).ball.Radius];
     catch
