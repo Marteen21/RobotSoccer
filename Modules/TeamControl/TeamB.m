@@ -18,6 +18,17 @@ classdef TeamB
                     if norm(originalState.robots(i).Simulation.Speed.RowForm()) >= 15
                         originalState.robots(i).Simulation.Speed = Vector2(originalState.robots(i).Simulation.Speed.RowForm()/ norm(originalState.robots(i).Simulation.Speed.RowForm())*15);
                     end
+                    
+                    
+                    %Orientation pointing at the target all the time
+                    if (cross([originalState.robots(i).Simulation.Speed.X,originalState.robots(i).Simulation.Speed.Y,0],[originalState.robots(i).Orientation.X,originalState.robots(i).Orientation.Y,0])==0)
+                        if norm(originalState.robots(i).Simulation.Speed.RowForm()) >= 15
+                            originalState.robots(i).Simulation.Speed = Vector2(originalState.robots(i).Simulation.Speed.RowForm()/ norm(originalState.robots(i).Simulation.Speed.RowForm())*15);
+                        end
+                    else % Differential type robot have to rotate before moving
+                        originalState.robots(i).Orientation = Vector2(-1*(targetSpeed.RowForm())/norm(targetSpeed.RowForm()));
+                        %originalState.robots(i).Simulation.Speed = Vector2(0,0); %only rotating no moving
+                    end
                 end
             end
             controlledState = originalState;

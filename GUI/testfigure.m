@@ -109,10 +109,10 @@ Steps = 500;
 
 
 myball = Ball(Environment.xLim/2,Environment.yLim/2,0,0);
-myrobot = Robot(Environment.xLim/2 - 20,Environment.yLim/2 + Environment.yLim/40,0,0,'TeamA');
-myrobot2 = Robot(Environment.xLim/2 + 20,Environment.yLim/2 - Environment.yLim/40,0,0,'TeamB');
-myrobot3 = Robot(Environment.xLim/2 - 40,Environment.yLim/2 - Environment.yLim/40,0,0,'TeamA');
-myrobot4 = Robot(Environment.xLim/2 + 40,Environment.yLim/2 - Environment.yLim/40,0,0,'TeamB');
+myrobot = Robot(Environment.xLim/2 - 20,Environment.yLim/2 + Environment.yLim/40,1,0,0,0,'TeamA');
+myrobot2 = Robot(Environment.xLim/2 + 20,Environment.yLim/2 - Environment.yLim/40,-1,0,0,0,'TeamB');
+myrobot3 = Robot(Environment.xLim/2 - 40,Environment.yLim/2 - Environment.yLim/40,1,0,0,0,'TeamA');
+myrobot4 = Robot(Environment.xLim/2 + 40,Environment.yLim/2 - Environment.yLim/40,-1,0,0,0,'TeamB');
 myState = SimState(0,myball,[myrobot,myrobot2,myrobot3,myrobot4]);
 c = Simulate(myState, Steps);
 
@@ -163,8 +163,10 @@ for i=1:Steps
     try
     for k=1:length(RobotDraw)
         RobotDraw(k).Position = [c(i).robots(k).Position.X-c(i).robots(k).Radius,c(i).robots(k).Position.Y-c(i).robots(k).Radius, 2*c(i).robots(k).Radius, 2*c(i).robots(k).Radius];
-        Orientation(k).XData = [c(i).robots(k).Position.X c(i).robots(k).Position.X+c(i).robots(k).Radius*((c(i).robots(k).Simulation.Speed.X)/(norm(c(i).robots(k).Simulation.Speed.RowForm())))];
-        Orientation(k).YData = [c(i).robots(k).Position.Y c(i).robots(k).Position.Y+c(i).robots(k).Radius*((c(i).robots(k).Simulation.Speed.Y)/(norm(c(i).robots(k).Simulation.Speed.RowForm())))];
+        Orientation(k).XData = [c(i).robots(k).Position.X c(i).robots(k).Position.X+c(i).robots(k).Radius*(c(i).robots(k).Orientation.X)];
+        Orientation(k).YData = [c(i).robots(k).Position.Y c(i).robots(k).Position.Y+c(i).robots(k).Radius*(c(i).robots(k).Orientation.Y)];
+%         Orientation(k).XData = [c(i).robots(k).Position.X c(i).robots(k).Position.X+c(i).robots(k).Radius*((c(i).robots(k).Simulation.Speed.X)/(norm(c(i).robots(k).Simulation.Speed.RowForm())))];
+%         Orientation(k).YData = [c(i).robots(k).Positoin.Y c(i).robots(k).Position.Y+c(i).robots(k).Radius*((c(i).robots(k).Simulation.Speed.Y)/(norm(c(i).robots(k).Simulation.Speed.RowForm())))];
     end     
     BallDraw.Position = [c(i).ball.Position.X-c(i).ball.Radius,c(i).ball.Position.Y-c(i).ball.Radius, 2*c(i).ball.Radius, 2*c(i).ball.Radius];
     catch

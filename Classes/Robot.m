@@ -10,7 +10,7 @@ classdef Robot < handle
     end
     
     methods
-        function obj = Robot(pX,pY,vX,vY,ownr,mass)
+        function obj = Robot(pX,pY,oX,oY,vX,vY,ownr,mass)
             obj.Radius = 5;
             switch nargin
                 case 2
@@ -25,6 +25,16 @@ classdef Robot < handle
                 case 6
                     obj.Position = Vector2(pX,pY);  %Set position
                     obj.Simulation = SimulationData (vX,vY,mass);%Set speed
+                    obj.Owner = ownr;
+                case 7
+                    obj.Position = Vector2(pX,pY);  %Set position
+                    obj.Orientation = Vector2(oX,oY);
+                    obj.Simulation = SimulationData (vX,vY,1);%Set speed with default 1 mass
+                    obj.Owner = ownr;
+                case 8
+                    obj.Position = Vector2(pX,pY);  %Set position
+                    obj.Orientation = Vector2(oX,oY);
+                    obj.Simulation = SimulationData (vX,vY,mass);%Set speed with default 1 mass
                     obj.Owner = ownr;
                     ...
                 otherwise
@@ -103,7 +113,7 @@ classdef Robot < handle
             else
                 nextSpeed = Vector2(this.Simulation.Speed.X,this.Simulation.Speed.Y);
             end
-            nextRobot = Robot(nextPositionX,nextPositionY, nextSpeed.X, nextSpeed.Y, nextOwner, nextMass);
+            nextRobot = Robot(nextPositionX,nextPositionY,this.Orientation.X, this.Orientation.Y, nextSpeed.X, nextSpeed.Y, nextOwner, nextMass);
         end
     end
 end

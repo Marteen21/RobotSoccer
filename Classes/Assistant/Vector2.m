@@ -76,15 +76,13 @@ classdef Vector2
             end
         end
         function result = times(this, c)    %Times a constant
-            if (isnumeric(c))
-                result = Vector2(this.X*c,this.Y*c);
-                %elseif isa(c,'Vector2')
-                %
-            else
-                error('This operator is not defined for this two classes.');
-            end
-            
+                temp = c*this.ColumnForm();
+                result = Vector2(temp(1,1),temp(2,1));
+                %error('This operator is not defined for this two classes.');
         end
+%         function result = mtimes(this, m) %times with matrix
+%             result = Vector2(this.X*c(1,1)+this.Y*c(2,1),this.X*c(1,2)+this.Y*c(2,2));
+%         end
         function result = eq(this,other)
             if(this.X == other.X && this.Y == other.Y)
                 result = true;

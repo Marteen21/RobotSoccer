@@ -15,16 +15,31 @@ classdef TeamA
                     diffSpeed = originalState.robots(i).Simulation.Speed-targetSpeed;
                     diffSpeed = Vector2(diffSpeed.RowForm()/norm(diffSpeed.RowForm())* SimulationData.sampleTime* 10);
                     originalState.robots(i).Simulation.Speed = originalState.robots(i).Simulation.Speed + diffSpeed;
-                    
                     if norm(originalState.robots(i).Simulation.Speed.RowForm()) >= 15
                         originalState.robots(i).Simulation.Speed = Vector2(originalState.robots(i).Simulation.Speed.RowForm()/ norm(originalState.robots(i).Simulation.Speed.RowForm())*15);
                     end
                     
-                    %---------------------------------
-                    %------FintA Differential EQ------
                     
-                    [ SOunits, OrientationEnd ] = DifferentialEQ(originalState.robots(i),originalState.ball);
-                    
+                    %Orientation pointing at the target all the time
+                    if (cross([originalState.robots(i).Simulation.Speed.X,originalState.robots(i).Simulation.Speed.Y,0],[originalState.robots(i).Orientation.X,originalState.robots(i).Orientation.Y,0])==0)
+                        if norm(originalState.robots(i).Simulation.Speed.RowForm()) >= 15
+                            originalState.robots(i).Simulation.Speed = Vector2(originalState.robots(i).Simulation.Speed.RowForm()/ norm(originalState.robots(i).Simulation.Speed.RowForm())*15);
+                        end
+                    else % Differential type robot have to rotate before moving
+                        
+                        %---------------------------------
+                        %------FintA Differential EQ------
+                        %[ SOunits, OrientationEnd ] = DifferentialEQ(originalState.robots(i),originalState.ball);
+                        [ SOunits, OrientationEnd ] = DifferentialEQ(originalState.robots(i),originalState.ball);
+                        Rot = Rodriguez(SOunits(1,2));
+                        originalState.robots(i).Orientation = times(originalState.robots(i).Orientation,Rot);
+                        
+                        %Only pointing at the ball
+                        %originalState.robots(i).Orientation = Vector2(-1*(targetSpeed.RowForm())/norm(targetSpeed.RowForm()));
+                        
+                        %Only rotating no moving
+                        %originalState.robots(i).Simulation.Speed = Vector2(0,0);
+                    end
                 end
             end
             controlledState = originalState;
