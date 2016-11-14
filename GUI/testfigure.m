@@ -165,13 +165,6 @@ for i=1:Steps
         RobotDraw(k).Position = [c(i).robots(k).Position.X-c(i).robots(k).Radius,c(i).robots(k).Position.Y-c(i).robots(k).Radius, 2*c(i).robots(k).Radius, 2*c(i).robots(k).Radius];
         Orientation(k).XData = [c(i).robots(k).Position.X c(i).robots(k).Position.X+c(i).robots(k).Radius*((c(i).robots(k).Simulation.Speed.X)/(norm(c(i).robots(k).Simulation.Speed.RowForm())))];
         Orientation(k).YData = [c(i).robots(k).Position.Y c(i).robots(k).Position.Y+c(i).robots(k).Radius*((c(i).robots(k).Simulation.Speed.Y)/(norm(c(i).robots(k).Simulation.Speed.RowForm())))];
-        %plot([c(i).robots(k).Position.X c(i).robots(k).Position.X+sign(c(i).robots(k).Simulation.Speed.X)*c(i).robots(k).Radius*norm(cosSpeed)],[c(i).robots(k).Position.Y c(i).robots(k).Position.Y+sign(c(i).robots(k).Simulation.Speed.Y)*c(i).robots(k).Radius*norm(sinSpeed)]);
-%         plot([c(i).robots(k).Position.X c(i).robots(k).Position.X+c(i).robots(k).Radius*c(i).robots(k).Simulation.Speed.X],[c(i).robots(k).Position.Y c(i).robots(k).Position.Y+c(i).robots(k).Radius*c(i).robots(k).Simulation.Speed.Y]);
-%         Orientation = plot(x,y,'black');
-%         x = [c(i).robots(k).Position.X c(i).robots(k).Position.X+c(i).robots(k).Radius*c(i).robots(k).Simulation.Speed.X];
-%         y = [c(i).robots(k).Position.Y c(i).robots(k).Position.Y+c(i).robots(k).Radius*c(i).robots(k).Simulation.Speed.Y];
-%         Orientation.XDataSource = 'x';
-%         Orientation.YDataSource = 'y';
     end     
     BallDraw.Position = [c(i).ball.Position.X-c(i).ball.Radius,c(i).ball.Position.Y-c(i).ball.Radius, 2*c(i).ball.Radius, 2*c(i).ball.Radius];
     catch
