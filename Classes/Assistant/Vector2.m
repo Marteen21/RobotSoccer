@@ -76,10 +76,15 @@ classdef Vector2
             end
         end
         function result = times(this, c)    %Times a constant
-                temp = c*this.ColumnForm();
-                result = Vector2(temp(1,1),temp(2,1));
-                %error('This operator is not defined for this two classes.');
+            try
+            temp = c*this.ColumnForm();
+            result = Vector2(temp(1,1),temp(2,1));
+
+            catch
+                error('This operator is not defined for this. (loc: Vector2 times)');
+            end
         end
+                
 %         function result = mtimes(this, m) %times with matrix
 %             result = Vector2(this.X*c(1,1)+this.Y*c(2,1),this.X*c(1,2)+this.Y*c(2,2));
 %         end
