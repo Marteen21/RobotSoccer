@@ -10,7 +10,10 @@ function SimulationData = Simulate( startState, noSteps )
         c(end+1) = c(end).NextState(FID);
         goal = Referee.isGoal(c(end));
         c(end) = Referee.fixMyState(c(end),FID,i);
-        c(end) = TeamA.controlMyState(c(end));
+        for k=1:length(c(end).robots)
+           costDist(k) = CostFunction(c(end).robots(k),c(end).ball); 
+        end
+        c(end) = TeamA.controlMyState(c(end),costDist);
         c(end) = TeamB.controlMyState(c(end));
         
         %----Logging ball vectors----
