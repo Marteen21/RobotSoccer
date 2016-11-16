@@ -52,11 +52,17 @@ classdef TeamA
                     else
                         target = Vector2(Environment.xLim/2 - 40,Environment.yLim/2 - Environment.yLim/40);
                         targetSpeed = originalState.robots(i).Position-target;
-                        targetSpeed = Vector2(targetSpeed.RowForm()/norm(targetSpeed.RowForm())* 15);
+                        if (norm(targetSpeed.RowForm()) > 0)
+                            targetSpeed = Vector2(targetSpeed.RowForm()/norm(targetSpeed.RowForm())* 15);
+                        else
+                            %targetSpeed = norm(targetSpeed.RowForm());
+                        end
                         
                         %Going to the starting point
                         diffSpeed = originalState.robots(i).Simulation.Speed-targetSpeed;
-                        diffSpeed = Vector2(diffSpeed.RowForm()/norm(diffSpeed.RowForm())* SimulationData.sampleTime* 10);
+                        if (norm(diffSpeed.RowForm()) > 0)
+                            diffSpeed = Vector2(diffSpeed.RowForm()/norm(diffSpeed.RowForm())* SimulationData.sampleTime* 10);
+                        end
                         originalState.robots(i).Simulation.Speed = originalState.robots(i).Simulation.Speed + diffSpeed;
                         if norm(originalState.robots(i).Simulation.Speed.RowForm()) >= 15
                             originalState.robots(i).Simulation.Speed = Vector2(originalState.robots(i).Simulation.Speed.RowForm()/ norm(originalState.robots(i).Simulation.Speed.RowForm())*15);
