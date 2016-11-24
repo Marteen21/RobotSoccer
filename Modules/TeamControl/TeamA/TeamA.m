@@ -83,7 +83,18 @@ classdef TeamA
                     kickAble(i, 1) = evalfis([distToBall(1, i) ballSpeed], fuz);
                 end
             end
+            %fuzzy system assigns a position for each team member depending on the role
+            %(permanent assignment for now - defender, midfielder and attacker.
+            %output is x, y position.
+            fuz = readfis('Team1/Formation');
+            for i = 1:3
+                formation(i, 1:2) = evalfis([(i/3 - 0.1) Bx By], fuz);
+            end
 
+            DesiredPlace{1} = [ bestShot(1,:) formation(2,:)];
+            DesiredPlace{2} = [ bestShot(2,:) formation(3,:)];
+            DesiredPlace{3} = [ bestShot(3,:) formation(1,:)];
+            
             
             controlledState = originalState;
         end
