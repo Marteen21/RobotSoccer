@@ -96,11 +96,11 @@ for i = 1: 3 %for now do not pass to the goalie!!! 3 robots + goal
         case 3   %possibility to score (shoot to the goal)
             % goal coordinates 1 - left, 2 - right goalposts, Mid - middle.
             x1 = Environment.xLim;
-            y1 = Environment.goalPos(2)+Environment.goalLength;
+            y1 = Environment.goalPos.Y+Environment.goalLength;
             x2 = Environment.xLim;
-            y2 = Environment.goalPos(2)-Environment.goalLength;
+            y2 = Environment.goalPos.Y-Environment.goalLength;
             xMid = Environment.xLim;
-            yMid = Environment.goalPos(2);
+            yMid = Environment.goalPos.Y;
 
             angle = acos(((x1 - x)*(x2 - x) + (y1 - y)*(y2 - y))/...          %shooting angle
                 (sqrt((x1 - x)^2 + (y1 - y)^2)*sqrt((x2 - x)^2 + (y2 - y)^2)));
@@ -128,9 +128,9 @@ for i = 1: 3 %for now do not pass to the goalie!!! 3 robots + goal
                         end
                     end
             end
-            chances(4, 1) = ShootSucces(dist, angle, number) + 0.1; %artificially increased for more attackness
-            chances(4, 2) = xMid;
-            chances(4, 3) = yMid;
+            chances(3, 1) = ShootSucces(dist, angle, number) + 0.1; %artificially increased for more attackness
+            chances(3, 2) = xMid;
+            chances(3, 3) = yMid;
 
     end
 end

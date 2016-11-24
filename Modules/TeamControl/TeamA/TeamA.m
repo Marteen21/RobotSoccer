@@ -86,14 +86,55 @@ classdef TeamA
             %fuzzy system assigns a position for each team member depending on the role
             %(permanent assignment for now - defender, midfielder and attacker.
             %output is x, y position.
-            fuz = readfis('Team1/Formation');
-            for i = 1:3
-                formation(i, 1:2) = evalfis([(i/3 - 0.1) Bx By], fuz);
+            fuz = readfis('Formation');
+            for i = 1:2
+                formation(i, 1:2) = evalfis([(i/2 - 0.1) originalState.ball.Position.X originalState.ball.Position.Y], fuz);
             end
 
             DesiredPlace{1} = [ bestShot(1,:) formation(2,:)];
-            DesiredPlace{2} = [ bestShot(2,:) formation(3,:)];
-            DesiredPlace{3} = [ bestShot(3,:) formation(1,:)];
+            DesiredPlace{2} = [ bestShot(2,:) formation(1,:)];
+            
+            %!!!!!crude situation estimation. use fuzzy logic rules or simply think about
+            %better way of deciding. At least come up with buffer, so that the roles
+            %are not changed all the time.
+            if originalState.ball.Simulation.Speed.X >= 0 && originalState.ball.Position.X > 45
+                Situation = 'offense';
+            else
+                Situation = 'hidefense';
+            end;
+            
+            %if offensive - use fuzzy logic for role assignment and BestTarget for
+            %pass/shoot decision
+            %if defensive - use Reacheable, try to intercept the ball and prevent
+            %opponent from scoring
+
+            switch Situation
+                case 'offense'
+                    for agentIndex = 1:length(originalState.robots)
+                        CS0=zeros(CycleBatch,2);
+
+                        DesiredSpeedTime=1;
+
+                        %closest to the ball gets to attack (for now)
+                        % if (kickAble(agentIndex) == max(kickAble) && max(kickAble) > 0.5) %what should be this number??? probability of successful kick..
+                        if (distToBall(agentIndex)==min(distToBall) && distToBall(agentIndex) < 10)
+                            [CS,TeamOwn{agentIndex}.Target,TeamOwn{agentIndex}.TargetSpeedTime]=FUN.haromszog(agentIndex,TeamOwn,Ball,DesiredPlace{agentIndex},AgentVelocityLim);
+                        else
+                            TeamOwn{agentIndex}.Target=[DesiredPlace{agentIndex}(3:4) 0 0];
+                            [CS,TeamOwn{agentIndex}.Target,TeamOwn{agentIndex}.TargetSpeedTime]=FUN.moveTo(agentIndex,TeamOwn,DesiredSpeedTime);
+                        end;
+                        [s,o]=size(CS);
+
+                        if s < 2000   % issue with s growing too large sometimes. RESOLVE!!!!
+                            for i=1:s
+                                CS0(i,:)=CS(i,:);
+                            end;
+                            ControlSignal{agentIndex} = [GameMode(1)+(1:CycleBatch)', CS0(1:CycleBatch,:) ];
+                        end
+                    end
+            end
+
+            
             
             
             controlledState = originalState;
