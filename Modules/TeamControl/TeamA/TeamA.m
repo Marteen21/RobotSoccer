@@ -8,6 +8,7 @@ classdef TeamA
     methods (Static)
         function controlledState = controlMyState(originalState,Cost)
             min = 5*10E6;
+            MaxSpeed = 15;
             for i=1:length(originalState.robots)
 %                 if(strcmp(originalState.robots(i).Owner,'TeamA'))
 %                     if Cost(i)<min
@@ -67,7 +68,7 @@ classdef TeamA
 %                     end
 %                 end
 %             end
-            %robotsA and robotsB first element is the robotindex
+            %originalState.robots and robotsB first element is the robotindex
             
             %--------HLS implementation with fuzzy--------
             bestShot(3, 2) = 0;
@@ -111,26 +112,26 @@ classdef TeamA
             switch Situation
                 case 'offense'
                     for agentIndex = 1:length(originalState.robots)
-                        CS0=zeros(CycleBatch,2);
+%                         CS0=zeros(CycleBatch,2);
 
                         DesiredSpeedTime=1;
 
                         %closest to the ball gets to attack (for now)
                         % if (kickAble(agentIndex) == max(kickAble) && max(kickAble) > 0.5) %what should be this number??? probability of successful kick..
                         if (distToBall(agentIndex)==min(distToBall) && distToBall(agentIndex) < 10)
-                            [CS,TeamOwn{agentIndex}.Target,TeamOwn{agentIndex}.TargetSpeedTime]=FUN.haromszog(agentIndex,TeamOwn,Ball,DesiredPlace{agentIndex},AgentVelocityLim);
+                            [CS,originalState.robots(agentIndex).Target,originalState.robots(agentIndex).TargetSpeedTime]= haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed);
                         else
-                            TeamOwn{agentIndex}.Target=[DesiredPlace{agentIndex}(3:4) 0 0];
-                            [CS,TeamOwn{agentIndex}.Target,TeamOwn{agentIndex}.TargetSpeedTime]=FUN.moveTo(agentIndex,TeamOwn,DesiredSpeedTime);
+                            originalState.robots(agentIndex).Target=[DesiredPlace{agentIndex}(3:4) 0 0];
+                            [CS,originalState.robots(agentIndex).Target,originalState.robots(agentIndex).TargetSpeedTime]= moveTo(agentIndex,originalState.robots,DesiredSpeedTime);
                         end;
-                        [s,o]=size(CS);
-
-                        if s < 2000   % issue with s growing too large sometimes. RESOLVE!!!!
-                            for i=1:s
-                                CS0(i,:)=CS(i,:);
-                            end;
-                            ControlSignal{agentIndex} = [GameMode(1)+(1:CycleBatch)', CS0(1:CycleBatch,:) ];
-                        end
+%                         [s,o]=size(CS);
+% 
+%                         if s < 2000   % issue with s growing too large sometimes. RESOLVE!!!!
+%                             for i=1:s
+%                                 CS0(i,:)=CS(i,:);
+%                             end;
+%                             ControlSignal{agentIndex} = [GameMode(1)+(1:CycleBatch)', CS0(1:CycleBatch,:) ];
+%                         end
                     end
             end
 

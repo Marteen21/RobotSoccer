@@ -6,6 +6,8 @@ classdef Robot < handle
         Orientation;    %Vector2
         Simulation;     %SimulationData
         Radius;         %Radius of the simulated robot
+        Target;         %Target where the robot wants to go
+        TargetSpeedTime;
         Owner;
     end
     
