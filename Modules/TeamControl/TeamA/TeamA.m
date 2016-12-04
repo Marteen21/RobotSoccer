@@ -7,6 +7,7 @@ classdef TeamA
     
     methods (Static)
         function controlledState = controlMyState(originalState,Cost)
+            originalState.ball.Simulation.Speed
             min = 5*10E6;
             MaxSpeed = 15;
             for i=1:length(originalState.robots)
@@ -73,7 +74,11 @@ classdef TeamA
             %--------HLS implementation with fuzzy--------
             bestShot(3, 2) = 0;
             kickAble(3, 1) = 0;
-            ballSpeed = abs(originalState.ball.Simulation.Speed);
+            if (originalState.ball.Simulation.Speed.RowForm() ~= [0 0])
+                ballSpeed = abs(Vector2(originalState.ball.Simulation.Speed.RowForm()/norm(originalState.ball.Simulation.Speed.RowForm())));
+            else
+                ballSpeed = abs(originalState.ball.Simulation.Speed);
+            end
             
 
             %probably the Kickability is not even needed....................
@@ -81,6 +86,7 @@ classdef TeamA
             for i = 1:length(originalState.robots)
                 if (strcmp(originalState.robots(i).Owner,'TeamA'))
                     bestShot(i,:) = BestTarget(i, originalState.robots, originalState.robots);
+                    %asd = [distToBall(1, i) ballSpeed]
                     kickAble(i, 1) = evalfis([distToBall(1, i) ballSpeed], fuz);
                 end
             end
@@ -119,7 +125,7 @@ classdef TeamA
                         %closest to the ball gets to attack (for now)
                         % if (kickAble(agentIndex) == max(kickAble) && max(kickAble) > 0.5) %what should be this number??? probability of successful kick..
                         if (distToBall(agentIndex)==min && distToBall(agentIndex) < 10)
-                            [CS,originalState.robots(agentIndex).Target,originalState.robots(agentIndex).TargetSpeedTime]= haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed);
+                            [originalState.robots(agentIndex).Simulation.Speed,originalState.robots(agentIndex).Target]= haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed);
                         else
                             originalState.robots(agentIndex).Target=[DesiredPlace{agentIndex}(3:4) 0 0];
                             %[CS,originalState.robots(agentIndex).Target,originalState.robots(agentIndex).TargetSpeedTime]= MoveTo(agentIndex,originalState.robots,DesiredSpeedTime);
@@ -149,8 +155,10 @@ classdef TeamA
                         else
                             originalState.robots(agentIndex).Target=[ 0 0];
                         end
-
-                        [CS,originalState.robots(agentIndex).Target,originalState.robots(agentIndex).TargetSpeedTime]=MoveTo(agentIndex,originalState.robots,DesiredSpeedTime);
+                        Target = Vector2(originalState.robots(agentIndex).Target(1), originalState.robots(agentIndex).Target(2));
+                        
+                        %Moving to the target
+                        originalState.robots(agentIndex).Simulation.Speed = MoveTo(originalState.robots(agentIndex),Target);
 
 %                         [s,o]=size(CS);
 %                         for i=1:s
@@ -159,17 +167,18 @@ classdef TeamA
 %                         ControlSignal{agentIndex} = [GameMode(1)+(1:CycleBatch)',  CS0(1:CycleBatch,:) ];
 
                         for agentIndex = 2:(length(originalState.robots))/2
-                            CS0=zeros(CycleBatch,2);
+                            %CS0=zeros(CycleBatch,2);
                             
                             DesiredSpeedTime=1;
                             
                             %closest to the ball gets to attack (for now)
                             % if (kickAble(agentIndex) == max(kickAble) && max(kickAble) > 0.5) %what should be this number??? probability of successful kick..
-                            if (distToBall(agentIndex)==min(distToBall))
-                                [CS,originalState.robots(agentIndex).Target,originalState.robots(agentIndex).TargetSpeedTime]=haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},AgentVelocityLim);
+                            if (distToBall(agentIndex)==min)
+                                [originalState.robots(agentIndex).Simulation.Speed,originalState.robots(agentIndex).Target]=haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed);
                             else
                                 originalState.robots(agentIndex).Target=[DesiredPlace{agentIndex}(3:4) 0 0];
-                                [CS,originalState.robots(agentIndex).Target,originalState.robots(agentIndex).TargetSpeedTime]=MoveTo(agentIndex,originalState.robots,DesiredSpeedTime);
+                                Target = Vector2(originalState.robots(agentIndex).Target(1), originalState.robots(agentIndex).Target(2));
+                                originalState.robots(agentIndex).Simulation.Speed = MoveTo(originalState.robots(agentIndex), Target);
                             end;
 %                             [s,o]=size(CS);
 %                             
@@ -181,7 +190,7 @@ classdef TeamA
 %                             end
                         end
             end
-
+            originalState.ball.Simulation.Speed
             controlledState = originalState;
         end
     end

@@ -1,4 +1,4 @@
-function [ controlSignal target time ] = haromszog( agentIndex, Robots, Ball, DesiredPlace, AgentVelocity )
+function [ ControlSignal, Target] = haromszog( agentIndex, Robots, Ball, DesiredPlace, AgentVelocity )
 %HAROMSZOG
 %function produces a control signal for the specified agent to kick the
 %ball to the desired place?
@@ -19,9 +19,9 @@ Vx=Ball.Simulation.Speed.X;
 Vy=Ball.Simulation.Speed.Y;
 V=[Vx Vy];
 
-q=SimulatoinData.friction;
-m=Ball.Simulation.mass;
-M=Robots(agentIndex).Simulation.mass;    
+q=SimulationData.friction;
+m=Ball.Simulation.Mass;
+M=Robots(agentIndex).Simulation.Mass;    
 BallRadius=Ball.Radius;
 AgentRadius=Robots(agentIndex).Radius;
 Radius=(1+10^-13)*(BallRadius+AgentRadius);
@@ -92,9 +92,9 @@ for j=1:length(PossibleTimes)
     
     
     %Approach
-    [ControlSignal,Target,Time]=DefineApproach(TeamOwn,agentIndex,ApproachSequence,P,Q,R,S,K);
+    [ControlSignal,Target]=DefineApproach(Robots,agentIndex,ApproachSequence,P,Q,R,S,K);
     
-    NeedTime=sum(Time);
+    %NeedTime=sum(Time);
 
 
     if (AgentVelocity>AgentVelocityLim)
@@ -102,27 +102,27 @@ for j=1:length(PossibleTimes)
     end;
 
     %If available, we kick it then
-    if ( NeedTime<i )
-        ControlSignal;
-        ControlSignal=[ControlSignal ; zeros(i-sum(Time),2)];
+    %if ( NeedTime<i )
+        %ControlSignal;
+        %ControlSignal=[ControlSignal ; zeros(i-sum(Time),2)];
         Robots(agentIndex).Target=[K(1)+wx1 K(2)+wy1 wx1 wy1];
         %[CS,TG,TM]=FUN.moveTo(agentIndex,TeamOwn,AgentVelocity);
-        CS=[AgentVelocity 0];
+        %CS=[AgentVelocity 0];
         TG=Robots(agentIndex).Target;
         TM=1;
-        ControlSignal=[ControlSignal;CS];
-        Target=[Target;TG];
-        Time=[Time;TM];
+        ControlSignal=Vector2(ControlSignal(1),ControlSignal(2));
+        Target=TG;
         kick=1;
         return;
-    end;
+    %end;
 end;
 
 
 %If he was not can be kicked, we send it then onto his place
 if (kick==0)
     Robots(agentIndex).Target=[Destination 0 0];
-    [ControlSignal,Target,Time]=moveTo(agentIndex,TeamOwn,DesiredSpeedTime);
+    Target = Vector2(Destination(1), Destination(2));
+    ControlSignal = MoveTo(Robots.(agentIndex),Target);
 end;
 
 

@@ -1,10 +1,10 @@
-function [ControlSignal,Target,Time] = DefineApproach( Robots,agentIndex,ApproachSequence,P,Q,R,S,K )
+function [OutSpeed,Target] = DefineApproach( Robots,agentIndex,ApproachSequence,P,Q,R,S,K )
 
     DesiredSpeedTime=1;
 
 
 
-ControlSignal=[0 0];
+OutSpeed=[0 0];
 Target=[0 0 0 0];
 Time=0;
 [sor,oszlop]=size(ApproachSequence);
@@ -59,14 +59,13 @@ for s=1:sor
             Robots(agentIndex).Target=K;
        
     end;
-    [CS,TG,TM]=FUN.moveTo(agentIndex,TeamOwn,DesiredSpeedTime);
-    ControlSignal=[ControlSignal;CS];
-    Target=[Target;TG];
-    Time=[Time;TM];
+    tempTarget = Vector2(Robots(agentIndex).Target(1), Robots(agentIndex).Target(1));
+    Speed = MoveTo(Robots(agentIndex),tempTarget);
+    TG = Robots(agentIndex).Target;
+    OutSpeed = Speed.RowForm();
+    Target = TG;
 end;
-ControlSignal(1,:)=[];
-Target(1,:)=[];
-Time(1)=[];
+%Target(1,:)=[];
 
 
 end

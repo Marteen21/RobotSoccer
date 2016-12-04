@@ -8,7 +8,7 @@ function Cost = CostFunction( Robot, Target )
  elseif ( distV > Robot.Radius+Target.Radius)
      Cost = distV;
  else
-     Cost = -1;
+     Cost = 999;
  end
 
 end
