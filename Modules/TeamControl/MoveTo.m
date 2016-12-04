@@ -9,6 +9,8 @@ function desiredSpeed = MoveTo( robot, Target )
     desiredSpeedTemp = robot.Simulation.Speed + diffSpeed;
     if norm(desiredSpeedTemp.RowForm()) >= 15
         desiredSpeed = Vector2(robot.Simulation.Speed.RowForm()/ norm(robot.Simulation.Speed.RowForm())*15);
+    else
+        desiredSpeed = Vector2(robot.Simulation.Speed.RowForm());
     end
 
 
