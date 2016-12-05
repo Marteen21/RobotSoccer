@@ -85,7 +85,7 @@ classdef Referee < handle
             stepA = 1;
             stepB = 1;
             myBall.Position.Y = Environment.yLim/2;
-            myBall.Simulation.Speed = Vector2([0,0]);
+            myBall.Simulation.Speed = Vector2([0,1]);
             for i=1:length(myRobots)
                 myRobots(i).Simulation.Speed = Vector2([0,-1]);
                 if (strcmp(myRobots(i).Owner,'TeamA'))
