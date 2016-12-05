@@ -108,10 +108,10 @@ Steps = 500;
 %             end
 
 
-myball = Ball(Environment.xLim/2,Environment.yLim/2,0,0);
+myball = Ball(Environment.xLim/2,Environment.yLim/2,0,1);
 myrobot = Robot(Environment.xLim/2 - 20,Environment.yLim/2 + Environment.yLim/40,1,0,0,0,'TeamA');
 myrobot2 = Robot(Environment.xLim/2 + 20,Environment.yLim/2 - Environment.yLim/40,-1,0,0,0,'TeamB');
-myrobot3 = Robot(Environment.xLim/2 - 40,Environment.yLim/2 - Environment.yLim/40,1,0,0,0,'TeamA');
+myrobot3 = Robot(Environment.xLim/2 - 40,Environment.yLim/2 + Environment.yLim/40,1,0,0,0,'TeamA');
 myrobot4 = Robot(Environment.xLim/2 + 40,Environment.yLim/2 - Environment.yLim/40,-1,0,0,0,'TeamB');
 myState = SimState(0,myball,[myrobot,myrobot2,myrobot3,myrobot4]);
 c = Simulate(myState, Steps);

@@ -8,26 +8,30 @@ function SimulationData = Simulate( startState, noSteps )
     c = [startState];
     for i = 1:noSteps
         c(end+1) = c(end).NextState(FID);
+        %c(end).ball.Simulation.Speed
         goal = Referee.isGoal(c(end));
         c(end) = Referee.fixMyState(c(end),FID,i);
         for k=1:length(c(end).robots)
            costDist(k) = CostFunction(c(end).robots(k),c(end).ball); 
         end
         c(end) = TeamA.controlMyState(c(end),costDist);
-        c(end) = TeamB.controlMyState(c(end));
+        c(end) = TeamB.controlMyState(c(end),costDist);
         
         %----Logging ball vectors----
             
-%             if FID < 0
-%                  error('Cannot open file');
-%             end
-%             %fprintf(FID, '%s\n', Data);  % Write to the screen at the same time:
-%                                           % fprintf('%s\n', Data);
-%             fprintf(FID, 'Step:%d \n',i);
-%             fprintf(FID, 'Ball POS:%d_%d ',c(end).ball.Position.X,c(end).ball.Position.Y);
-%             fprintf(FID, 'Ball speed:%d_%d ',c(end).ball.Simulation.Speed.X,c(end).ball.Simulation.Speed.Y);
-%             fprintf(FID, 'CollisionVector:%d ',c(end).ball.Simulation.CollisionVector);
-%             fprintf(FID, 'CollisionTime:%d \n\n',c(end).ball.Simulation.CollisionTime);
+            if FID < 0
+                 error('Cannot open file');
+            end
+            %fprintf(FID, '%s\n', Data);  % Write to the screen at the same time:
+                                          % fprintf('%s\n', Data);
+            fprintf(FID, 'Step:%d \n',i);
+            fprintf(FID, 'Ball POS:%d_%d ',c(end).ball.Position.X,c(end).ball.Position.Y);
+            fprintf(FID, 'Ball speed:%d_%d ',c(end).ball.Simulation.Speed.X,c(end).ball.Simulation.Speed.Y);
+            fprintf(FID, 'CollisionVector:%d ',c(end).ball.Simulation.CollisionVector);
+            for k=1:length(c(end).robots)
+                fprintf(FID, '%d.RobotTarget: %d_%d_%d_%d ; ', k, c(end).robots(k).Target);
+            end
+            fprintf(FID, 'CollisionTime:%d \n\n',c(end).ball.Simulation.CollisionTime);
 
             
         %--------
@@ -38,7 +42,8 @@ function SimulationData = Simulate( startState, noSteps )
             Referee.isGoal = false;
         else
         end
-        if(i==16)
+        if(i==17)
+            stop=0;
         end
     end
     fclose(FID);

@@ -7,7 +7,7 @@ classdef TeamA
     
     methods (Static)
         function controlledState = controlMyState(originalState,Cost)
-            originalState.ball.Simulation.Speed
+            %originalState.ball.Simulation.Speed
             min = 5*10E6;
             MaxSpeed = 15;
             for i=1:length(originalState.robots)
@@ -72,23 +72,27 @@ classdef TeamA
             %originalState.robots and robotsB first element is the robotindex
             
             %--------HLS implementation with fuzzy--------
-            bestShot(3, 2) = 0;
+            bestShot(2, 2) = 0;
             kickAble(3, 1) = 0;
             if (originalState.ball.Simulation.Speed.RowForm() ~= [0 0])
-                ballSpeed = abs(Vector2(originalState.ball.Simulation.Speed.RowForm()/norm(originalState.ball.Simulation.Speed.RowForm())));
+                ballSpeed = abs(Vector2(originalState.ball.Simulation.Speed.RowForm()));
             else
                 ballSpeed = abs(originalState.ball.Simulation.Speed);
             end
             
-
+            %Choosing the member of TeamA with the agentIndex
+            %CIKLUSBA ÁTÍRNI!!!
+            teamAgentA = [originalState.robots(1) originalState.robots(3)];
+            %agentAindex = [1 3];
+            teamAgentB = [originalState.robots(2) originalState.robots(4)];
+            %
+            
             %probably the Kickability is not even needed....................
             fuz = readfis('kickAbility');
-            for i = 1:length(originalState.robots)
-                if (strcmp(originalState.robots(i).Owner,'TeamA'))
-                    bestShot(i,:) = BestTarget(i, originalState.robots, originalState.robots);
-                    %asd = [distToBall(1, i) ballSpeed]
-                    kickAble(i, 1) = evalfis([distToBall(1, i) ballSpeed], fuz);
-                end
+            for i = 1:length(teamAgentA)
+                bestShot(i,:) = BestTarget(i, teamAgentA, teamAgentB);
+                %asd = [distToBall(1, i) ballSpeed]
+                kickAble(i, 1) = evalfis([distToBall(1, i) ballSpeed], fuz);
             end
             %fuzzy system assigns a position for each team member depending on the role
             %(permanent assignment for now - defender, midfielder and attacker.
@@ -104,7 +108,7 @@ classdef TeamA
             %!!!!!crude situation estimation. use fuzzy logic rules or simply think about
             %better way of deciding. At least come up with buffer, so that the roles
             %are not changed all the time.
-            if originalState.ball.Simulation.Speed.X >= 0 && originalState.ball.Position.X > 45
+            if originalState.ball.Simulation.Speed.X >= 0 && originalState.ball.Position.X > 50
                 Situation = 'offense';
             else
                 Situation = 'hidefense';
@@ -117,7 +121,7 @@ classdef TeamA
 
             switch Situation
                 case 'offense'
-                    for agentIndex = 1:(length(originalState.robots))/2
+                    for agentIndex = 1:(length(teamAgentA))
 %                         CS0=zeros(CycleBatch,2);
 
                         DesiredSpeedTime=1;
@@ -125,25 +129,17 @@ classdef TeamA
                         %closest to the ball gets to attack (for now)
                         % if (kickAble(agentIndex) == max(kickAble) && max(kickAble) > 0.5) %what should be this number??? probability of successful kick..
                         if (distToBall(agentIndex)==min && distToBall(agentIndex) < 10)
-                            [originalState.robots(agentIndex).Simulation.Speed,originalState.robots(agentIndex).Target]= haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed);
+                            [teamAgentA(agentIndex).Simulation.Speed,teamAgentA(agentIndex).Target]= haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed);
                         else
-                            originalState.robots(agentIndex).Target=[DesiredPlace{agentIndex}(3:4) 0 0];
-                            %[CS,originalState.robots(agentIndex).Target,originalState.robots(agentIndex).TargetSpeedTime]= MoveTo(agentIndex,originalState.robots,DesiredSpeedTime);
-                            Target = Vector2(originalState.robots(agentIndex).Target(1), originalState.robots(agentIndex).Target(2));
+                            teamAgentA(agentIndex).Target=[DesiredPlace{agentIndex}(3:4) 0 0];
+                            %[CS,teamAgentA(agentIndex).Target,teamAgentA(agentIndex).TargetSpeedTime]= MoveTo(agentIndex,originalState.robots,DesiredSpeedTime);
+                            Target = Vector2(teamAgentA(agentIndex).Target(1), teamAgentA(agentIndex).Target(2));
                             
                             %Moving to the target
-                            originalState.robots(agentIndex).Simulation.Speed = MoveTo(originalState.robots(agentIndex), Target);
+                            teamAgentA(agentIndex).Simulation.Speed = MoveTo(teamAgentA(agentIndex), Target);
                             %End of moving
                             
                         end;
-%                         [s,o]=size(CS);
-% 
-%                         if s < 2000   % issue with s growing too large sometimes. RESOLVE!!!!
-%                             for i=1:s
-%                                 CS0(i,:)=CS(i,:);
-%                             end;
-%                             ControlSignal{agentIndex} = [GameMode(1)+(1:CycleBatch)', CS0(1:CycleBatch,:) ];
-%                         end
                     end
                   case 'hidefense'
                         %red - defence
@@ -151,20 +147,14 @@ classdef TeamA
                         DesiredSpeedTime = 1;
                         target = Goalie(originalState.ball);
                         if target > 0
-                            originalState.robots(agentIndex).Target=[target 0 0];
+                            teamAgentA(agentIndex).Target=[target 0 0];
                         else
-                            originalState.robots(agentIndex).Target=[ 0 0];
+                            teamAgentA(agentIndex).Target=[0 0];
                         end
-                        Target = Vector2(originalState.robots(agentIndex).Target(1), originalState.robots(agentIndex).Target(2));
+                        Target = Vector2(teamAgentA(agentIndex).Target(1), teamAgentA(agentIndex).Target(2));
                         
                         %Moving to the target
-                        originalState.robots(agentIndex).Simulation.Speed = MoveTo(originalState.robots(agentIndex),Target);
-
-%                         [s,o]=size(CS);
-%                         for i=1:s
-%                             CS0(i,:)=CS(i,:);
-%                         end;
-%                         ControlSignal{agentIndex} = [GameMode(1)+(1:CycleBatch)',  CS0(1:CycleBatch,:) ];
+                        teamAgentA(agentIndex).Simulation.Speed = MoveTo(teamAgentA(agentIndex),Target);
 
                         for agentIndex = 2:(length(originalState.robots))/2
                             %CS0=zeros(CycleBatch,2);
@@ -174,23 +164,15 @@ classdef TeamA
                             %closest to the ball gets to attack (for now)
                             % if (kickAble(agentIndex) == max(kickAble) && max(kickAble) > 0.5) %what should be this number??? probability of successful kick..
                             if (distToBall(agentIndex)==min)
-                                [originalState.robots(agentIndex).Simulation.Speed,originalState.robots(agentIndex).Target]=haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed);
+                                [teamAgentA(agentIndex).Simulation.Speed,teamAgentA(agentIndex).Target]=haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed);
                             else
-                                originalState.robots(agentIndex).Target=[DesiredPlace{agentIndex}(3:4) 0 0];
-                                Target = Vector2(originalState.robots(agentIndex).Target(1), originalState.robots(agentIndex).Target(2));
-                                originalState.robots(agentIndex).Simulation.Speed = MoveTo(originalState.robots(agentIndex), Target);
+                                teamAgentA(agentIndex).Target=[DesiredPlace{agentIndex}(3:4) 0 0];
+                                Target = Vector2(teamAgentA(agentIndex).Target(1), teamAgentA(agentIndex).Target(2));
+                                teamAgentA(agentIndex).Simulation.Speed = MoveTo(teamAgentA(agentIndex), Target);
                             end;
-%                             [s,o]=size(CS);
-%                             
-%                             if s < 2000   % issue with s growing too large sometimes. RESOLVE!!!!
-%                                 for i=1:s
-%                                     CS0(i,:)=CS(i,:);
-%                                 end;
-%                                 ControlSignal{agentIndex} = [GameMode(1)+(1:CycleBatch)', CS0(1:CycleBatch,:) ];
-%                             end
                         end
             end
-            originalState.ball.Simulation.Speed
+            %originalState.ball.Simulation.Speed
             controlledState = originalState;
         end
     end
