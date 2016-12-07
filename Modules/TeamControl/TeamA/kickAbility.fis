@@ -13,19 +13,19 @@ DefuzzMethod='wtaver'
 
 [Input1]
 Name='distanceToBall'
-Range=[0 999]
+Range=[0 137]
 NumMFs=3
-MF1='near':'trimf',[-72 0 3.57142857142858]
-MF2='medium':'trimf',[0.238095238095241 24.5 158]
-MF3='far':'trimf',[38.9 179.761904761905 183]
+MF1='near':'trimf',[-54.8 0 2.7182539]
+MF2='medium':'trimf',[0.181216 18.6472222 120.2555554]
+MF3='far':'trimf',[29.6072222 136.8187 139.283333]
 
 [Input2]
 Name='ballSpeed'
-Range=[0 999]
+Range=[0 150]
 NumMFs=3
-MF1='slow':'trimf',[-0.4 0 0.202]
-MF2='medium':'trimf',[-0.0907 0.431481481481481 1.26]
-MF3='fast':'trimf',[0.45 1.42 1.98]
+MF1='slow':'trimf',[-4.284 0 2.16342]
+MF2='medium':'trimf',[-0.971397 4.621166667 13.4946]
+MF3='fast':'trimf',[4.8195 15.2082 21.2058]
 
 [Output1]
 Name='kickAble'

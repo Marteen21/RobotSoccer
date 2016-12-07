@@ -72,7 +72,7 @@ classdef TeamA
             %originalState.robots and robotsB first element is the robotindex
             
             %--------HLS implementation with fuzzy--------
-            bestShot(2, 2) = 0;
+            bestShot(3, 2) = 0;
             kickAble(3, 1) = 0;
             if (originalState.ball.Simulation.Speed.RowForm() ~= [0 0])
                 ballSpeed = abs(Vector2(originalState.ball.Simulation.Speed.RowForm()));
@@ -81,29 +81,39 @@ classdef TeamA
             end
             
             %Choosing the member of TeamA with the agentIndex
-            %CIKLUSBA ÁTÍRNI!!!
-            teamAgentA = [originalState.robots(1) originalState.robots(3)];
-            %agentAindex = [1 3];
-            teamAgentB = [originalState.robots(2) originalState.robots(4)];
+            k=1;
+            for i=1:length(originalState.robots)
+                if (strcmp(originalState.robots(i).Owner,'TeamA'))
+                    teamAgentA(k) = originalState.robots(i);
+                    k = k+1;
+                end
+            end
+            k=1;
+            for i=1:length(originalState.robots)
+                if (strcmp(originalState.robots(i).Owner,'TeamB'))
+                    teamAgentB(k) = originalState.robots(i);
+                    k = k+1;
+                end
+            end
             %
             
             %probably the Kickability is not even needed....................
             fuz = readfis('kickAbility');
             for i = 1:length(teamAgentA)
                 bestShot(i,:) = BestTarget(i, teamAgentA, teamAgentB);
-                %asd = [distToBall(1, i) ballSpeed]
                 kickAble(i, 1) = evalfis([distToBall(1, i) ballSpeed], fuz);
             end
             %fuzzy system assigns a position for each team member depending on the role
             %(permanent assignment for now - defender, midfielder and attacker.
             %output is x, y position.
             fuz = readfis('Formation');
-            for i = 1:2
-                formation(i, 1:2) = evalfis([(i/2 - 0.1) originalState.ball.Position.X originalState.ball.Position.Y], fuz);
+            for i = 1:3
+                formation(i, 1:2) = evalfis([(i/3 - 0.1) originalState.ball.Position.X originalState.ball.Position.Y], fuz);
             end
-
-            DesiredPlace{1} = [ bestShot(1,:) formation(2,:)];
-            DesiredPlace{2} = [ bestShot(2,:) formation(1,:)];
+            %formation 1: Offense; 2: defense; 3: middle;
+            DesiredPlace{1} = [ bestShot(1,:) formation(1,:)];
+            DesiredPlace{2} = [ bestShot(2,:) formation(3,:)];
+            DesiredPlace{3} = [ bestShot(3,:) formation(2,:)];
             
             %!!!!!crude situation estimation. use fuzzy logic rules or simply think about
             %better way of deciding. At least come up with buffer, so that the roles
@@ -142,8 +152,8 @@ classdef TeamA
                         end;
                     end
                   case 'hidefense'
-                        %red - defence
-                        agentIndex = 1;
+                        %agent 2 - defence
+                        agentIndex = 2;
                         DesiredSpeedTime = 1;
                         target = Goalie(originalState.ball);
                         if target > 0

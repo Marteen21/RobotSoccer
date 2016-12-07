@@ -18,7 +18,8 @@ function desiredSpeed = MoveTo( robot, Target )
             robot.Simulation.Speed = Vector2(robot.Simulation.Speed.RowForm()/ norm(robot.Simulation.Speed.RowForm())*15);
         end
     else 
-        robot.Orientation = Vector2(-1*(targetSpeed.RowForm())/norm(targetSpeed.RowForm()));
+        %robot.Orientation = Vector2(-1*(targetSpeed.RowForm())/norm(targetSpeed.RowForm()));
+        robot.Orientation = Vector2(robot.Simulation.Speed.RowForm()/ norm(robot.Simulation.Speed.RowForm()));
     end            
 
 

@@ -13,7 +13,7 @@ classdef Robot < handle
     
     methods
         function obj = Robot(pX,pY,oX,oY,vX,vY,ownr,mass)
-            obj.Radius = 5;
+            obj.Radius = 4;
             switch nargin
                 case 2
                     obj.Position = Vector2(pX,pY);  %Set position

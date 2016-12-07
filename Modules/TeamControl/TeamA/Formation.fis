@@ -23,33 +23,33 @@ MF3='offence':'trapmf',[0.0119788359788364 0.0149788359788364 0.313978835978835 
 Name='BallPosX'
 Range=[0 115]
 NumMFs=3
-MF1='defensive':'trimf',[-60 0 60]
-MF2='middlefield':'trimf',[15 75 135]
-MF3='offensive':'trimf',[90 150 210]
+MF1='defensive':'trimf',[-44.4 0 44.4]
+MF2='middlefield':'trimf',[11.1 55.5 99.9]
+MF3='offensive':'trimf',[66.6 111 155.4]
 
 [Input3]
 Name='BallPosY'
 Range=[0 74]
 NumMFs=3
-MF1='right':'trimf',[-40 0 40]
-MF2='middle':'trimf',[10 50 90]
-MF3='left':'trimf',[60 100 140]
+MF1='right':'trimf',[-30.668 0 30.668]
+MF2='middle':'trimf',[7.667 38.335 69.003]
+MF3='left':'trimf',[46.002 76.67 107.338]
 
 [Output1]
 Name='PositionX'
 Range=[0 115]
 NumMFs=3
-MF1='defense':'trimf',[-60 0 60]
-MF2='middle':'trimf',[15 75 135]
-MF3='offense':'trimf',[90 150 210]
+MF1='defensive':'trimf',[-44.4 0 44.4]
+MF2='middlefield':'trimf',[11.1 55.5 99.9]
+MF3='offensive':'trimf',[66.6 111 155.4]
 
 [Output2]
 Name='PositionY'
 Range=[0 74]
 NumMFs=3
-MF1='right':'trimf',[-40 0 40]
-MF2='middle':'trimf',[10 50 90]
-MF3='left':'trimf',[60 100 140]
+MF1='right':'trimf',[-30.668 0 30.668]
+MF2='middle':'trimf',[7.667 38.335 69.003]
+MF3='left':'trimf',[46.002 76.67 107.338]
 
 [Rules]
 1 1 1, 1 1 (1) : 1

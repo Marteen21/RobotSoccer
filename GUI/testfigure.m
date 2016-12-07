@@ -111,9 +111,11 @@ Steps = 500;
 myball = Ball(Environment.xLim/2,Environment.yLim/2,0,1);
 myrobot = Robot(Environment.xLim/2 - 20,Environment.yLim/2 + Environment.yLim/40,1,0,0,0,'TeamA');
 myrobot2 = Robot(Environment.xLim/2 + 20,Environment.yLim/2 - Environment.yLim/40,-1,0,0,0,'TeamB');
-myrobot3 = Robot(Environment.xLim/2 - 40,Environment.yLim/2 + Environment.yLim/40,1,0,0,0,'TeamA');
-myrobot4 = Robot(Environment.xLim/2 + 40,Environment.yLim/2 - Environment.yLim/40,-1,0,0,0,'TeamB');
-myState = SimState(0,myball,[myrobot,myrobot2,myrobot3,myrobot4]);
+myrobot3 = Robot(Environment.xLim/2 - 35,Environment.yLim/2 + Environment.yLim/40,1,0,0,0,'TeamA');
+myrobot4 = Robot(Environment.xLim/2 + 35,Environment.yLim/2 - Environment.yLim/40,-1,0,0,0,'TeamB');
+myrobot5 = Robot(Environment.xLim/2 - 50,Environment.yLim/2 + Environment.yLim/40,1,0,0,0,'TeamA');
+myrobot6 = Robot(Environment.xLim/2 + 50,Environment.yLim/2 + Environment.yLim/40,-1,0,0,0,'TeamB');
+myState = SimState(0,myball,[myrobot,myrobot2,myrobot3,myrobot4,myrobot5,myrobot6]);
 c = Simulate(myState, Steps);
 
 
@@ -136,6 +138,10 @@ RobotDraw(2) = rectangle('Position',[c(1).robots(2).Position.X-c(1).robots(2).Ra
 RobotDraw(3) = rectangle('Position',[c(1).robots(3).Position.X-c(1).robots(3).Radius,c(1).robots(3).Position.Y-c(1).robots(3).Radius, 2*c(1).robots(3).Radius, 2*c(1).robots(3).Radius],...
 'Curvature',[1,1], 'FaceColor','g');
 RobotDraw(4) = rectangle('Position',[c(1).robots(4).Position.X-c(1).robots(4).Radius,c(1).robots(4).Position.Y-c(1).robots(4).Radius, 2*c(1).robots(4).Radius, 2*c(1).robots(4).Radius],...
+'Curvature',[1,1], 'FaceColor','r');
+RobotDraw(5) = rectangle('Position',[c(1).robots(5).Position.X-c(1).robots(5).Radius,c(1).robots(5).Position.Y-c(1).robots(5).Radius, 2*c(1).robots(5).Radius, 2*c(1).robots(5).Radius],...
+'Curvature',[1,1], 'FaceColor','g');
+RobotDraw(6) = rectangle('Position',[c(1).robots(6).Position.X-c(1).robots(6).Radius,c(1).robots(6).Position.Y-c(1).robots(6).Radius, 2*c(1).robots(6).Radius, 2*c(1).robots(6).Radius],...
 'Curvature',[1,1], 'FaceColor','r');
 BallDraw = rectangle('Position',[c(1).ball.Position.X-c(1).ball.Radius,c(1).ball.Position.Y-c(1).ball.Radius, 2*c(1).ball.Radius, 2*c(1).ball.Radius],...
 'Curvature',[1,1], 'FaceColor','y');

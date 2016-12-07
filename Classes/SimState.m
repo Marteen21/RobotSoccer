@@ -10,7 +10,7 @@ classdef SimState < handle
     end
     
     methods
-        function obj = SimState(op1, op2, op3, op4)
+        function obj = SimState(op1, op2, op3, op4, op5, op6)
             switch nargin
                 case 3
                     obj.time = op1;

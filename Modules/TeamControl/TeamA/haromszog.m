@@ -31,7 +31,7 @@ Radius=(1+10^-13)*(BallRadius+AgentRadius);
 DesiredSpeedTime=1;
 PossibleTimes=[1:20 22:2:50 55:5:100 110:10:200 220:20:400];
 PSR=[0.001:0.001:0.01 0.015:0.005:0.1 0.2:0.1:1];
-Bounding=1.2*Radius;
+Bounding=0.9*Radius;
 
 
 kick=0;
@@ -47,11 +47,11 @@ for j=1:length(PossibleTimes)
     Cx=Bx+Vx*(1-(1-q)^i)/q;
     Cy=By+Vy*(1-(1-q)^i)/q;
     C=[Cx Cy];
-    C=mirror2(C);
+    %C=mirror2(C);
     
     %Labda sebessege az utkozes pillanataban
     vx1=Vx*(1-q)^i;
-    vy1=Vy*(1-q)^i;                                                        %It would be necessary to reflect this
+    vy1=Vy*(1-q)^i;                           %It would be necessary to reflect this
     
     %The proportion of the velocities of a ball after a collision
     DVX=D(1)-C(1);
