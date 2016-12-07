@@ -152,8 +152,8 @@ classdef TeamA
                         end;
                     end
                   case 'hidefense'
-                        %agent 2 - defence
-                        agentIndex = 2;
+                        %agent 3 - defence
+                        agentIndex = 3;
                         DesiredSpeedTime = 1;
                         target = Goalie(originalState.ball);
                         if target > 0
@@ -166,20 +166,21 @@ classdef TeamA
                         %Moving to the target
                         teamAgentA(agentIndex).Simulation.Speed = MoveTo(teamAgentA(agentIndex),Target);
 
-                        for agentIndex = 2:(length(originalState.robots))/2
+                        for agentIndex = 1:(length(teamAgentA)-1)
                             %CS0=zeros(CycleBatch,2);
-                            
-                            DesiredSpeedTime=1;
-                            
-                            %closest to the ball gets to attack (for now)
-                            % if (kickAble(agentIndex) == max(kickAble) && max(kickAble) > 0.5) %what should be this number??? probability of successful kick..
-                            if (distToBall(agentIndex)==min)
-                                [teamAgentA(agentIndex).Simulation.Speed,teamAgentA(agentIndex).Target]=haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed);
-                            else
-                                teamAgentA(agentIndex).Target=[DesiredPlace{agentIndex}(3:4) 0 0];
-                                Target = Vector2(teamAgentA(agentIndex).Target(1), teamAgentA(agentIndex).Target(2));
-                                teamAgentA(agentIndex).Simulation.Speed = MoveTo(teamAgentA(agentIndex), Target);
-                            end;
+                            %if (i~=2)
+                                DesiredSpeedTime=1;
+
+                                %closest to the ball gets to attack (for now)
+                                % if (kickAble(agentIndex) == max(kickAble) && max(kickAble) > 0.5) %what should be this number??? probability of successful kick..
+                                if (distToBall(agentIndex)==min)
+                                    [teamAgentA(agentIndex).Simulation.Speed,teamAgentA(agentIndex).Target]=haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed);
+                                else
+                                    teamAgentA(agentIndex).Target=[DesiredPlace{agentIndex}(3:4) 0 0];
+                                    Target = Vector2(teamAgentA(agentIndex).Target(1), teamAgentA(agentIndex).Target(2));
+                                    teamAgentA(agentIndex).Simulation.Speed = MoveTo(teamAgentA(agentIndex), Target);
+                                end;
+                            %end
                         end
             end
             %originalState.ball.Simulation.Speed

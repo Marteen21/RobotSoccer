@@ -95,6 +95,9 @@ classdef Ball < handle
                 nextSpeed = this.Simulation.Speed.TotalReflectionFrom(this.Simulation.CollisionVector);
                 if(this.Simulation.SpeedGain.collidedWith == BodyType.Robot)
                     nextSpeed = nextSpeed + this.Simulation.SpeedGain.gain;
+                    if abs(nextSpeed) > 45
+                        nextSpeed = Vector2((nextSpeed.RowForm()/norm(nextSpeed.RowForm())*45));
+                    end
                 end
             else
                 nextSpeed = Vector2(this.Simulation.Speed.X,this.Simulation.Speed.Y);

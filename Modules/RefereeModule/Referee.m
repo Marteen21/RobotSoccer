@@ -82,25 +82,20 @@ classdef Referee < handle
         end
         function [BallReset, RobotReset] = Reset(myBall,myRobots)
             myBall.Position.X = Environment.xLim/2;
-            stepA(1) = 10;
-            stepA(2) = 10;
-            stepB(1) = 1;
-            stepB(2) = 1;
-            step = 20;
+            stepA = 20;
+            stepB = 20;
             myBall.Position.Y = Environment.yLim/2;
             myBall.Simulation.Speed = Vector2([0,1]);
-            %ROSSZ A RESET POSOTION HELP!!
             for i=1:length(myRobots)
                 myRobots(i).Simulation.Speed = Vector2([0,-1]);
                 if (strcmp(myRobots(i).Owner,'TeamA'))
-                    myRobots(i).Position.X = Environment.xLim/2 - stepA(1) - myRobots(i).Radius*(stepB(1));
+                    myRobots(i).Position.X = Environment.xLim/2 - stepA;
                     myRobots(i).Position.Y = Environment.yLim/2 + Environment.yLim/40;
-                    stepA(1) = stepA(1)+10;
-                    stepB(1) = stepB(1)+3;
+                    stepA = stepA + 15;
                 else
-                    myRobots(i).Position.X = Environment.xLim/2 + step;
+                    myRobots(i).Position.X = Environment.xLim/2 + stepB;
                     myRobots(i).Position.Y = Environment.yLim/2 - Environment.yLim/40;
-                    step = step + 15;
+                    stepB = stepB + 15;
                 end
             end
 %Bruteforce reset, bugos valami a resetben myRobot2 nem tud ütközni a
@@ -113,7 +108,7 @@ classdef Referee < handle
         end
         
         function goalState = isGoal(mySimState)
-            if (((mySimState.ball.Position.X - mySimState.ball.Radius) <= 0.2) && (Environment.goalPos.Y-Environment.goalLength <= mySimState.ball.Position.Y) && (mySimState.ball.Position.Y <= Environment.goalPos.Y + Environment.goalLength))
+            if (((mySimState.ball.Position.X - mySimState.ball.Radius) <= 0.1) && (Environment.goalPos.Y-Environment.goalLength <= mySimState.ball.Position.Y) && (mySimState.ball.Position.Y <= Environment.goalPos.Y + Environment.goalLength))
                 goalState = true;
                 mySimState.teamScore(2)=mySimState.teamScore(2)+1;
                 Referee.ScoreB(mySimState.time);
