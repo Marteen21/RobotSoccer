@@ -1,7 +1,7 @@
-function [ U, OrientationEnd ] = DifferentialEQ( robot, ball )
+function [ U, OrientationEnd ] = DifferentialEQ( robot, Target ) %Changed ball to Target
 %DIFFERENTIALEQ the movement of the differential type robot.
 %   From FintaA Differential_EQ, U: 1. column contains the value of the
-%   speed vectors, 2. column contains the required angle for rotation
+%   speed vectors, 2. column contains the required angular speed
 %   OrientationEnd: Orientation of the robot after went to the target
 %   position
     
@@ -13,11 +13,12 @@ function [ U, OrientationEnd ] = DifferentialEQ( robot, ball )
                     %Pontos megválasztása kérdéses a mi esetünkben
                     DesiredSpeedTime = 0;%1;
 
-                    DeltaX = sqrt((robot.Position.X-ball.Position.X)^2+(robot.Position.Y-ball.Position.Y)^2); % a két pont távolsága
+                    DeltaX = sqrt((robot.Position.X-Target.X)^2+(robot.Position.Y-Target.Y)^2); % a két pont távolsága
                     % A jelenlegi orientáció-hiba: eltérés a következõ pontba mutató iránytól:
-                    OrientCurrent = atan2(ball.Simulation.Speed.Y,ball.Simulation.Speed.X);
-                    OrientMoveFWD = atan2(robot.Position.Y-ball.Position.Y,robot.Position.X-ball.Position.X); % ez az az orientáció, amikor a célpont irányába állunk az adott helyen
-                    OrientMoveBWD = atan2(ball.Position.Y-robot.Position.Y,ball.Position.X-robot.Position.X); % ez az az orientáció, amikor a célpontnak háttal állunk az adott helyen
+                    %OrientCurrent = atan2(ball.Simulation.Speed.Y,ball.Simulation.Speed.X);
+                    OrientCurrent = 0;
+                    OrientMoveFWD = atan2(robot.Position.Y-Target.Y,robot.Position.X-Target.X); % ez az az orientáció, amikor a célpont irányába állunk az adott helyen
+                    OrientMoveBWD = atan2(Target.Y-robot.Position.Y,Target.X-robot.Position.X); % ez az az orientáció, amikor a célpontnak háttal állunk az adott helyen
                     OrientTarget  = atan2(robot.Simulation.Speed.Y,robot.Simulation.Speed.X);
                     if (DeltaX>Epsilon)                             % nem értük még el a pontot
                         % itt nem unitokra számolja a forgásokat, így összekumulálódhat egy pici hiba, hogy végül mégsem arra jobb fordulni - de ez pici...
