@@ -34,7 +34,7 @@ classdef Vector2
         function v = ColumnForm(this)
             v = [this.X;this.Y];
         end
-        %% Rodriguez shit
+        %% Rodriguez
         %return the incident angle
         function alpha = CIncidentAngle(this,other)
             alpha = (acos(dot(this.ColumnForm,other.ColumnForm)/(norm(this.ColumnForm)*norm(other.ColumnForm))));
