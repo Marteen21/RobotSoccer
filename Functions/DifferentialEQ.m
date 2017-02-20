@@ -16,10 +16,10 @@ function [ U, OrientationEnd ] = DifferentialEQ( robot, Target ) %Changed ball t
                     DeltaX = sqrt((robot.Position.X-Target.X)^2+(robot.Position.Y-Target.Y)^2); % a két pont távolsága
                     % A jelenlegi orientáció-hiba: eltérés a következõ pontba mutató iránytól:
                     %OrientCurrent = atan2(ball.Simulation.Speed.Y,ball.Simulation.Speed.X);
-                    OrientCurrent = 0;
+                    OrientCurrent = atan2(robot.Orientation.Y,robot.Orientation.X);
                     OrientMoveFWD = atan2(robot.Position.Y-Target.Y,robot.Position.X-Target.X); % ez az az orientáció, amikor a célpont irányába állunk az adott helyen
                     OrientMoveBWD = atan2(Target.Y-robot.Position.Y,Target.X-robot.Position.X); % ez az az orientáció, amikor a célpontnak háttal állunk az adott helyen
-                    OrientTarget  = atan2(robot.Simulation.Speed.Y,robot.Simulation.Speed.X);
+                    OrientTarget  = 0;
                     if (DeltaX>Epsilon)                             % nem értük még el a pontot
                         % itt nem unitokra számolja a forgásokat, így összekumulálódhat egy pici hiba, hogy végül mégsem arra jobb fordulni - de ez pici...
                         DeltaThetaFWD = OrientMoveFWD - OrientCurrent;
