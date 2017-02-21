@@ -33,6 +33,7 @@ classdef Robot < handle
                     obj.Orientation = Vector2(oX,oY);
                     obj.Simulation = SimulationData (vX,vY,1);%Set speed with default 1 mass
                     obj.Owner = ownr;
+                    obj.Target = [pX pY];
                 case 8
                     obj.Position = Vector2(pX,pY);  %Set position
                     obj.Orientation = Vector2(oX,oY);
