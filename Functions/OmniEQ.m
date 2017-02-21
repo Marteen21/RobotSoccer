@@ -1,4 +1,4 @@
-function [ v1 v2 v3 ] = OmniEQ( robot, w )
+function [ v1, v2, v3 ] = OmniEQ( robot, w )
 %The beta function of omnidirectional robots
 %    Gets the robot's Vx, Vy, w and gives back the speed of the wheels
     
