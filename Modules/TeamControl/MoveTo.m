@@ -29,6 +29,7 @@ function desiredSpeed = MoveTo( robot, Target )
             robot.Orientation = Vector2(robot.Simulation.Speed.RowForm()/ norm(robot.Simulation.Speed.RowForm()));
         end            
     else %Backfire of the differential movements.
+        [v1 v2 v3] = OmniEQ(robot, 0);
         [Control OriEnd] = DifferentialEQ(robot, Target);
         TempSpeedRobot = robot.Simulation.Speed;
         robot.Simulation.Speed = Vector2(0,0);
