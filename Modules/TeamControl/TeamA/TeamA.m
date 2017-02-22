@@ -63,7 +63,6 @@ classdef TeamA
             DesiredPlace{1} = [ bestShot(1,:) formation(1,:)];
             DesiredPlace{2} = [ bestShot(2,:) formation(3,:)];
             DesiredPlace{3} = [ bestShot(3,:) formation(2,:)];
-            
             %!!!!!crude situation estimation. use fuzzy logic rules or simply think about
             %better way of deciding. At least come up with buffer, so that the roles
             %are not changed all the time.

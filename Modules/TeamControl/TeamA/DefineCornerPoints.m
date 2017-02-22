@@ -1,5 +1,6 @@
 function [P,Q,R,S] = DefineCornerPoints(C,T,A,Bounding)
-
+%C origin: from ball Positions
+%A agent: from the position of the robot agent
 %T transformation: from a world into this co-ordinate system
 
 %Agent in the co-ordinate system of the ball

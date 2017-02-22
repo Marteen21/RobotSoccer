@@ -5,7 +5,7 @@ function [OutSpeed,Target] = DefineApproach( Robots,agentIndex,ApproachSequence,
 
 
 OutSpeed=[0 0];
-Target=[0 0 0 0];
+Target=Vector2(0,0);
 Time=0;
 [sor,oszlop]=size(ApproachSequence);
 for s=1:sor
@@ -14,52 +14,52 @@ for s=1:sor
         case 'P'
             switch ApproachSequence(s,2)
                 case '1'
-                    Robots(agentIndex).Target=P(1,:);
+                    Robots(agentIndex).Target=Vector2(P(1,1),P(1,2));
                 case '2'
-                    Robots(agentIndex).Target=P(2,:);
+                    Robots(agentIndex).Target=Vector2(P(2,1),P(2,2));
                 case '3'
-                    Robots(agentIndex).Target=P(3,:);
+                    Robots(agentIndex).Target=Vector2(P(3,1),P(3,2));
                 case '4'
-                    Robots(agentIndex).Target=P(4,:);
+                    Robots(agentIndex).Target=Vector2(P(4,1),P(4,2));
             end;
         case 'Q'
             switch ApproachSequence(s,2)
                 case '1'
-                    Robots(agentIndex).Target=Q(1,:);
+                    Robots(agentIndex).Target=Vector2(Q(1,1),Q(1,2));
                 case '2'
-                    Robots(agentIndex).Target=Q(2,:);
+                    Robots(agentIndex).Target=Vector2(Q(2,1),Q(2,2));
                 case '3'
-                    Robots(agentIndex).Target=Q(3,:);
+                    Robots(agentIndex).Target=Vector2(Q(3,1),Q(3,2));
                 case '4'
-                    Robots(agentIndex).Target=Q(4,:);
+                    Robots(agentIndex).Target=Vector2(Q(4,1),Q(4,2));
             end;
         case 'R'
             switch ApproachSequence(s,2)
                 case '1'
-                    Robots(agentIndex).Target=R(1,:);
+                    Robots(agentIndex).Target=Vector2(R(1,1),R(1,2));
                 case '2'
-                    Robots(agentIndex).Target=R(2,:);
+                    Robots(agentIndex).Target=Vector2(R(2,1),R(2,2));
                 case '3'
-                    Robots(agentIndex).Target=R(3,:);
+                    Robots(agentIndex).Target=Vector2(R(3,1),R(3,2));
                 case '4'
-                    Robots(agentIndex).Target=R(4,:);
+                    Robots(agentIndex).Target=Vector2(R(4,1),R(4,2));
             end;
         case 'S'
             switch ApproachSequence(s,2)
                 case '1'
-                    Robots(agentIndex).Target=S(1,:);
+                    Robots(agentIndex).Target=Vector2(S(1,1),S(1,2));
                 case '2'
-                    Robots(agentIndex).Target=S(2,:);
+                    Robots(agentIndex).Target=Vector2(S(2,1),S(2,2));
                 case '3'
-                    Robots(agentIndex).Target=S(3,:);
+                    Robots(agentIndex).Target=Vector2(S(3,1),S(3,2));
                 case '4'
-                    Robots(agentIndex).Target=S(4,:);
+                    Robots(agentIndex).Target=Vector2(S(4,1),S(4,2));
             end;
         case 'K'
-            Robots(agentIndex).Target=K;
+            Robots(agentIndex).Target=Vector2(K);
        
     end;
-    tempTarget = Vector2(Robots(agentIndex).Target(1), Robots(agentIndex).Target(1));
+    tempTarget = Vector2(Robots(agentIndex).Target.X, Robots(agentIndex).Target.Y);
     Speed = MoveTo(Robots(agentIndex),tempTarget);
     TG = Robots(agentIndex).Target;
     OutSpeed = Speed.RowForm();

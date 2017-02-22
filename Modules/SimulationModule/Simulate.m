@@ -28,9 +28,9 @@ function SimulationData = Simulate( startState, noSteps )
             fprintf(FID, 'Ball POS:%d_%d ',c(end).ball.Position.X,c(end).ball.Position.Y);
             fprintf(FID, 'Ball speed:%d_%d ',c(end).ball.Simulation.Speed.X,c(end).ball.Simulation.Speed.Y);
             fprintf(FID, 'CollisionVector:%d ',c(end).ball.Simulation.CollisionVector);
-            for k=1:length(c(end).robots)
-                fprintf(FID, '%d.RobotTarget: %d_%d_%d_%d ; ', k, c(end).robots(k).Target);
-            end
+%             for k=1:length(c(end).robots)
+%                 fprintf(FID, '%d.RobotTarget: %d_%d_%d_%d ; ', k, c(end).robots(k).Target);
+%             end
             fprintf(FID, 'CollisionTime:%d \n\n',c(end).ball.Simulation.CollisionTime);
 
             

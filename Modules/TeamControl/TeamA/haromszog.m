@@ -76,8 +76,7 @@ for j=1:length(PossibleTimes)
     ApproachSequence=DefineApproachSequence(AgentSector,KickSector);
     
     %Defining pivotal points
-
-    [P,Q,R,S]=DefineCornerPoints(C,T,A,Bounding);                      %Origin, transformation, agent, width
+    [P,Q,R,S]=DefineCornerPoints(C,T,A,Bounding);          %Origin, transformation, agent, width
     
     
     
@@ -94,27 +93,27 @@ for j=1:length(PossibleTimes)
     %Approach
     [ControlSignal,Target]=DefineApproach(Robots,agentIndex,ApproachSequence,P,Q,R,S,K);
     
-    %NeedTime=sum(Time);
+%     NeedTime=sum(Time);
 
 
     if (AgentVelocity>AgentVelocityLim)
         NeedTime=1000;
     end;
 
-    %If available, we kick it then
-    %if ( NeedTime<i )
-        %ControlSignal;
-        %ControlSignal=[ControlSignal ; zeros(i-sum(Time),2)];
-        Robots(agentIndex).Target=[K(1)+wx1 K(2)+wy1 wx1 wy1];
-        %[CS,TG,TM]=FUN.moveTo(agentIndex,TeamOwn,AgentVelocity);
-        %CS=[AgentVelocity 0];
-        TG=Robots(agentIndex).Target;
-        TM=1;
-        ControlSignal=Vector2(ControlSignal(1),ControlSignal(2));
-        Target=TG;
-        kick=1;
-        return;
-    %end;
+%     %If available, we kick it then
+%     if ( NeedTime<i )
+%         %ControlSignal;
+%         %ControlSignal=[ControlSignal ; zeros(i-sum(Time),2)];
+%         Robots(agentIndex).Target=[K(1)+wx1 K(2)+wy1 wx1 wy1];
+%         %[CS,TG,TM]=FUN.moveTo(agentIndex,TeamOwn,AgentVelocity);
+%         %CS=[AgentVelocity 0];
+%         TG=Robots(agentIndex).Target;
+%         TM=1;
+%         ControlSignal=Vector2(ControlSignal(1),ControlSignal(2));
+%         Target=TG;
+%         kick=1;
+%         return;
+%     end;
 end;
 
 
@@ -122,7 +121,7 @@ end;
 if (kick==0)
     Robots(agentIndex).Target=[Destination 0 0];
     Target = Vector2(Destination(1), Destination(2));
-    ControlSignal = MoveTo(Robots.(agentIndex),Target);
+    ControlSignal = MoveTo(Robots(agentIndex),Target);
 end;
 
 
