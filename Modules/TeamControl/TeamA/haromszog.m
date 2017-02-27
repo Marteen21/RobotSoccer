@@ -1,4 +1,4 @@
-function [ ControlSignal, Target] = haromszog( agentIndex, Robots, Ball, DesiredPlace, AgentVelocity )
+function [ ControlSignal, Target] = haromszog( agentIndex, Robots, Ball, DesiredPlace, AgentVelocity, File )
 %HAROMSZOG
 %function produces a control signal for the specified agent to kick the
 %ball to the desired place?
@@ -91,7 +91,7 @@ for j=1:length(PossibleTimes)
     
     
     %Approach
-    [ControlSignal,Target]=DefineApproach(Robots,agentIndex,ApproachSequence,P,Q,R,S,K);
+    [ControlSignal,Target]=DefineApproach(Robots,agentIndex,ApproachSequence,P,Q,R,S,K,File);
     
 %     NeedTime=sum(Time);
 
@@ -119,9 +119,9 @@ end;
 
 %If he was not can be kicked, we send it then onto his place
 if (kick==0)
-    Robots(agentIndex).Target=[Destination 0 0];
     Target = Vector2(Destination(1), Destination(2));
-    ControlSignal = MoveTo(Robots(agentIndex),Target);
+    Robots(agentIndex).Target = Target;
+    ControlSignal = MoveTo(agentIndex, Robots(agentIndex),Robots(agentIndex).Target, File,'haromszog.m');
 end;
 
 

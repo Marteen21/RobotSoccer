@@ -7,14 +7,14 @@ function SimulationData = Simulate( startState, noSteps )
     end
     c = [startState];
     for i = 1:noSteps
-        c(end+1) = c(end).NextState(FID);
+        c(end+1) = c(end).NextState();
         %c(end).ball.Simulation.Speed
         goal = Referee.isGoal(c(end));
-        c(end) = Referee.fixMyState(c(end),FID,i);
+        c(end) = Referee.fixMyState(c(end),i);
         for k=1:length(c(end).robots)
            costDist(k) = CostFunction(c(end).robots(k),c(end).ball); 
         end
-        c(end) = TeamA.controlMyState(c(end),costDist);
+        c(end) = TeamA.controlMyState(c(end),costDist,FID);
         c(end) = TeamB.controlMyState(c(end),costDist);
         
         %----Logging ball vectors----
@@ -22,18 +22,6 @@ function SimulationData = Simulate( startState, noSteps )
             if FID < 0
                  error('Cannot open file');
             end
-            %fprintf(FID, '%s\n', Data);  % Write to the screen at the same time:
-                                          % fprintf('%s\n', Data);
-            fprintf(FID, 'Step:%d \n',i);
-            fprintf(FID, 'Ball POS:%d_%d ',c(end).ball.Position.X,c(end).ball.Position.Y);
-            fprintf(FID, 'Ball speed:%d_%d ',c(end).ball.Simulation.Speed.X,c(end).ball.Simulation.Speed.Y);
-            fprintf(FID, 'CollisionVector:%d ',c(end).ball.Simulation.CollisionVector);
-%             for k=1:length(c(end).robots)
-%                 fprintf(FID, '%d.RobotTarget: %d_%d_%d_%d ; ', k, c(end).robots(k).Target);
-%             end
-            fprintf(FID, 'CollisionTime:%d \n\n',c(end).ball.Simulation.CollisionTime);
-
-            
         %--------
         
         %Referee in progress

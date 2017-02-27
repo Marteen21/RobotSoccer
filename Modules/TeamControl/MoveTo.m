@@ -1,6 +1,10 @@
-function desiredSpeed = MoveTo( robot, Target )
+function desiredSpeed = MoveTo(agentIndex,  robot, Target, File, Nev )
 %MOVETO Summary of this function goes here
 %   Moving to the desired target
+    if (agentIndex == 1)
+        fprintf(File,'Funtion name: %s\n', Nev);
+        fprintf(File,'RobotSpeed before Moveto: %d_%d \n',robot.Simulation.Speed.X, robot.Simulation.Speed.Y);
+    end
     TargetOri = Target-robot.Position;
     TempSpeedRobot = robot.Simulation.Speed;
     %if the angle between the robot orientation and the direction the
@@ -22,12 +26,15 @@ function desiredSpeed = MoveTo( robot, Target )
 
         if (cross([robot.Simulation.Speed.X,robot.Simulation.Speed.Y,0],[robot.Orientation.X,robot.Orientation.Y,0])==0)
             if norm(robot.Simulation.Speed.RowForm()) >= 15
-                robot.Simulation.Speed = Vector2(robot.Simulation.Speed.RowForm()/ norm(robot.Simulation.Speed.RowForm())*15);
+                desiredSpeed = Vector2(robot.Simulation.Speed.RowForm()/ norm(robot.Simulation.Speed.RowForm())*15);
             end
         else 
             %robot.Orientation = Vector2(robot.Simulation.Speed.RowForm()/ norm(robot.Simulation.Speed.RowForm()));
             robot.Orientation = Vector2(desiredSpeed.RowForm()/ norm(desiredSpeed.RowForm()));
-        end            
+        end    
+        if (agentIndex == 1)
+            fprintf(File,'RobotSpeed after Moveto: %d_%d \n\n',desiredSpeed.X, desiredSpeed.Y);
+        end
 %     else %Backfire of the differential movements.
 %         [v1, v2, v3] = OmniEQ(robot, 0);
 %         [Control OriEnd] = DifferentialEQ(robot, Target);

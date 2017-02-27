@@ -19,12 +19,11 @@ classdef Referee < handle
             out = Var;
         end
         
-        function fixedState = fixMyState( originalState,FID,i)
+        function fixedState = fixMyState( originalState,i)
             for i=1:length(originalState.robots)
                 realD = originalState.ball.Position.Distance(originalState.robots(i).Position);
                 imD = originalState.ball.Radius+originalState.robots(i).Radius;
                 if(realD<imD)
-                    fprintf(FID,'\n Fixing the position, no collision at %d. step \n\n', i);
                     originalState.ball.Position = originalState.robots(i).Position+(originalState.robots(i).Position-originalState.ball.Position).*-(imD/realD);
                 end
             end

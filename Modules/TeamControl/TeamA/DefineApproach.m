@@ -1,4 +1,4 @@
-function [OutSpeed,Target] = DefineApproach( Robots,agentIndex,ApproachSequence,P,Q,R,S,K )
+function [OutSpeed,Target] = DefineApproach( Robots,agentIndex,ApproachSequence,P,Q,R,S,K, File )
 
     DesiredSpeedTime=1;
 
@@ -59,10 +59,9 @@ for s=1:sor
             Robots(agentIndex).Target=Vector2(K);
        
     end;
-    tempTarget = Vector2(Robots(agentIndex).Target.X, Robots(agentIndex).Target.Y);
-    Speed = MoveTo(Robots(agentIndex),tempTarget);
+    Speed = MoveTo(agentIndex, Robots(agentIndex),Robots(agentIndex).Target, File,'DefineApproach.m');
     TG = Robots(agentIndex).Target;
-    OutSpeed = Speed.RowForm();
+    OutSpeed = Speed;
     Target = TG;
 end;
 %Target(1,:)=[];
