@@ -1,4 +1,4 @@
-function [ ControlSignal, Target] = haromszog( agentIndex, Robots, Ball, DesiredPlace, AgentVelocity, File )
+function [ ControlSignal, Target, Time] = haromszog( agentIndex, Robots, Ball, DesiredPlace, AgentVelocity, File )
 %HAROMSZOG
 %function produces a control signal for the specified agent to kick the
 %ball to the desired place?
@@ -91,29 +91,31 @@ for j=1:length(PossibleTimes)
     
     
     %Approach
-    [ControlSignal,Target]=DefineApproach(Robots,agentIndex,ApproachSequence,P,Q,R,S,K,File);
+    [ControlSignal,Target,Time]=DefineApproach(Robots,agentIndex,ApproachSequence,P,Q,R,S,K,File);
     
-%     NeedTime=sum(Time);
+    NeedTime=sum(Time);
 
 
     if (AgentVelocity>AgentVelocityLim)
         NeedTime=1000;
     end;
 
-%     %If available, we kick it then
-%     if ( NeedTime<i )
-%         %ControlSignal;
-%         %ControlSignal=[ControlSignal ; zeros(i-sum(Time),2)];
-%         Robots(agentIndex).Target=[K(1)+wx1 K(2)+wy1 wx1 wy1];
-%         %[CS,TG,TM]=FUN.moveTo(agentIndex,TeamOwn,AgentVelocity);
-%         %CS=[AgentVelocity 0];
-%         TG=Robots(agentIndex).Target;
-%         TM=1;
-%         ControlSignal=Vector2(ControlSignal(1),ControlSignal(2));
-%         Target=TG;
-%         kick=1;
-%         return;
-%     end;
+    %If available, we kick it then
+    if ( NeedTime<i )
+        %ControlSignal;
+        ControlSignal=[ControlSignal ; zeros(i-sum(Time),2)];
+        Robots(agentIndex).Target=Vector2(K(1)+wx1, K(2)+wy1);
+        %[CS,TG,TM]=FUN.moveTo(agentIndex,TeamOwn,AgentVelocity);
+        CS=[AgentVelocity 0];
+        TG=Robots(agentIndex).Target;
+        TM=1;
+        ControlSignal=[ControlSignal;CS];
+        Target=[Target; TG];
+        Time = [Time;TM];
+        Time = sum(Time);
+        kick=1;
+        return;
+    end;
 end;
 
 
@@ -121,7 +123,7 @@ end;
 if (kick==0)
     Target = Vector2(Destination(1), Destination(2));
     Robots(agentIndex).Target = Target;
-    ControlSignal = MoveTo(agentIndex, Robots(agentIndex),Robots(agentIndex).Target, File,'haromszog.m');
+    [ControlSignal, Target, Time] = MoveTo(agentIndex, Robots(agentIndex),Robots(agentIndex).Target, File,'haromszog.m');
 end;
 
 

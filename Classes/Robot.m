@@ -8,6 +8,7 @@ classdef Robot < handle
         Radius;         %Radius of the simulated robot
         Target;         %Target where the robot wants to go
         TargetSpeedTime;
+        ControlSignal;
         Owner;
     end
     

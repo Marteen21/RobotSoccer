@@ -133,9 +133,9 @@ plot(Environment.goalPos.X+Environment.xLim,Environment.goalPos.Y + Environment.
 %---------Rectangles-------------
 RobotDraw(1) = rectangle('Position',[c(1).robots(1).Position.X-c(1).robots(1).Radius,c(1).robots(1).Position.Y-c(1).robots(1).Radius, 2*c(1).robots(1).Radius, 2*c(1).robots(1).Radius],...
 'Curvature',[1,1], 'FaceColor','g');
-RobotTargetDraw = rectangle('Position',[c(1).robots(1).Target.X-c(1).robots(1).Radius,c(1).robots(1).Target.Y-c(1).robots(1).Radius, 2*c(1).robots(1).Radius, 2*c(1).robots(1).Radius],...
+RobotTargetDraw = rectangle('Position',[c(1).robots(1).Target(1).X-c(1).robots(1).Radius,c(1).robots(1).Target(1).Y-c(1).robots(1).Radius, 2*c(1).robots(1).Radius, 2*c(1).robots(1).Radius],...
 'Curvature',[1,1], 'EdgeColor','b','LineStyle','--');
-TargetLine = line([c(1).robots(1).Position.X c(1).robots(1).Target.X],[c(1).robots(1).Position.Y c(1).robots(1).Target.Y], 'LineStyle','--');
+TargetLine = line([c(1).robots(1).Position.X c(1).robots(1).Target(1).X],[c(1).robots(1).Position.Y c(1).robots(1).Target(1).Y], 'LineStyle','--');
 RobotDraw(2) = rectangle('Position',[c(1).robots(2).Position.X-c(1).robots(2).Radius,c(1).robots(2).Position.Y-c(1).robots(2).Radius, 2*c(1).robots(2).Radius, 2*c(1).robots(2).Radius],...
 'Curvature',[1,1], 'FaceColor','r');
 RobotDraw(3) = rectangle('Position',[c(1).robots(3).Position.X-c(1).robots(3).Radius,c(1).robots(3).Position.Y-c(1).robots(3).Radius, 2*c(1).robots(3).Radius, 2*c(1).robots(3).Radius],...
@@ -177,7 +177,7 @@ for i=1:Steps
 %         Orientation(k).XData = [c(i).robots(k).Position.X c(i).robots(k).Position.X+c(i).robots(k).Radius*((c(i).robots(k).Simulation.Speed.X)/(norm(c(i).robots(k).Simulation.Speed.RowForm())))];
 %         Orientation(k).YData = [c(i).robots(k).Positoin.Y c(i).robots(k).Position.Y+c(i).robots(k).Radius*((c(i).robots(k).Simulation.Speed.Y)/(norm(c(i).robots(k).Simulation.Speed.RowForm())))];
     end     
-    RobotTargetDraw.Position = [c(i).robots(1).Target.X-c(i).robots(1).Radius,c(i).robots(1).Target.Y-c(i).robots(1).Radius, 2*c(i).robots(1).Radius, 2*c(i).robots(1).Radius];
+    RobotTargetDraw.Position = [c(i).robots(1).Target(1).X-c(i).robots(1).Radius,c(i).robots(1).Target(1).Y-c(i).robots(1).Radius, 2*c(i).robots(1).Radius, 2*c(i).robots(1).Radius];
     BallDraw.Position = [c(i).ball.Position.X-c(i).ball.Radius,c(i).ball.Position.Y-c(i).ball.Radius, 2*c(i).ball.Radius, 2*c(i).ball.Radius];
     TargetLine.XData = [c(i).robots(1).Position.X c(i).robots(1).Target.X];
     TargetLine.YData = [c(i).robots(1).Position.Y c(i).robots(1).Target.Y];

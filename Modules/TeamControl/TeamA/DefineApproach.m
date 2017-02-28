@@ -1,10 +1,10 @@
-function [OutSpeed,Target] = DefineApproach( Robots,agentIndex,ApproachSequence,P,Q,R,S,K, File )
+function [ControlSignal,Target,Time] = DefineApproach( Robots,agentIndex,ApproachSequence,P,Q,R,S,K, File )
 
     DesiredSpeedTime=1;
 
 
 
-OutSpeed=[0 0];
+ControlSignal=[0 0];
 Target=Vector2(0,0);
 Time=0;
 [sor,oszlop]=size(ApproachSequence);
@@ -59,13 +59,13 @@ for s=1:sor
             Robots(agentIndex).Target=Vector2(K);
        
     end;
-    Speed = MoveTo(agentIndex, Robots(agentIndex),Robots(agentIndex).Target, File,'DefineApproach.m');
-    TG = Robots(agentIndex).Target;
-    OutSpeed = Speed;
-    Target = TG;
+    [CS, TG, TM] = MoveTo(agentIndex, Robots(agentIndex),Robots(agentIndex).Target, File,'DefineApproach.m');
+    ControlSignal = [ControlSignal; CS];
+    Target = [Target;TG];
+    Time = [Time, TM];
 end;
-%Target(1,:)=[];
-
-
+ControlSignal(1,:)=[];
+Target(1,:)=[];
+Time(1)=[];
 end
 

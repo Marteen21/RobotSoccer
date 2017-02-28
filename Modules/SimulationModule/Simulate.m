@@ -30,7 +30,7 @@ function SimulationData = Simulate( startState, noSteps )
             Referee.isGoal = false;
         else
         end
-        if(i==17)
+        if(i==18)
             stop=0;
         end
     end
