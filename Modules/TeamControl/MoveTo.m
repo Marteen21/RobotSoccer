@@ -1,9 +1,11 @@
 function [ControlSignal, Target, Time] = MoveTo(agentIndex,  robot, Target, File, Nev )
 %MOVETO Summary of this function goes here
 %   Moving to the desired target
-    if (agentIndex == 1)
-        fprintf(File,'Funtion name: %s\n', Nev);
-        fprintf(File,'RobotSpeed before Moveto: %d_%d \n',robot.Simulation.Speed.X, robot.Simulation.Speed.Y);
+    if nargin > 3
+        if (agentIndex == 1)
+            fprintf(File,'Funtion name: %s\n', Nev);
+            fprintf(File,'RobotSpeed before Moveto: %d_%d \n',robot.Simulation.Speed.X, robot.Simulation.Speed.Y);
+        end
     end
 %     TargetOri = Target-robot.Position;
 %     TempSpeedRobot = robot.Simulation.Speed;

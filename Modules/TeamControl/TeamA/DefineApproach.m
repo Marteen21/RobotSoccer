@@ -59,7 +59,7 @@ for s=1:sor
             Robots(agentIndex).Target=Vector2(K);
        
     end;
-    [CS, TG, TM] = MoveTo(agentIndex, Robots(agentIndex),Robots(agentIndex).Target, File,'DefineApproach.m');
+    [CS, TG, TM] = MoveTo(agentIndex, Robots(agentIndex),Robots(agentIndex).Target);
     ControlSignal = [ControlSignal; CS];
     Target = [Target;TG];
     Time = [Time, TM];

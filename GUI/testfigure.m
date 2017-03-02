@@ -133,8 +133,11 @@ plot(Environment.goalPos.X+Environment.xLim,Environment.goalPos.Y + Environment.
 %---------Rectangles-------------
 RobotDraw(1) = rectangle('Position',[c(1).robots(1).Position.X-c(1).robots(1).Radius,c(1).robots(1).Position.Y-c(1).robots(1).Radius, 2*c(1).robots(1).Radius, 2*c(1).robots(1).Radius],...
 'Curvature',[1,1], 'FaceColor','g');
+
+%Target  is  Vector2 MATRIX!!!
 RobotTargetDraw = rectangle('Position',[c(1).robots(1).Target(1).X-c(1).robots(1).Radius,c(1).robots(1).Target(1).Y-c(1).robots(1).Radius, 2*c(1).robots(1).Radius, 2*c(1).robots(1).Radius],...
 'Curvature',[1,1], 'EdgeColor','b','LineStyle','--');
+
 TargetLine = line([c(1).robots(1).Position.X c(1).robots(1).Target(1).X],[c(1).robots(1).Position.Y c(1).robots(1).Target(1).Y], 'LineStyle','--');
 RobotDraw(2) = rectangle('Position',[c(1).robots(2).Position.X-c(1).robots(2).Radius,c(1).robots(2).Position.Y-c(1).robots(2).Radius, 2*c(1).robots(2).Radius, 2*c(1).robots(2).Radius],...
 'Curvature',[1,1], 'FaceColor','r');

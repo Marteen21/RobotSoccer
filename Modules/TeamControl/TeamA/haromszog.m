@@ -29,7 +29,9 @@ Radius=(1+10^-13)*(BallRadius+AgentRadius);
 
 %Allithato parameterek
 DesiredSpeedTime=1;
-PossibleTimes=[1:20 22:2:50 55:5:100 110:10:200 220:20:400];
+
+PossibleTimes=[1:20 22:2:50 55:5:100 110:10:200 220:20:400]; %MI EZ???
+
 PSR=[0.001:0.001:0.01 0.015:0.005:0.1 0.2:0.1:1];
 Bounding=0.9*Radius;
 
@@ -38,7 +40,7 @@ kick=0;
 
 
 
-
+%MIERT KELL 65x LEFUTNIA??????
 for j=1:length(PossibleTimes)
 
     i=PossibleTimes(j);
@@ -113,6 +115,7 @@ for j=1:length(PossibleTimes)
         Target=[Target; TG];
         Time = [Time;TM];
         Time = sum(Time);
+        
         kick=1;
         return;
     end;

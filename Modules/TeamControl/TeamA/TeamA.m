@@ -137,6 +137,16 @@ classdef TeamA
             fprintf(File,'Target: %d_%d \n',teamAgentA(1).Target.X, teamAgentA(1).Target.Y);
             fprintf(File,'RobotSpeed: %d_%d \n\n', teamAgentA(1).Simulation.Speed.X, teamAgentA(1).Simulation.Speed.Y);
         end
+        
+        function controlledState = calculateControls(originalState, ControlSignal, Target)
+            
+            Time = size(ControlSignal{1});
+            Time = Time(1);
+            
+            
+            
+            controlledState = originalState
+        end
     end
 end
 
