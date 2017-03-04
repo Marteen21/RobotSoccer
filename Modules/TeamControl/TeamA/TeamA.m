@@ -90,10 +90,10 @@ classdef TeamA
                             [teamAgentA(agentIndex).Simulation.Speed,teamAgentA(agentIndex).Target]= haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed,File);
                         else
                             teamAgentA(agentIndex).Target=Vector2(DesiredPlace{agentIndex}(3:4));
-                            %[CS,teamAgentA(agentIndex).Target,teamAgentA(agentIndex).TargetSpeedTime]= MoveTo(agentIndex,originalState.robots,DesiredSpeedTime);
+                            %[CS,teamAgentA(agentIndex).Target,teamAgentA(agentIndex).TargetSpeedTime]= getControls(agentIndex,originalState.robots,DesiredSpeedTime);
                             %Moving to the target, added agentIndex for the
                             %logFile, 
-                            [teamAgentA(agentIndex).ControlSignal, teamAgentA(agentIndex).Target, teamAgentA(agentIndex).TargetSpeedTime]  = MoveTo(agentIndex, teamAgentA(agentIndex), teamAgentA(agentIndex).Target, File, 'TeamA.m offense');
+                            [teamAgentA(agentIndex).ControlSignal, teamAgentA(agentIndex).Target, teamAgentA(agentIndex).TargetSpeedTime]  = getControls(teamAgentA(agentIndex), teamAgentA(agentIndex).Target, File, 'TeamA.m offense');
                             %End of moving
                             
                         end;
@@ -110,8 +110,8 @@ classdef TeamA
                         end
                         
                         %Moving to the target
-                        %teamAgentA(agentIndex).Simulation.Speed = MoveTo(agentIndex, teamAgentA(agentIndex),teamAgentA(agentIndex).Target, File,'TeamA.m hidefense');
-                        [teamAgentA(agentIndex).ControlSignal, teamAgentA(agentIndex).Target, teamAgentA(agentIndex).TargetSpeedTime] = MoveTo(agentIndex, teamAgentA(agentIndex),teamAgentA(agentIndex).Target, File,'TeamA.m hidefense');
+                        %teamAgentA(agentIndex).Simulation.Speed = getControls(agentIndex, teamAgentA(agentIndex),teamAgentA(agentIndex).Target, File,'TeamA.m hidefense');
+                        [teamAgentA(agentIndex).ControlSignal, teamAgentA(agentIndex).Target, teamAgentA(agentIndex).TargetSpeedTime] = getControls(teamAgentA(agentIndex),teamAgentA(agentIndex).Target, File,'TeamA.m hidefense');
                         
 
                         for agentIndex = 1:(length(teamAgentA)-1)
@@ -125,7 +125,7 @@ classdef TeamA
                                     [teamAgentA(agentIndex).ControlSignal,teamAgentA(agentIndex).Target, teamAgentA(agentIndex).TargetSpeedTime]=haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed,File);
                                 else
                                     teamAgentA(agentIndex).Target=Vector2(DesiredPlace{agentIndex}(3:4));
-                                    [teamAgentA(agentIndex).ControlSignal, teamAgentA(agentIndex).Target, teamAgentA(agentIndex).TargetSpeedTime]  = MoveTo(agentIndex, teamAgentA(agentIndex), teamAgentA(agentIndex).Target, File,'TeamA.m hidefense2');
+                                    [teamAgentA(agentIndex).ControlSignal, teamAgentA(agentIndex).Target, teamAgentA(agentIndex).TargetSpeedTime]  = getControls(teamAgentA(agentIndex), teamAgentA(agentIndex).Target, File,'TeamA.m hidefense2');
                                 end;
                             %end
                         end
@@ -140,12 +140,29 @@ classdef TeamA
         
         function controlledState = calculateControls(originalState, ControlSignal, Target)
             
-            Time = size(ControlSignal{1});
-            Time = Time(1);
+            k=1;
+            for i=1:length(originalState.robots)
+                if (strcmp(originalState.robots(i).Owner,'TeamA'))
+                    teamAgentA(k) = originalState.robots(i);
+                    k = k+1;
+                end
+            end
             
+            for i=1:k
+                teamAgentA(i).Target = Target{i}(1);
+                switch ControlSignal{i}(1,1)
+                    case 0
+                        %Orientation change
+                        teamAgentA(i).Orientation = teamAgentA(i).Orientation * Rodriguez(ControlSignal{i}(1,1));
+                    otherwise
+                        %Speed change
+                        desiredSpeed = MoveTo(i,teamAgentA(i).Orientation,ControlSignal{i}(1,1));
+                        teamAgentA(i).Simulation.Speed = desiredSpeed;
+                end
+                ControlSignal{i}(1,1) = [];
+            end
             
-            
-            controlledState = originalState
+            controlledState = originalState;
         end
     end
 end
