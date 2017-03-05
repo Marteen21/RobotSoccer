@@ -6,7 +6,7 @@ classdef TeamA
     end
     
     methods (Static)
-        function controlledState = controlMyState(originalState,Cost,File)
+        function [ControlSignal, Target] = controlMyState(originalState,Cost,File)
             %originalState.ball.Simulation.Speed
             min = 5*10E6;
             MaxSpeed = 15;
@@ -87,13 +87,13 @@ classdef TeamA
                         %closest to the ball gets to attack (for now)
                         % if (kickAble(agentIndex) == max(kickAble) && max(kickAble) > 0.5) %what should be this number??? probability of successful kick..
                         if (distToBall(agentIndex)==min && distToBall(agentIndex) < 10)
-                            [teamAgentA(agentIndex).Simulation.Speed,teamAgentA(agentIndex).Target]= haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed,File);
+                            [ControlSignal{agentIndex} ,Target{agentIndex}]= haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed,File);
                         else
-                            teamAgentA(agentIndex).Target=Vector2(DesiredPlace{agentIndex}(3:4));
-                            %[CS,teamAgentA(agentIndex).Target,teamAgentA(agentIndex).TargetSpeedTime]= getControls(agentIndex,originalState.robots,DesiredSpeedTime);
+                            Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
+                            %[CS,teamAgentA(agentIndex).Target{agentIndex},teamAgentA(agentIndex).TargetSpeedTime]= getControls(agentIndex,originalState.robots,DesiredSpeedTime);
                             %Moving to the target, added agentIndex for the
                             %logFile, 
-                            [teamAgentA(agentIndex).ControlSignal, teamAgentA(agentIndex).Target, teamAgentA(agentIndex).TargetSpeedTime]  = getControls(teamAgentA(agentIndex), teamAgentA(agentIndex).Target, File, 'TeamA.m offense');
+                            [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex}, File, 'TeamA.m offense');
                             %End of moving
                             
                         end;
@@ -104,14 +104,14 @@ classdef TeamA
                         DesiredSpeedTime = 1;
                         target = Goalie(originalState.ball);
                         if target > 0
-                            teamAgentA(agentIndex).Target=Vector2(target);
+                            Target{agentIndex}=Vector2(target);
                         else
-                            teamAgentA(agentIndex).Target=Vector2(0,0);
+                            Target{agentIndex}=Vector2(0,0);
                         end
                         
                         %Moving to the target
-                        %teamAgentA(agentIndex).Simulation.Speed = getControls(agentIndex, teamAgentA(agentIndex),teamAgentA(agentIndex).Target, File,'TeamA.m hidefense');
-                        [teamAgentA(agentIndex).ControlSignal, teamAgentA(agentIndex).Target, teamAgentA(agentIndex).TargetSpeedTime] = getControls(teamAgentA(agentIndex),teamAgentA(agentIndex).Target, File,'TeamA.m hidefense');
+                        %teamAgentA(agentIndex).Simulation.Speed = getControls(agentIndex, teamAgentA(agentIndex),teamAgentA(agentIndex).Target{agentIndex}, File,'TeamA.m hidefense');
+                        [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime] = getControls(teamAgentA(agentIndex),Target{agentIndex}, File,'TeamA.m hidefense');
                         
 
                         for agentIndex = 1:(length(teamAgentA)-1)
@@ -122,44 +122,44 @@ classdef TeamA
                                 %closest to the ball gets to attack (for now)
                                 % if (kickAble(agentIndex) == max(kickAble) && max(kickAble) > 0.5) %what should be this number??? probability of successful kick..
                                 if (distToBall(agentIndex)==min)
-                                    [teamAgentA(agentIndex).ControlSignal,teamAgentA(agentIndex).Target, teamAgentA(agentIndex).TargetSpeedTime]=haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed,File);
+                                    [ControlSignal{agentIndex},Target{agentIndex}, TargetSpeedTime]=haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed,File);
                                 else
-                                    teamAgentA(agentIndex).Target=Vector2(DesiredPlace{agentIndex}(3:4));
-                                    [teamAgentA(agentIndex).ControlSignal, teamAgentA(agentIndex).Target, teamAgentA(agentIndex).TargetSpeedTime]  = getControls(teamAgentA(agentIndex), teamAgentA(agentIndex).Target, File,'TeamA.m hidefense2');
+                                    Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
+                                    [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex}, File,'TeamA.m hidefense2');
                                 end;
                             %end
                         end
             end
             %originalState.ball.Simulation.Speed
-            controlledState = originalState;
-            fprintf(File,'Time: %d \n',originalState.time);
-            fprintf(File,'RobotPos: %d_%d \n',teamAgentA(1).Position.X, teamAgentA(1).Position.Y);
-            fprintf(File,'Target: %d_%d \n',teamAgentA(1).Target.X, teamAgentA(1).Target.Y);
-            fprintf(File,'RobotSpeed: %d_%d \n\n', teamAgentA(1).Simulation.Speed.X, teamAgentA(1).Simulation.Speed.Y);
+            %controlledState = originalState;
+%             fprintf(File,'Time: %d \n',originalState.time);
+%             fprintf(File,'RobotPos: %d_%d \n',teamAgentA(1).Position.X, teamAgentA(1).Position.Y);
+%             fprintf(File,'Target{agentIndex}: %d_%d \n',Target{agentIndex}.X, Target{agentIndex}.Y);
+%             fprintf(File,'RobotSpeed: %d_%d \n\n', teamAgentA(1).Simulation.Speed.X, teamAgentA(1).Simulation.Speed.Y);
         end
         
         function controlledState = calculateControls(originalState, ControlSignal, Target)
             
-            k=1;
+            k=0;
             for i=1:length(originalState.robots)
                 if (strcmp(originalState.robots(i).Owner,'TeamA'))
-                    teamAgentA(k) = originalState.robots(i);
                     k = k+1;
+                    teamAgentA(k) = originalState.robots(i);
                 end
             end
             
             for i=1:k
-                teamAgentA(i).Target = Target{i}(1);
+                teamAgentA(i).Target = Target(i);
                 switch ControlSignal{i}(1,1)
                     case 0
                         %Orientation change
-                        teamAgentA(i).Orientation = teamAgentA(i).Orientation * Rodriguez(ControlSignal{i}(1,1));
+                        teamAgentA(i).Orientation = Vector2(teamAgentA(i).Orientation.RowForm() * Rodriguez(ControlSignal{i}(1,2)));
                     otherwise
                         %Speed change
                         desiredSpeed = MoveTo(i,teamAgentA(i).Orientation,ControlSignal{i}(1,1));
                         teamAgentA(i).Simulation.Speed = desiredSpeed;
                 end
-                ControlSignal{i}(1,1) = [];
+                ControlSignal{i}(1,:) = [];
             end
             
             controlledState = originalState;

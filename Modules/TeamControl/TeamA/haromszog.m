@@ -106,13 +106,14 @@ for j=1:length(PossibleTimes)
     if ( NeedTime<i )
         %ControlSignal;
         ControlSignal=[ControlSignal ; zeros(i-sum(Time),2)];
-        Robots(agentIndex).Target=Vector2(K(1)+wx1, K(2)+wy1);
+        TargetNew = Vector2(K(1)+wx1, K(2)+wy1);
         %[CS,TG,TM]=FUN.moveTo(agentIndex,TeamOwn,AgentVelocity);
         CS=[AgentVelocity 0];
-        TG=Robots(agentIndex).Target;
+        TG=TargetNew;
         TM=1;
         ControlSignal=[ControlSignal;CS];
-        Target=[Target; TG];
+        %Target=[TargetNew; TG];
+        Target = TG;
         Time = [Time;TM];
         Time = sum(Time);
         

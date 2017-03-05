@@ -7,6 +7,10 @@ function SimulationData = Simulate( startState, noSteps )
     end
     c = [startState];
     ControlSignal{1} = 0;
+    oldControl{1} = 0;
+    oldControl{2} = 0;
+    oldControl{3} = 0;
+    CompareTarget = Vector2(0,0);
     Time = 1; %number of times when the controlsignal remain unchanged
     for i = 1:noSteps
         c(end+1) = c(end).NextState();
@@ -29,9 +33,15 @@ function SimulationData = Simulate( startState, noSteps )
         %ControlSignal 3 blokkbol allo elem, sorai a kulonbozo robot
         %Controllok
         [ControlSignal, Target] = TeamA.controlMyState(c(end),costDist,FID);
- 
+        %Egymashoz kozel elhelyezkedo Targetet azonosnak tekintunk
+        if Distance(CompareTarget,Target) < 10
+            Target = CompareTarget;
+        end
+        CompareTarget = Target;
+        
         for k=1:length(ControlSignal)
-            Compare(k) = (oldControl{k} == ControlSignal{k}(Time:end,:));
+            CompareMat = (oldControl{k} == ControlSignal{k}(Time:end,:));
+            Compare(k) = all(all(CompareMat));
         end
         %all() logical AND operator
         Logic = all(Compare);
@@ -40,7 +50,7 @@ function SimulationData = Simulate( startState, noSteps )
           Time = Time+1;
         else
           c(end) = TeamA.calculateControls(c(end),ControlSignal, Target);
-          Time = 0;
+          Time = 1;
         end
          
         
