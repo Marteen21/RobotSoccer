@@ -93,7 +93,7 @@ classdef TeamA
                             %[CS,teamAgentA(agentIndex).Target{agentIndex},teamAgentA(agentIndex).TargetSpeedTime]= getControls(agentIndex,originalState.robots,DesiredSpeedTime);
                             %Moving to the target, added agentIndex for the
                             %logFile, 
-                            [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex}, File, 'TeamA.m offense');
+                            [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex});
                             %End of moving
                             
                         end;
@@ -111,7 +111,7 @@ classdef TeamA
                         
                         %Moving to the target
                         %teamAgentA(agentIndex).Simulation.Speed = getControls(agentIndex, teamAgentA(agentIndex),teamAgentA(agentIndex).Target{agentIndex}, File,'TeamA.m hidefense');
-                        [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime] = getControls(teamAgentA(agentIndex),Target{agentIndex}, File,'TeamA.m hidefense');
+                        [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime] = getControls(teamAgentA(agentIndex),Target{agentIndex});
                         
 
                         for agentIndex = 1:(length(teamAgentA)-1)
@@ -125,7 +125,7 @@ classdef TeamA
                                     [ControlSignal{agentIndex},Target{agentIndex}, TargetSpeedTime]=haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed,File);
                                 else
                                     Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
-                                    [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex}, File,'TeamA.m hidefense2');
+                                    [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex});
                                 end;
                             %end
                         end
@@ -138,7 +138,7 @@ classdef TeamA
 %             fprintf(File,'RobotSpeed: %d_%d \n\n', teamAgentA(1).Simulation.Speed.X, teamAgentA(1).Simulation.Speed.Y);
         end
         
-        function controlledState = calculateControls(originalState, ControlSignal, Target)
+        function [controlledState, ControlSignal] = calculateControls(originalState, ControlSignal, Target, File)
             
             k=0;
             for i=1:length(originalState.robots)
@@ -150,16 +150,50 @@ classdef TeamA
             
             for i=1:k
                 teamAgentA(i).Target = Target(i);
-                switch ControlSignal{i}(1,1)
-                    case 0
-                        %Orientation change
-                        teamAgentA(i).Orientation = Vector2(teamAgentA(i).Orientation.RowForm() * Rodriguez(ControlSignal{i}(1,2)));
-                    otherwise
-                        %Speed change
-                        desiredSpeed = MoveTo(i,teamAgentA(i).Orientation,ControlSignal{i}(1,1));
-                        teamAgentA(i).Simulation.Speed = desiredSpeed;
-                end
+                if ~(isempty(ControlSignal{i}))
+                    switch ControlSignal{i}(1,1)
+                        case 0
+                            %Orientation change, now bruteforce orientation
+                            %change
+%                             NewOrientTemp = Target{i} - teamAgentA(i).Position;
+%                             NewOrientTemp = Vector2(NewOrientTemp.RowForm()/norm(NewOrientTemp.RowForm()));
+%                             teamAgentA(i).Orientation = NewOrientTemp;
+                            
+%                             newOriTemp = Vector2(teamAgentA(i).Orientation.RowForm() * Rodriguez(ControlSignal{i}(1,2)));
+%                             targetOri = Target{i} - teamAgentA(i).Position;
+%                             targetOri = Vector2(targetOri.RowForm()/norm(targetOri.RowForm()));
+%                             angleOri = atan2(newOriTemp.Y,newOriTemp.X);
+%                             angleTarget = atan2(targetOri.Y,targetOri.X);
+%                             if ~(round(angleOri,1) == round(angleTarget,1))
+%                                  ControlSignal{i} = [ControlSignal{i}(1,:);ControlSignal{i}];
+%                             end
+                            rotOri = atan2(teamAgentA(i).Orientation.Y,teamAgentA(i).Orientation.X)+ControlSignal{i}(1,2);
+                            targetOri = Target{i}-teamAgentA(i).Position;
+                            targetOri = Vector2(targetOri.RowForm()/norm(targetOri.RowForm()));
+                            fprintf(File,'Agens: %d\n',i);
+                            fprintf(File,'Rotation Orientation: %d\n',rotOri);
+                            fprintf(File,'Old Orientation: %d__%d\n',teamAgentA(i).Orientation.X,teamAgentA(i).Orientation.Y);
+                            if (abs(rotOri)>pi)
+                               rotOri=rotOri-sign(rotOri)*2*pi; 
+                            end
+                            teamAgentA(i).Orientation.X = cos(rotOri);
+                            teamAgentA(i).Orientation.Y = sin(rotOri);
+                            
+                            
+                            fprintf(File,'New Orientatoin: %d__%d\n',teamAgentA(i).Orientation.X,teamAgentA(i).Orientation.Y);
+                            fprintf(File,'Real Orientatoin: %d__%d\n\n',targetOri.X,targetOri.Y);
+%                             teamAgentA(i).Orientation = Vector2(teamAgentA(i).Orientation.RowForm() * Rodriguez(ControlSignal{i}(1,2)));
+                        otherwise
+                            %Speed change
+%                             desiredSpeed = MoveTo(teamAgentA(i).Orientation,ControlSignal{i}(1,1));
+                            desiredSpeed = MoveTo(teamAgentA(i).Orientation,15);
+                            teamAgentA(i).Simulation.Speed = desiredSpeed;
+%                             fprintf(File,'Agens: %d\n',i);
+%                             fprintf(File,'ControlSingalom: %d\n',size(ControlSignal{i}));
+%                             fprintf(File,'Sebesseget adok:%d_%d\n\n',teamAgentA(i).Simulation.Speed.X,teamAgentA(i).Simulation.Speed.Y);
+                    end
                 ControlSignal{i}(1,:) = [];
+                end
             end
             
             controlledState = originalState;

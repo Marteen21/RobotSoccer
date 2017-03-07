@@ -105,7 +105,7 @@ for j=1:length(PossibleTimes)
     %If available, we kick it then
     if ( NeedTime<i )
         %ControlSignal;
-        ControlSignal=[ControlSignal ; zeros(i-sum(Time),2)];
+%         ControlSignal=[ControlSignal ; zeros(i-sum(Time),2)];
         TargetNew = Vector2(K(1)+wx1, K(2)+wy1);
         %[CS,TG,TM]=FUN.moveTo(agentIndex,TeamOwn,AgentVelocity);
         CS=[AgentVelocity 0];
@@ -114,7 +114,8 @@ for j=1:length(PossibleTimes)
         ControlSignal=[ControlSignal;CS];
         %Target=[TargetNew; TG];
         Target = TG;
-        Time = [Time;TM];
+%         Time
+        Time = [Time,TM];
         Time = sum(Time);
         
         kick=1;
@@ -126,8 +127,7 @@ end;
 %If he was not can be kicked, we send it then onto his place
 if (kick==0)
     Target = Vector2(Destination(1), Destination(2));
-    Robots(agentIndex).Target = Target;
-    [ControlSignal, Target, Time] = MoveTo(agentIndex, Robots(agentIndex),Robots(agentIndex).Target, File,'haromszog.m');
+    [ControlSignal, Target, Time] = MoveTo(agentIndex, Robots(agentIndex),Target, File,'haromszog.m');
 end;
 
 

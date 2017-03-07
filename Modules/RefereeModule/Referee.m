@@ -90,10 +90,12 @@ classdef Referee < handle
                 if (strcmp(myRobots(i).Owner,'TeamA'))
                     myRobots(i).Position.X = Environment.xLim/2 - stepA;
                     myRobots(i).Position.Y = Environment.yLim/2 + Environment.yLim/40;
+                    myRobots(i).Orientation = Vector2(1,0);
                     stepA = stepA + 15;
                 else
                     myRobots(i).Position.X = Environment.xLim/2 + stepB;
                     myRobots(i).Position.Y = Environment.yLim/2 - Environment.yLim/40;
+                    myRobots(i).Orientation = Vector2(-1,0);
                     stepB = stepB + 15;
                 end
             end

@@ -8,10 +8,10 @@ function [ U, OrientationEnd ] = DifferentialEQ( robot, Target ) %Changed ball t
     MaxSpeed    = 15;                                           % a robot maximális sebessége
                     R           = robot.Radius;               % tengelyhossz fele (=fordulási rádiusz)
                     ControlNum  = 2;                                            % beav.jel szabadsági fok
-                    Epsilon     = 10E-6;                                        % numerikus pontossági küszöb az adott robot(típus)hoz ->
-                    EpsilonTh   = 10E-6;                                        % ezen belül =nek veszünk 2 számot
+                    Epsilon     = 10E-4;                                        % numerikus pontossági küszöb az adott robot(típus)hoz ->
+                    EpsilonTh   = 10E-4;                                        % ezen belül =nek veszünk 2 számot
                     %Pontos megválasztása kérdéses a mi esetünkben
-                    DesiredSpeedTime = 0;%1;
+                    DesiredSpeedTime = 0;
 
                     DeltaX = sqrt((robot.Position.X-Target.X)^2+(robot.Position.Y-Target.Y)^2); % a két pont távolsága
                     % A jelenlegi orientáció-hiba: eltérés a következõ pontba mutató iránytól:
@@ -19,7 +19,7 @@ function [ U, OrientationEnd ] = DifferentialEQ( robot, Target ) %Changed ball t
                     OrientCurrent = atan2(robot.Orientation.Y,robot.Orientation.X);
                     OrientMoveFWD = atan2(robot.Position.Y-Target.Y,robot.Position.X-Target.X); % ez az az orientáció, amikor a célpont irányába állunk az adott helyen
                     OrientMoveBWD = atan2(Target.Y-robot.Position.Y,Target.X-robot.Position.X); % ez az az orientáció, amikor a célpontnak háttal állunk az adott helyen
-                    OrientTarget  = 0;
+                    OrientTarget  = atan2(robot.Orientation.Y,robot.Orientation.X);
                     if (DeltaX>Epsilon)                             % nem értük még el a pontot
                         % itt nem unitokra számolja a forgásokat, így összekumulálódhat egy pici hiba, hogy végül mégsem arra jobb fordulni - de ez pici...
                         DeltaThetaFWD = OrientMoveFWD - OrientCurrent;
