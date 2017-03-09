@@ -153,46 +153,36 @@ classdef TeamA
                 if ~(isempty(ControlSignal{i}))
                     switch ControlSignal{i}(1,1)
                         case 0
-                            %Orientation change, now bruteforce orientation
-                            %change
-%                             NewOrientTemp = Target{i} - teamAgentA(i).Position;
-%                             NewOrientTemp = Vector2(NewOrientTemp.RowForm()/norm(NewOrientTemp.RowForm()));
-%                             teamAgentA(i).Orientation = NewOrientTemp;
-                            
-%                             newOriTemp = Vector2(teamAgentA(i).Orientation.RowForm() * Rodriguez(ControlSignal{i}(1,2)));
-%                             targetOri = Target{i} - teamAgentA(i).Position;
-%                             targetOri = Vector2(targetOri.RowForm()/norm(targetOri.RowForm()));
-%                             angleOri = atan2(newOriTemp.Y,newOriTemp.X);
-%                             angleTarget = atan2(targetOri.Y,targetOri.X);
-%                             if ~(round(angleOri,1) == round(angleTarget,1))
-%                                  ControlSignal{i} = [ControlSignal{i}(1,:);ControlSignal{i}];
-%                             end
+                            %Orientation change, 
                             rotOri = atan2(teamAgentA(i).Orientation.Y,teamAgentA(i).Orientation.X)+ControlSignal{i}(1,2);
                             targetOri = Target{i}-teamAgentA(i).Position;
                             targetOri = Vector2(targetOri.RowForm()/norm(targetOri.RowForm()));
                             fprintf(File,'Agens: %d\n',i);
+                            fprintf(File,'DiffEQ rot value: %d\n',ControlSignal{i}(1,2));
                             fprintf(File,'Rotation Orientation: %d\n',rotOri);
                             fprintf(File,'Old Orientation: %d__%d\n',teamAgentA(i).Orientation.X,teamAgentA(i).Orientation.Y);
-                            if (abs(rotOri)>pi)
-                               rotOri=rotOri-sign(rotOri)*2*pi; 
-                            end
+%                             if (abs(rotOri)>pi)
+%                                rotOri=rotOri-sign(rotOri)*2*pi; 
+%                             end
                             teamAgentA(i).Orientation.X = cos(rotOri);
                             teamAgentA(i).Orientation.Y = sin(rotOri);
-                            
+                            teamAgentA(k).Simulation.Speed = Vector2(0,0);
                             
                             fprintf(File,'New Orientatoin: %d__%d\n',teamAgentA(i).Orientation.X,teamAgentA(i).Orientation.Y);
                             fprintf(File,'Real Orientatoin: %d__%d\n\n',targetOri.X,targetOri.Y);
-%                             teamAgentA(i).Orientation = Vector2(teamAgentA(i).Orientation.RowForm() * Rodriguez(ControlSignal{i}(1,2)));
                         otherwise
                             %Speed change
 %                             desiredSpeed = MoveTo(teamAgentA(i).Orientation,ControlSignal{i}(1,1));
                             desiredSpeed = MoveTo(teamAgentA(i).Orientation,15);
-                            teamAgentA(i).Simulation.Speed = desiredSpeed;
+                            teamAgentA(i).Simulation.Speed = Vector2((-1)*sign(ControlSignal{i}(1,1))*desiredSpeed.RowForm());
 %                             fprintf(File,'Agens: %d\n',i);
 %                             fprintf(File,'ControlSingalom: %d\n',size(ControlSignal{i}));
 %                             fprintf(File,'Sebesseget adok:%d_%d\n\n',teamAgentA(i).Simulation.Speed.X,teamAgentA(i).Simulation.Speed.Y);
                     end
                 ControlSignal{i}(1,:) = [];
+                else
+%                     teamAgentA(i).Simulation.Speed = Vector2(0,0);
+                    fprintf(File,'ControlSignal is empty...WTF\n\n');
                 end
             end
             

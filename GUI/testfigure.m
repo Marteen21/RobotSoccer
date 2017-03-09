@@ -135,10 +135,20 @@ RobotDraw(1) = rectangle('Position',[c(1).robots(1).Position.X-c(1).robots(1).Ra
 'Curvature',[1,1], 'FaceColor','g');
 
 %Target  is  Vector2 MATRIX!!!
-RobotTargetDraw = rectangle('Position',[c(1).robots(1).Target{1}.X-c(1).robots(1).Radius,c(1).robots(1).Target{1}.Y-c(1).robots(1).Radius, 2*c(1).robots(1).Radius, 2*c(1).robots(1).Radius],...
-'Curvature',[1,1], 'EdgeColor','b','LineStyle','--');
+k = 1;
+RobotTargetDraw = [];
+for L=1:length(c(1).robots)
+    if strcmp(c(1).robots(L).Owner,'TeamA')
+        RobotTargetDraw = [RobotTargetDraw; rectangle('Position',[c(1).robots(L).Target{1}.X-c(1).robots(L).Radius,c(1).robots(L).Target{1}.Y-c(1).robots(L).Radius, 2*c(1).robots(L).Radius, 2*c(1).robots(L).Radius],'Curvature',[1,1], 'EdgeColor','b','LineStyle','--') ];
+        TargetLine(k) = line([c(1).robots(L).Position.X c(1).robots(L).Target{1}.X],[c(1).robots(L).Position.Y c(1).robots(L).Target{1}.Y], 'LineStyle','--');
+        teamAmember(k) = L;
+        k = k+1;
+    end
+end
+% RobotTargetDraw = rectangle('Position',[c(1).robots(1).Target{1}.X-c(1).robots(1).Radius,c(1).robots(1).Target{1}.Y-c(1).robots(1).Radius, 2*c(1).robots(1).Radius, 2*c(1).robots(1).Radius],...
+% 'Curvature',[1,1], 'EdgeColor','b','LineStyle','--');
 
-TargetLine = line([c(1).robots(1).Position.X c(1).robots(1).Target{1}.X],[c(1).robots(1).Position.Y c(1).robots(1).Target{1}.Y], 'LineStyle','--');
+% TargetLine = line([c(1).robots(1).Position.X c(1).robots(1).Target{1}.X],[c(1).robots(1).Position.Y c(1).robots(1).Target{1}.Y], 'LineStyle','--');
 RobotDraw(2) = rectangle('Position',[c(1).robots(2).Position.X-c(1).robots(2).Radius,c(1).robots(2).Position.Y-c(1).robots(2).Radius, 2*c(1).robots(2).Radius, 2*c(1).robots(2).Radius],...
 'Curvature',[1,1], 'FaceColor','r');
 RobotDraw(3) = rectangle('Position',[c(1).robots(3).Position.X-c(1).robots(3).Radius,c(1).robots(3).Position.Y-c(1).robots(3).Radius, 2*c(1).robots(3).Radius, 2*c(1).robots(3).Radius],...
@@ -180,10 +190,13 @@ for i=1:Steps
 %         Orientation(k).XData = [c(i).robots(k).Position.X c(i).robots(k).Position.X+c(i).robots(k).Radius*((c(i).robots(k).Simulation.Speed.X)/(norm(c(i).robots(k).Simulation.Speed.RowForm())))];
 %         Orientation(k).YData = [c(i).robots(k).Positoin.Y c(i).robots(k).Position.Y+c(i).robots(k).Radius*((c(i).robots(k).Simulation.Speed.Y)/(norm(c(i).robots(k).Simulation.Speed.RowForm())))];
     end     
-    RobotTargetDraw.Position = [c(i).robots(1).Target{1}.X-c(i).robots(1).Radius,c(i).robots(1).Target{1}.Y-c(i).robots(1).Radius, 2*c(i).robots(1).Radius, 2*c(i).robots(1).Radius];
+    for count=1:length(teamAmember)
+        RobotTargetDraw(count).Position = [c(i).robots(teamAmember(1,count)).Target{1}.X-c(i).robots(teamAmember(1,count)).Radius,c(i).robots(teamAmember(1,count)).Target{1}.Y-c(i).robots(teamAmember(1,count)).Radius, 2*c(i).robots(teamAmember(1,count)).Radius, 2*c(i).robots(teamAmember(1,count)).Radius];
+        TargetLine(count).XData = [c(i).robots(teamAmember(1,count)).Position.X c(i).robots(teamAmember(1,count)).Target{1}.X];
+        TargetLine(count).YData = [c(i).robots(teamAmember(1,count)).Position.Y c(i).robots(teamAmember(1,count)).Target{1}.Y];
+    end
     BallDraw.Position = [c(i).ball.Position.X-c(i).ball.Radius,c(i).ball.Position.Y-c(i).ball.Radius, 2*c(i).ball.Radius, 2*c(i).ball.Radius];
-    TargetLine.XData = [c(i).robots(1).Position.X c(i).robots(1).Target{1}.X];
-    TargetLine.YData = [c(i).robots(1).Position.Y c(i).robots(1).Target{1}.Y];
+    
     catch
         error('Rectangle position error');
     end
