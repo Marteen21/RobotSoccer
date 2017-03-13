@@ -102,7 +102,7 @@ classdef TeamA
                         %agent 3 - defence
                         agentIndex = 3;
                         DesiredSpeedTime = 1;
-                        target = Goalie(originalState.ball);
+                        target = Goalie(originalState.ball,teamAgentA(agentIndex).Radius);
                         if target > 0
                             Target{agentIndex}=Vector2(target);
                         else
@@ -115,19 +115,14 @@ classdef TeamA
                         
 
                         for agentIndex = 1:(length(teamAgentA)-1)
-                            %CS0=zeros(CycleBatch,2);
-                            %if (i~=2)
-                                DesiredSpeedTime=1;
-
-                                %closest to the ball gets to attack (for now)
-                                % if (kickAble(agentIndex) == max(kickAble) && max(kickAble) > 0.5) %what should be this number??? probability of successful kick..
-                                if (distToBall(agentIndex)==min)
-                                    [ControlSignal{agentIndex},Target{agentIndex}, TargetSpeedTime]=haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed,File);
-                                else
-                                    Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
-                                    [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex});
-                                end;
-                            %end
+                            %closest to the ball gets to attack (for now)
+                            % if (kickAble(agentIndex) == max(kickAble) && max(kickAble) > 0.5) %what should be this number??? probability of successful kick..
+                            if (distToBall(agentIndex)==min)
+                                [ControlSignal{agentIndex},Target{agentIndex}, TargetSpeedTime]=haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed,File);
+                            else
+                                Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
+                                [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex});
+                            end;
                         end
             end
             %originalState.ball.Simulation.Speed
@@ -149,31 +144,40 @@ classdef TeamA
             end
             
             for i=1:k
+                teamAgentA(i).Simulation.Speed = Vector2(0,0);
                 teamAgentA(i).Target = Target(i);
                 if ~(isempty(ControlSignal{i}))
                     switch ControlSignal{i}(1,1)
                         case 0
+                            teamAgentA(k).Simulation.Speed = Vector2(0,0);
                             %Orientation change, 
                             rotOri = atan2(teamAgentA(i).Orientation.Y,teamAgentA(i).Orientation.X)+ControlSignal{i}(1,2);
                             targetOri = Target{i}-teamAgentA(i).Position;
                             targetOri = Vector2(targetOri.RowForm()/norm(targetOri.RowForm()));
+                            
                             fprintf(File,'Agens: %d\n',i);
-                            fprintf(File,'DiffEQ rot value: %d\n',ControlSignal{i}(1,2));
-                            fprintf(File,'Rotation Orientation: %d\n',rotOri);
-                            fprintf(File,'Old Orientation: %d__%d\n',teamAgentA(i).Orientation.X,teamAgentA(i).Orientation.Y);
+                            [temp_s temp_o] = size(ControlSignal{i});
+                            fprintf(File,'ControlSignal size in rotation: %d\n\n',temp_s);
+%                             fprintf(File,'DiffEQ rot value: %d\n',ControlSignal{i}(1,2));
+%                             fprintf(File,'Rotation Orientation: %d\n',rotOri);
+%                             fprintf(File,'Old Orientation: %d__%d\n',teamAgentA(i).Orientation.X,teamAgentA(i).Orientation.Y);
 %                             if (abs(rotOri)>pi)
 %                                rotOri=rotOri-sign(rotOri)*2*pi; 
 %                             end
                             teamAgentA(i).Orientation.X = cos(rotOri);
                             teamAgentA(i).Orientation.Y = sin(rotOri);
-                            teamAgentA(k).Simulation.Speed = Vector2(0,0);
                             
-                            fprintf(File,'New Orientatoin: %d__%d\n',teamAgentA(i).Orientation.X,teamAgentA(i).Orientation.Y);
-                            fprintf(File,'Real Orientatoin: %d__%d\n\n',targetOri.X,targetOri.Y);
+                            
+%                             fprintf(File,'New Orientatoin: %d__%d\n',teamAgentA(i).Orientation.X,teamAgentA(i).Orientation.Y);
+%                             fprintf(File,'Real Orientatoin: %d__%d\n\n',targetOri.X,targetOri.Y);
                         otherwise
                             %Speed change
 %                             desiredSpeed = MoveTo(teamAgentA(i).Orientation,ControlSignal{i}(1,1));
-                            desiredSpeed = MoveTo(teamAgentA(i).Orientation,15);
+                            fprintf(File,'Agens: %d\n',i);
+                            [temp_s temp_o] = size(ControlSignal{i});
+                            fprintf(File,'ControlSignal size in speed: %d\n\n',temp_s);
+                            
+                            desiredSpeed = MoveTo(teamAgentA(i).Orientation,ControlSignal{i}(1,1));
                             teamAgentA(i).Simulation.Speed = Vector2((-1)*sign(ControlSignal{i}(1,1))*desiredSpeed.RowForm());
 %                             fprintf(File,'Agens: %d\n',i);
 %                             fprintf(File,'ControlSingalom: %d\n',size(ControlSignal{i}));
@@ -181,8 +185,8 @@ classdef TeamA
                     end
                 ControlSignal{i}(1,:) = [];
                 else
-%                     teamAgentA(i).Simulation.Speed = Vector2(0,0);
                     fprintf(File,'ControlSignal is empty...WTF\n\n');
+                    teamAgentA(i).Simulation.Speed = Vector2(0,0);
                 end
             end
             

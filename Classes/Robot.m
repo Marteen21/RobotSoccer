@@ -112,6 +112,14 @@ classdef Robot < handle
             nextOwner = this.Owner;
             if (isa(this.Simulation.CollisionVector,'Vector2') && cTime == this.Simulation.CollisionTime)
                 nextSpeed = this.Simulation.Speed.TotalReflectionFrom(this.Simulation.CollisionVector);
+                %Differencial hajas oldalso iranyban erkezo utkozes utani
+                %elmozdulas kinullazasa
+                angle_nextSpeed = atan2(nextSpeed.Y,nextSpeed.X);
+                angle_thisSpeed = atan2(this.Simulation.Speed.Y,this.Simulation.Speed.X);
+                if (abs(angle_thisSpeed-angle_nextSpeed)>0.2618)
+                    nextSpeed = Vector2(0,0);
+                end
+                %------------
                 if(this.Simulation.SpeedGain.collidedWith == BodyType.Wall || this.Simulation.SpeedGain.collidedWith == BodyType.Robot)
                     nextSpeed = nextSpeed.*0.5 + this.Simulation.SpeedGain.gain;
                 end

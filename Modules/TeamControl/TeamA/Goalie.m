@@ -1,4 +1,4 @@
-function target = Goalie(Ball)
+function target = Goalie(Ball,Radius)
 
 
     %Received parameters
@@ -16,11 +16,11 @@ function target = Goalie(Ball)
     
     if ua < Environment.yLim/2 + Environment.goalLength && ua > Environment.yLim/2 - Environment.goalLength
         %if ball is aimed at the goal - catch it!
-        target = [1, ua];
+        target = [Radius, ua];
     elseif ua < Environment.yLim/2 - Environment.goalLength
-        target = [1, Environment.yLim/2 - Environment.goalLength];
+        target = [Radius, Environment.yLim/2 - Environment.goalLength];
     elseif ua > Environment.yLim/2 + Environment.goalLength
-        target = [1, Environment.yLim/2 + Environment.goalLength];
+        target = [Radius, Environment.yLim/2 + Environment.goalLength];
     else
         target = 0;
     end

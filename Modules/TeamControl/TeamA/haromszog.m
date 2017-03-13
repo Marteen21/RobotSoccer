@@ -127,7 +127,7 @@ end;
 %If he was not can be kicked, we send it then onto his place
 if (kick==0)
     Target = Vector2(Destination(1), Destination(2));
-    [ControlSignal, Target, Time] = MoveTo(agentIndex, Robots(agentIndex),Target, File,'haromszog.m');
+    [ControlSignal, Target, Time] = getControls(Robots(agentIndex),Target);
 end;
 
 

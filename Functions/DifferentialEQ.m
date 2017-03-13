@@ -11,9 +11,12 @@ function [ U, OrientationEnd ] = DifferentialEQ( robot, Target ) %Changed ball t
                     Epsilon     = 10E-4;                                        % numerikus pontossági küszöb az adott robot(típus)hoz ->
                     EpsilonTh   = 10E-4;                                        % ezen belül =nek veszünk 2 számot
                     %Pontos megválasztása kérdéses a mi esetünkben
-                    DesiredSpeedTime = 0;
+                    
 
                     DeltaX = sqrt((robot.Position.X-Target.X)^2+(robot.Position.Y-Target.Y)^2); % a két pont távolsága
+                    %Simulation step unit = DesiredSpeedTime
+                    DesiredSpeedTime = SimulationData.sampleTime; %SimulationData.sampleTime -al kell megegyeznie ennek az idonek, hogy a mi egységünkhöz számolja a távot.
+                    %DesiredSpeedTime = DeltaX/MaxSpeed;
                     % A jelenlegi orientáció-hiba: eltérés a következõ pontba mutató iránytól:
                     %OrientCurrent = atan2(ball.Simulation.Speed.Y,ball.Simulation.Speed.X);
                     OrientCurrent = atan2(robot.Orientation.Y,robot.Orientation.X);
@@ -143,8 +146,11 @@ function [ U, OrientationEnd ] = DifferentialEQ( robot, Target ) %Changed ball t
                     % 2. fázis: egyenesen a célra megy állandó sebességgel:
                     %--------------------------------------------------------------------------
                     if TimeUnitsToGo>0                  % Csak akkor nézzük az egyenes szakaszt, ha egyáltalán van:
-                        U(Phase2Start : Phase2End,1) = Speed;
-                        U(Phase2End,1) = (DeltaX-(Speed*(TimeUnitsToGo-1)))/MaxSpeed; % utsó lépéssel pont beáll, nem lõ túl
+                        % *(1/DesiredSpeedTime) azert kell mert mashogy
+                        % ertelmezi az elozo keszito a DesiredSpeedTime
+                        % erteket, mint ahogy nekem kell.
+                        U(Phase2Start : Phase2End,1) = Speed*(1/DesiredSpeedTime);
+                        U(Phase2End,1) = (DeltaX-(Speed*(TimeUnitsToGo-1)))*(1/DesiredSpeedTime)/MaxSpeed; % utsó lépéssel pont beáll, nem lõ túl
                     end
                     if backward_multiplier==-1, U(Phase2Start : Phase2End,1) = -U(Phase2Start : Phase2End,1); end % ha háttal megy -> -1xes sebesség
                     
