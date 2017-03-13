@@ -2,3 +2,5 @@
 *.p -crlf -diff -merge
 *.slx -crlf -diff -merge
 *.mdl -crlf -diff -merge
+*~ -crlf -diff -merge
+*LogFile.txt -crlf -diff -merge
