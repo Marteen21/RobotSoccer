@@ -14,7 +14,7 @@ function SimulationData = Simulate( startState, noSteps )
     CompareTarget(2) = Vector2(0,0);
     CompareTarget(3) = Vector2(0,0);
     for i = 1:noSteps
-        c(end+1) = c(end).NextState();
+        c(end+1) = c(end).NextState(); % ebben van benne az aktualis collosionVector szamitas
         %c(end).ball.Simulation.Speed
         goal = Referee.isGoal(c(end));
         c(end) = Referee.fixMyState(c(end),i);
@@ -40,7 +40,7 @@ function SimulationData = Simulate( startState, noSteps )
             end
             CompareTarget(k) = Target{k};
         end
-        [c(end), oldControl] = TeamA.calculateControls(c(end),ControlSignal, Target,FID);
+        [c(end), oldControl] = TeamA.calculateControls(c(end),ControlSignal, Target, FID);
         
         
         c(end) = TeamB.controlMyState(c(end),costDist);

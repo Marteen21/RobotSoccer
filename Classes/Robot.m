@@ -9,11 +9,12 @@ classdef Robot < handle
         Target;         %Target where the robot wants to go
         TargetSpeedTime;
         ControlSignal;
+        CollisionSpeed
         Owner;
     end
     
     methods
-        function obj = Robot(pX,pY,oX,oY,vX,vY,ownr,mass)
+        function obj = Robot(pX,pY,oX,oY,vX,vY,ownr,colV,mass)
             obj.Radius = 4;
             switch nargin
                 case 2
@@ -35,11 +36,21 @@ classdef Robot < handle
                     obj.Simulation = SimulationData (vX,vY,1);%Set speed with default 1 mass
                     obj.Owner = ownr;
                     obj.Target{1} = Vector2(pX, pY);
+                    obj.CollisionSpeed = Vector2(0,0);
 %                     obj.Target = [pX, pY];
                 case 8
                     obj.Position = Vector2(pX,pY);  %Set position
                     obj.Orientation = Vector2(oX,oY);
+                    obj.Simulation = SimulationData (vX,vY,1);%Set speed with default 1 mass
+                    obj.Owner = ownr;
+                    obj.Target{1} = Vector2(pX, pY);
+                    obj.CollisionSpeed = colV;
+%                     obj.Target = [pX, pY];
+                case 9
+                    obj.Position = Vector2(pX,pY);  %Set position
+                    obj.Orientation = Vector2(oX,oY);
                     obj.Simulation = SimulationData (vX,vY,mass);%Set speed with default 1 mass
+                    obj.CollisionSpeed = Vector2(0,0);
                     obj.Owner = ownr;
                     ...
                 otherwise
@@ -106,19 +117,21 @@ classdef Robot < handle
             end
         end
         function nextRobot = Step(this, cTime)
+            colVector = Vector2(0,0);
             nextPositionX = this.Position.X + this.Simulation.Speed.X*cTime;
             nextPositionY = this.Position.Y + this.Simulation.Speed.Y*cTime;
             nextMass = this.Simulation.Mass;
             nextOwner = this.Owner;
             if (isa(this.Simulation.CollisionVector,'Vector2') && cTime == this.Simulation.CollisionTime)
                 nextSpeed = this.Simulation.Speed.TotalReflectionFrom(this.Simulation.CollisionVector);
-                %Differencial hajas oldalso iranyban erkezo utkozes utani
+                colVector = nextSpeed;
+                %Differencial hajtas oldalso iranyban erkezo utkozes utani
                 %elmozdulas kinullazasa
-                angle_nextSpeed = atan2(nextSpeed.Y,nextSpeed.X);
-                angle_thisSpeed = atan2(this.Simulation.Speed.Y,this.Simulation.Speed.X);
-                if (abs(angle_thisSpeed-angle_nextSpeed)>0.2618)
-                    nextSpeed = Vector2(0,0);
-                end
+%                 angle_nextSpeed = atan2(nextSpeed.Y,nextSpeed.X);
+%                 angle_thisSpeed = atan2(this.Simulation.Speed.Y,this.Simulation.Speed.X);
+%                 if (abs(angle_thisSpeed-angle_nextSpeed)>0.2618)
+%                     nextSpeed = Vector2(0,0);
+%                 end
                 %------------
                 if(this.Simulation.SpeedGain.collidedWith == BodyType.Wall || this.Simulation.SpeedGain.collidedWith == BodyType.Robot)
                     nextSpeed = nextSpeed.*0.5 + this.Simulation.SpeedGain.gain;
@@ -126,7 +139,7 @@ classdef Robot < handle
             else
                 nextSpeed = Vector2(this.Simulation.Speed.X,this.Simulation.Speed.Y);
             end
-            nextRobot = Robot(nextPositionX,nextPositionY,this.Orientation.X, this.Orientation.Y, nextSpeed.X, nextSpeed.Y, nextOwner, nextMass);
+            nextRobot = Robot(nextPositionX,nextPositionY,this.Orientation.X, this.Orientation.Y, nextSpeed.X, nextSpeed.Y, nextOwner,colVector, nextMass);
         end
     end
 end

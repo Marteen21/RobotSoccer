@@ -175,10 +175,14 @@ classdef TeamA
 %                             desiredSpeed = MoveTo(teamAgentA(i).Orientation,ControlSignal{i}(1,1));
                             fprintf(File,'Agens: %d\n',i);
                             [temp_s temp_o] = size(ControlSignal{i});
-                            fprintf(File,'ControlSignal size in speed: %d\n\n',temp_s);
-                            
-                            desiredSpeed = MoveTo(teamAgentA(i).Orientation,ControlSignal{i}(1,1));
-                            teamAgentA(i).Simulation.Speed = Vector2((-1)*sign(ControlSignal{i}(1,1))*desiredSpeed.RowForm());
+                            fprintf(File,'ControlSignal size in speed: %d\n',temp_s);
+                            fprintf(File,'CollisionDetect X:%d   Y:%d\n\n',teamAgentA(k).CollisionSpeed.X,teamAgentA(k).CollisionSpeed.Y);
+                            if any(teamAgentA(k).CollisionSpeed == Vector2(0,0))
+                                desiredSpeed = MoveTo(teamAgentA(i).Orientation,ControlSignal{i}(1,1));
+                                teamAgentA(i).Simulation.Speed = Vector2((-1)*sign(ControlSignal{i}(1,1))*desiredSpeed.RowForm());
+                            else
+                                teamAgentA(i).Simulation.Speed = collisionDetect;
+                            end
 %                             fprintf(File,'Agens: %d\n',i);
 %                             fprintf(File,'ControlSingalom: %d\n',size(ControlSignal{i}));
 %                             fprintf(File,'Sebesseget adok:%d_%d\n\n',teamAgentA(i).Simulation.Speed.X,teamAgentA(i).Simulation.Speed.Y);

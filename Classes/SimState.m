@@ -25,7 +25,8 @@ classdef SimState < handle
             end
             
         end
-        function nextState = NextState(this)
+        function [nextState, collisionDetect] = NextState(this)
+            collisionDetect = Vector2(0,0);
             bcTimes = [];
             bcTimes(1) = NaN;
             bcTimes(end+1) = this.ball.CollisionTimeWithXWall(0);
@@ -53,13 +54,11 @@ classdef SimState < handle
                 end
             end
             if(collisionHappened)
-                if (round(this.time,6) == 1.692277)
-                    
-                end
-                nextT = this.time+nextCollisionTime;
                 
+                nextT = this.time+nextCollisionTime;
                 nextB = this.ball.Step(nextCollisionTime);
                 nextR = Robot.empty;
+                
                 
                 for i = 1 : length(this.robots)
                     nextR(i) = this.robots(i).Step(nextCollisionTime);
