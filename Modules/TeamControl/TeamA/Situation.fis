@@ -1,0 +1,39 @@
+[System]
+Name='Situation'
+Type='mamdani'
+Version=2.0
+NumInputs=2
+NumOutputs=1
+NumRules=4
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='BallSpeedX'
+Range=[-50 50]
+NumMFs=2
+MF1='offense':'trimf',[-10 25 60]
+MF2='hidefense':'trimf',[-60 -25 10]
+
+[Input2]
+Name='BallPosX'
+Range=[0 115]
+NumMFs=2
+MF1='offense':'trimf',[11.1 55.5 115]
+MF2='hidefense':'trimf',[-10 0 55]
+
+[Output1]
+Name='Situation'
+Range=[-1 1]
+NumMFs=2
+MF1='offense':'trimf',[-0.2 0.75 1.33]
+MF2='hidefense':'trimf',[-1.33 -0.75 0.2]
+
+[Rules]
+1 1 , 1  (1) : 1
+1 2 , 2  (1) : 1
+2 1 , 1  (1) : 1
+2 2 , 2  (1) : 1

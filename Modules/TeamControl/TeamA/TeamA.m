@@ -66,12 +66,19 @@ classdef TeamA
             %!!!!!crude situation estimation. use fuzzy logic rules or simply think about
             %better way of deciding. At least come up with buffer, so that the roles
             %are not changed all the time.
-            if originalState.ball.Simulation.Speed.X >= 0 && originalState.ball.Position.X > 50
+%             if originalState.ball.Simulation.Speed.X >= 0 && originalState.ball.Position.X > 50
+%                 Situation = 'offense';
+%             else
+%                 Situation = 'hidefense';
+%             end;
+            %Situation with fuzzy logic
+            fuz = readfis('Situation'); %if the .fis file is empty MATAB freezes THX
+            SituationFuzz = evalfis([originalState.ball.Simulation.Speed.X originalState.ball.Position.X],fuz);
+            if SituationFuzz > 0
                 Situation = 'offense';
             else
                 Situation = 'hidefense';
-            end;
-            
+            end
             %if offensive - use fuzzy logic for role assignment and BestTarget for
             %pass/shoot decision
             %if defensive - use Reacheable, try to intercept the ball and prevent
