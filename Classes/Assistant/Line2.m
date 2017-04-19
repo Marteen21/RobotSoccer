@@ -78,6 +78,14 @@ classdef Line2
                 results(2) = NaN;
             end
         end
+        function equationLine = getRobotLine(Robot)
+            sym x y;
+            n =Vector2( -1*Robot.Simulation.Speed.Y, Robot.Simulation.X);
+            Point = Robot.Position;
+            temp = [x; y];
+            equationLine(1,1) = n.RowForm()*temp;
+            equationLine(1,2) = n.RowForm()*Point.ColumnForm();
+        end
 
     end
     
