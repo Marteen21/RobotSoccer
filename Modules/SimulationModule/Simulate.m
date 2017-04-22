@@ -43,7 +43,7 @@ function SimulationData = Simulate( startState, noSteps )
         [c(end), oldControl] = TeamA.calculateControls(c(end),ControlSignal, Target, FID);
         
         potField = buildUpPotField(c(end), Target, 'TeamA');
-        oldControl = calculateNewOri(c(end), potField, oldControl);
+        %oldControl = calculateNewOri(c(end), potField, oldControl);
         
         
         c(end) = TeamB.controlMyState(c(end),costDist);
