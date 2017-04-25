@@ -1,12 +1,13 @@
 function potField = buildUpPotField(State, Target, Team)
 %Planning the trajectory with potential field, correcting the orientation
 %Ha a robot es a target koze esik akadaly
-    
+    potObst = [];
     sigma = sqrt(10);  %Sulytenyezo a potencial ter szamitasanal,
                   %pontos beállítása kérdéses;
-    robotValue = 40;
+    robotValue = 8;
     targetValue = -1;
     %Selecting the given team members
+    Obstacle = [State.robots(1).empty];
     Own = 1;
     Opp = 1;
     for i=1:length(State.robots)
@@ -58,36 +59,32 @@ function potField = buildUpPotField(State, Target, Team)
         for j = 1:length(xStep{1,i})
             for k = 1:length(yStep{1,i})
                 for l=1:length(State.robots)
-                    if ~(State.robots(l).Position.RowForm() == teamMemberOwn(i).Position.RowForm())
+%                     if ~(State.robots(l).Position.RowForm() == teamMemberOwn(i).Position.RowForm())
                         if (contain(State.robots(l),Field))
                             Obs = Obs+1;
                             Obstacle(Obs) = State.robots(l);
                         end
-                    end
+%                     end
                 end
                 
                 if ~isempty(Obstacle)
                     for count = 1:length(Obstacle)
-                        potObst(i) = (sqrt(abs(Vector2([xStep{1,i}(1,j) yStep{1,i}(1,k)]-Obstacle(count).Position.RowForm())) / ((sigma/2)^2)))^2;
+%                         distValue = (abs(Vector2([xStep{1,i}(1,j) yStep{1,i}(1,k)]-Obstacle(count).Position.RowForm())));
+%                         sigmaO = distValue*2;
+                        potObst(1,count) = (1/(abs(Vector2([xStep{1,i}(1,j) yStep{1,i}(1,k)]-Obstacle(count).Position.RowForm())) / ((sigma)^2)));
                     end
-                    potObst = sum(potObst);
+                    potObst = 2*mean(potObst);
                 else
                     potObst = 0;
                 end
                 potField{i}{k,j} = abs(Vector2([xStep{1,i}(1,j) yStep{1,i}(1,k)]-Target{i}.RowForm())) / (sigma^2) + potObst;
             end
         end
-        for cObst = 1:length(Obstacle)
-            [obstX, obstY] = locateMyRobot(Field,Obstacle(cObst));
-            if ~(isnan(obstX))
-                potField{i}{obstY,obstX} = robotValue;
-            end
-        end
         [robX, robY] = locateMyRobot(Field,teamMemberOwn(i));
         [tarX, tarY] = locateMyRobot(Field,Target{i},1);
-        if ~(isnan(robX))
-            potField{i}{robY,robX} = robotValue;
-        end
+%         if ~(isnan(robX))
+%             potField{i}{robY,robX} = robotValue;
+%         end
         if ~isnan(tarX)
             potField{i}{tarY,tarX} = targetValue;
         end
