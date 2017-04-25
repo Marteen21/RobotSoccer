@@ -1,4 +1,4 @@
-function newControlSignal = calculateNewOri(State, cellpotField, oldControl ,robotIndexes)
+function newControlSignal = calculateNewOri(State, cellpotField, oldControl ,robotIndexes, Target, Radius)
 %Calculates the new orientation of the robots if needed
     newControlSignal = oldControl;
     Field = cellpotField{1,1};
@@ -12,7 +12,7 @@ function newControlSignal = calculateNewOri(State, cellpotField, oldControl ,rob
             for count = 1:length(oldControl)
                 robX = robotIndexes{1,i}(1,1);
                 robY = robotIndexes{1,i}(1,2);
-                [minValueIndeces(count,1) minValueIndeces(count,2) minValueIndeces(count,3)] = minAround(robX, robY, Field);
+                [minValueIndeces(count,1) minValueIndeces(count,2) minValueIndeces(count,3)] = minAround(robX, robY, Field,Target{i},Radius);
                 
                 %robot.pos-hoz kellene adni minValue-t valahogyan ez így
                 %nem jó (kövi sor)
@@ -32,6 +32,8 @@ function [minX, minY, value] = minAround(robX,robY,Field)
     minX = nan;
     minY = nan;
     value = nan;
+    yLim = size(Field,1);
+    xLim = size(Field,2);
     if isnan(robX)
         return
     end
@@ -59,7 +61,7 @@ function [minX, minY, value] = minAround(robX,robY,Field)
                     minY = robY;
                     value = Field{minY,minX};
             end
-        elseif (robX == 1)&&(robY == Environment.yLim)
+        elseif (robX == 1)&&(robY == yLim)
             around = [Field{robY-1, robX} Field{robY, robX+1} Field{robY-1, robX+1} Field{robY, robX}];
             [row, col] = find(around == min(around));
             switch col
@@ -80,7 +82,7 @@ function [minX, minY, value] = minAround(robX,robY,Field)
                     minY = robY;
                     value = Field{minY,minX};
             end
-        elseif (robX == 1)&&(robY < Environment.yLim)
+        elseif (robX == 1)&&(robY < yLim)
             around = [Field{robY+1,robX}, Field{robY,robX+1}, Field{robY+1,robX+1},...
                     Field{robY-1,robX}, Field{robY-1,robX+1} Field{robY, robX}];
                 [row, col] = find(around == min(around));
@@ -111,7 +113,8 @@ function [minX, minY, value] = minAround(robX,robY,Field)
                         value = Field{minY,minX};
                 end
         else
-            if ((robY > 1) && (robY < Environment.yLim)) && (robY > 1)
+            if ((robY > 1) && (robY < yLim)) && robX ~= 1 && robX ~= xLim
+                %ez után kellene breakpoint THX
                 around = [Field{robY+1,robX}, Field{robY,robX+1}, Field{robY+1,robX+1},...
                     Field{robY-1,robX}, Field{robY-1,robX+1} Field{robY, robX} ...
                     Field{robY-1,robX-1} Field{robY,robX-1} Field{robY+1,robX-1}];

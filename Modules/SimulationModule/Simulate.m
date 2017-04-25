@@ -52,6 +52,7 @@ function SimulationData = Simulate( startState, noSteps )
         end
         [c(end), oldControl] = TeamA.calculateControls(c(end),ControlSignal, Target, FID, teamMemberA);
         
+        %Potential field and new orientation calculation
         [potField, robotIndexes] = buildUpPotField(c(end),teamMemberA, Target, 'TeamA');
         oldControl = calculateNewOri(c(end), potField, oldControl, robotIndexes);
         
