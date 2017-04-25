@@ -6,6 +6,7 @@ function [robX, robY] = locateMyRobot(Field,Robot,Target)
         xStep = xStepCell{1,1}{1,1};
         yStepCell = Field(2);
         yStep = yStepCell{1,1}{1,1};
+        
 
         robX = nan;
         robY = nan;

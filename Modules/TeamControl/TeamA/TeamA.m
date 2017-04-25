@@ -6,7 +6,7 @@ classdef TeamA
     end
     
     methods (Static)
-        function [ControlSignal, Target] = controlMyState(originalState,Cost,File)
+        function [ControlSignal, Target] = controlMyState(originalState,Cost,File,teamAgentA,teamAgentB)
             %originalState.ball.Simulation.Speed
             min = 5*10E6;
             MaxSpeed = 15;
@@ -28,23 +28,6 @@ classdef TeamA
             else
                 ballSpeed = abs(originalState.ball.Simulation.Speed);
             end
-            
-            %Choosing the member of TeamA with the agentIndex
-            k=1;
-            for i=1:length(originalState.robots)
-                if (strcmp(originalState.robots(i).Owner,'TeamA'))
-                    teamAgentA(k) = originalState.robots(i);
-                    k = k+1;
-                end
-            end
-            k=1;
-            for i=1:length(originalState.robots)
-                if (strcmp(originalState.robots(i).Owner,'TeamB'))
-                    teamAgentB(k) = originalState.robots(i);
-                    k = k+1;
-                end
-            end
-            %
             
             %probably the Kickability is not even needed....................
             fuz = readfis('kickAbility');
@@ -140,31 +123,23 @@ classdef TeamA
 %             fprintf(File,'RobotSpeed: %d_%d \n\n', teamAgentA(1).Simulation.Speed.X, teamAgentA(1).Simulation.Speed.Y);
         end
         
-        function [controlledState, ControlSignal] = calculateControls(originalState, ControlSignal, Target, File)
+        function [controlledState, ControlSignal] = calculateControls(originalState, ControlSignal, Target, File, teamAgentA)
             
-            k=0;
-            for i=1:length(originalState.robots)
-                if (strcmp(originalState.robots(i).Owner,'TeamA'))
-                    k = k+1;
-                    teamAgentA(k) = originalState.robots(i);
-                end
-            end
-            
-            for i=1:k
+            for i=1:length(teamAgentA)
                 teamAgentA(i).Simulation.Speed = Vector2(0,0);
                 teamAgentA(i).Target = Target(i);
                 if ~(isempty(ControlSignal{i}))
                     switch ControlSignal{i}(1,1)
                         case 0
-                            teamAgentA(k).Simulation.Speed = Vector2(0,0);
+                            %teamAgentA(k).Simulation.Speed = Vector2(0,0);
                             %Orientation change, 
                             rotOri = atan2(teamAgentA(i).Orientation.Y,teamAgentA(i).Orientation.X)+ControlSignal{i}(1,2);
                             targetOri = Target{i}-teamAgentA(i).Position;
                             targetOri = Vector2(targetOri.RowForm()/norm(targetOri.RowForm()));
                             
-                            fprintf(File,'Agens: %d\n',i);
-                            [temp_s temp_o] = size(ControlSignal{i});
-                            fprintf(File,'ControlSignal size in rotation: %d\n\n',temp_s);
+%                             fprintf(File,'Agens: %d\n',i);
+%                             [temp_s temp_o] = size(ControlSignal{i});
+%                             fprintf(File,'ControlSignal size in rotation: %d\n\n',temp_s);
 %                             fprintf(File,'DiffEQ rot value: %d\n',ControlSignal{i}(1,2));
 %                             fprintf(File,'Rotation Orientation: %d\n',rotOri);
 %                             fprintf(File,'Old Orientation: %d__%d\n',teamAgentA(i).Orientation.X,teamAgentA(i).Orientation.Y);
@@ -183,12 +158,17 @@ classdef TeamA
                             fprintf(File,'Agens: %d\n',i);
                             [temp_s temp_o] = size(ControlSignal{i});
                             fprintf(File,'ControlSignal size in speed: %d\n',temp_s);
-                            fprintf(File,'CollisionDetect X:%d   Y:%d\n\n',teamAgentA(k).CollisionSpeed.X,teamAgentA(k).CollisionSpeed.Y);
-                            if any(teamAgentA(k).CollisionSpeed == Vector2(0,0))
+%                             fprintf(File,'CollisionDetect X:%d   Y:%d\n\n',teamAgentA(k).CollisionSpeed.X,teamAgentA(k).CollisionSpeed.Y);
+                            if any(teamAgentA(i).CollisionSpeed == Vector2(0,0))
                                 desiredSpeed = MoveTo(teamAgentA(i).Orientation,ControlSignal{i}(1,1));
                                 teamAgentA(i).Simulation.Speed = Vector2((-1)*sign(ControlSignal{i}(1,1))*desiredSpeed.RowForm());
                             else
                                 teamAgentA(i).Simulation.Speed = collisionDetect;
+                            end
+                            if ControlSignal{i}(1,2) ~= 0
+                                rotOri = atan2(teamAgentA(i).Orientation.Y,teamAgentA(i).Orientation.X)+ControlSignal{i}(1,2);
+                                teamAgentA(i).Orientation.X = cos(rotOri);
+                                teamAgentA(i).Orientation.Y = sin(rotOri);
                             end
 %                             fprintf(File,'Agens: %d\n',i);
 %                             fprintf(File,'ControlSingalom: %d\n',size(ControlSignal{i}));

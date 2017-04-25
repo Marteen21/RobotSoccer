@@ -14,6 +14,8 @@ function SimulationData = Simulate( startState, noSteps )
     CompareTarget(2) = Vector2(0,0);
     CompareTarget(3) = Vector2(0,0);
     for i = 1:noSteps
+        Own = 1;
+        Opp = 1;
         c(end+1) = c(end).NextState(); % ebben van benne az aktualis collosionVector szamitas
         %c(end).ball.Simulation.Speed
         goal = Referee.isGoal(c(end));
@@ -22,6 +24,14 @@ function SimulationData = Simulate( startState, noSteps )
         %EZT nem ide kéne-----
         for k=1:length(c(end).robots)
            costDist(k) = CostFunction(c(end).robots(k),c(end).ball); 
+           
+           if (strcmp(c(end).robots(k).Owner,'TeamA'))
+               teamMemberA(Own) = c(end).robots(k);
+               Own = Own + 1;
+           else
+               teamMemberB(Opp) = c(end).robots(k);
+               Opp = Opp + 1;
+           end
         end
         %---------------------
         
@@ -31,7 +41,7 @@ function SimulationData = Simulate( startState, noSteps )
 
         %ControlSignal 3 blokkbol allo elem, oszlopai a kulonbozo robothoz
         %tartozó controllok
-        [ControlSignal, Target] = TeamA.controlMyState(c(end),costDist,FID);
+        [ControlSignal, Target] = TeamA.controlMyState(c(end),costDist,FID,teamMemberA,teamMemberB);
         %Egymashoz kozel elhelyezkedo Targetet azonosnak tekintunk
         for k=1:length(Target)
             if (Distance(CompareTarget(k),Target{k}) < 5)
@@ -40,10 +50,10 @@ function SimulationData = Simulate( startState, noSteps )
             end
             CompareTarget(k) = Target{k};
         end
-        [c(end), oldControl] = TeamA.calculateControls(c(end),ControlSignal, Target, FID);
+        [c(end), oldControl] = TeamA.calculateControls(c(end),ControlSignal, Target, FID, teamMemberA);
         
-        potField = buildUpPotField(c(end), Target, 'TeamA');
-        %oldControl = calculateNewOri(c(end), potField, oldControl);
+        [potField, robotIndexes] = buildUpPotField(c(end),teamMemberA, Target, 'TeamA');
+        oldControl = calculateNewOri(c(end), potField, oldControl, robotIndexes);
         
         
         c(end) = TeamB.controlMyState(c(end),costDist);
