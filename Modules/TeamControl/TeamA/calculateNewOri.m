@@ -17,7 +17,7 @@ function newControlSignal = calculateNewOri(State, cellpotField, oldControl ,rob
                 diffPotAng = atan2(diff(1,2),diff(1,1));
                 %Changing the orient of the robot
                 if ~(isnan(diffPotAng)) && ~(isinf(diffPotAng))
-                    oldControl{i}(1,2) = diffPotAng;
+                    oldControl{i}(1,2) = 0.5*diffPotAng; %[0 diffPotAng; oldControl{i}];
                 end
             end
             
