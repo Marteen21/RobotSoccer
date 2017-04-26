@@ -126,11 +126,12 @@ classdef TeamA
         function [controlledState, ControlSignal] = calculateControls(originalState, ControlSignal, Target, File, teamAgentA)
             
             for i=1:length(teamAgentA)
-                teamAgentA(i).Simulation.Speed = Vector2(0,0);
+%                 teamAgentA(i).Simulation.Speed = Vector2(0,0);
                 teamAgentA(i).Target = Target(i);
                 if ~(isempty(ControlSignal{i}))
                     switch ControlSignal{i}(1,1)
                         case 0
+                            teamAgentA(i).Simulation.Speed = Vector2(0,0);
                             %teamAgentA(k).Simulation.Speed = Vector2(0,0);
                             %Orientation change, 
                             rotOri = atan2(teamAgentA(i).Orientation.Y,teamAgentA(i).Orientation.X)+ControlSignal{i}(1,2);
@@ -166,7 +167,8 @@ classdef TeamA
                                 teamAgentA(i).Simulation.Speed = collisionDetect;
                             end
                             if ControlSignal{i}(1,2) ~= 0
-                                rotOri = atan2(teamAgentA(i).Orientation.Y,teamAgentA(i).Orientation.X)+ControlSignal{i}(1,2);
+                                DiffOri = ControlSignal{i}(1,2) - atan2(teamAgentA(i).Orientation.Y,teamAgentA(i).Orientation.X);
+                                rotOri = atan2(teamAgentA(i).Orientation.Y,teamAgentA(i).Orientation.X) + DiffOri;
                                 teamAgentA(i).Orientation.X = cos(rotOri);
                                 teamAgentA(i).Orientation.Y = sin(rotOri);
                             end

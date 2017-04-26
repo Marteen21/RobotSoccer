@@ -1,6 +1,9 @@
 function [potField, robotIndexes] = buildUpPotField(State, teamMemberOwn, Target, Team)
 %Planning the trajectory with potential field, correcting the orientation
 %Ha a robot es a target koze esik akadaly
+    potField{1}{1,1} = nan;
+    robotIndexes{1,1} = [0 0;];
+    robotIndexes{1,2} = [0 0;];
     potObst = [];
     sigma = sqrt(10);  %Sulytenyezo a potencial ter szamitasanal,
                   %pontos beállítása kérdéses;
@@ -62,7 +65,10 @@ function [potField, robotIndexes] = buildUpPotField(State, teamMemberOwn, Target
                     end
                     potObst = 2*mean(potObst);
                 else
-                    potObst = 0;
+                    potObst{1}{1,1} = nan;
+                    robotIndexes{1,1} = [0 0;];
+                    robotIndexes{1,2} = [0 0;];
+                    return
                 end
                 potField{i}{k,j} = abs(Vector2([xStep{1,i}(1,j) yStep{1,i}(1,k)]-Target{i}.RowForm())) / (sigma^2) + potObst;
             end
