@@ -11,7 +11,7 @@ classdef Ball < handle
     methods
         %% Class constructor
         function obj = Ball(pX,pY,vX,vY,mass)
-            obj.Radius = 2;
+            obj.Radius = 1;
             switch nargin
                 case 2
                     obj.Position = Vector2(pX,pY);  %Set position
