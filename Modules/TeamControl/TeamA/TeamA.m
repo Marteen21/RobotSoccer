@@ -79,7 +79,16 @@ classdef TeamA
                         if (distToBall(agentIndex)==min && distToBall(agentIndex) < 10)
                             [ControlSignal{agentIndex} ,Target{agentIndex}]= haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed,File);
                         else
-                            Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
+                            if ~(inTheWay(teamAgentA(agentIndex),originalState.ball))
+                                Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
+                            else
+                                if inTheWay(teamAgentA(agentIndex),originalState.ball,originalState.robots)
+                                    Target{agentIndex} = ball.Position;
+                                else
+                                    Target{agentIndex} = Vector2(DesiredPlace{agentIndex}(3:4)+[0 15]);
+                                end
+                            end
+                             
                             %[CS,teamAgentA(agentIndex).Target{agentIndex},teamAgentA(agentIndex).TargetSpeedTime]= getControls(agentIndex,originalState.robots,DesiredSpeedTime);
                             %Moving to the target, added agentIndex for the
                             %logFile, 
