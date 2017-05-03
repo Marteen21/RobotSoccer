@@ -9,17 +9,17 @@ function newControlSignal = calculateNewOri(State, cellpotField, oldControl ,rob
             return
         elseif (oldControl{i}(1,2) == 0)
             %midnen egyes potField elemre meg kell csinálni
-            for count = 1:length(oldControl)
+%             for count = 1:length(oldControl)
                 robX = robotIndexes{1,i}(1,1);
                 robY = robotIndexes{1,i}(1,2);
-                [minValueIndeces(count,1) minValueIndeces(count,2) minValueIndeces(count,3)] = minAround(robX, robY, Field);
-                diff = minValueIndeces(count,1:2)-[robX robY];
+                [minValueIndeces(i,1) minValueIndeces(i,2) minValueIndeces(i,3)] = minAround(robX, robY, Field);
+                diff = minValueIndeces(i,1:2)-[robX robY];
                 diffPotAng = atan2(diff(1,2),diff(1,1));
                 %Changing the orient of the robot
                 if ~(isnan(diffPotAng)) && ~(isinf(diffPotAng))
                     oldControl{i}(1,2) = 0.5*diffPotAng; %[0 diffPotAng; oldControl{i}];
                 end
-            end
+%             end
             
         end
         newControlSignal{i} = oldControl{i};

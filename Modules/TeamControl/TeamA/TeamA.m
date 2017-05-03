@@ -160,20 +160,25 @@ classdef TeamA
                             [temp_s temp_o] = size(ControlSignal{i});
                             fprintf(File,'ControlSignal size in speed: %d\n',temp_s);
 %                             fprintf(File,'CollisionDetect X:%d   Y:%d\n\n',teamAgentA(k).CollisionSpeed.X,teamAgentA(k).CollisionSpeed.Y);
-                            if any(teamAgentA(i).CollisionSpeed == Vector2(0,0))
-                                desiredSpeed = MoveTo(teamAgentA(i).Orientation,ControlSignal{i}(1,1));
-                                teamAgentA(i).Simulation.Speed = Vector2((-1)*sign(ControlSignal{i}(1,1))*desiredSpeed.RowForm());
-                            else
-                                teamAgentA(i).Simulation.Speed = collisionDetect;
-                            end
+                            
                             if ControlSignal{i}(1,2) ~= 0
-                                DiffOri = ControlSignal{i}(1,2) - atan2(teamAgentA(i).Orientation.Y,teamAgentA(i).Orientation.X);
-                                rotOri = atan2(teamAgentA(i).Orientation.Y,teamAgentA(i).Orientation.X) + DiffOri;
-                                teamAgentA(i).Orientation.X = cos(rotOri);
-                                teamAgentA(i).Orientation.Y = sin(rotOri);
+%                                 DiffOri = ControlSignal{i}(1,2) - atan2(teamAgentA(i).Orientation.Y,teamAgentA(i).Orientation.X);
+                                    DiffOri = ControlSignal{i}(1,2) - atan2(teamAgentA(i).Orientation.Y,teamAgentA(i).Orientation.X);
+                                    DiffOri = 0.0873 * sign(DiffOri);
+                                    rotOri = atan2(teamAgentA(i).Orientation.Y,teamAgentA(i).Orientation.X) + DiffOri;
+                                    teamAgentA(i).Orientation.X = cos(rotOri);
+                                    teamAgentA(i).Orientation.Y = sin(rotOri);
+                                    
+                                    desiredSpeed = MoveTo(teamAgentA(i).Orientation,ControlSignal{i}(1,1));
+                                    teamAgentA(i).Simulation.Speed = Vector2((-1)*sign(ControlSignal{i}(1,1))*desiredSpeed.RowForm());
                                 
-                                desiredSpeed = MoveTo(teamAgentA(i).Orientation,ControlSignal{i}(1,1));
-                                teamAgentA(i).Simulation.Speed = Vector2((-1)*sign(ControlSignal{i}(1,1))*desiredSpeed.RowForm());
+                            else
+                                if any(teamAgentA(i).CollisionSpeed == Vector2(0,0))
+                                    desiredSpeed = MoveTo(teamAgentA(i).Orientation,ControlSignal{i}(1,1));
+                                    teamAgentA(i).Simulation.Speed = Vector2((-1)*sign(ControlSignal{i}(1,1))*desiredSpeed.RowForm());
+                                else
+                                    teamAgentA(i).Simulation.Speed = collisionDetect;
+                                end
                             end
 %                             fprintf(File,'Agens: %d\n',i);
 %                             fprintf(File,'ControlSingalom: %d\n',size(ControlSignal{i}));

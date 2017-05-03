@@ -53,10 +53,12 @@ function SimulationData = Simulate( startState, noSteps )
         [c(end), oldControl] = TeamA.calculateControls(c(end),ControlSignal, Target, FID, teamMemberA);
         
         %Potential field and new orientation calculation
-        [potField, robotIndexes] = buildUpPotField(c(end),teamMemberA, Target, 'TeamA');
-        if ~isnan(potField{1}{1,1})
-            oldControl = calculateNewOri(c(end), potField, oldControl, robotIndexes);
-        end
+%         spmd
+            [potField, robotIndexes] = buildUpPotField(c(end),teamMemberA, Target, 'TeamA');
+            if ~isnan(potField{1}(1,1))
+                oldControl = calculateNewOri(c(end), potField, oldControl, robotIndexes);
+            end
+%         end
         
         
         c(end) = TeamB.controlMyState(c(end),costDist);
