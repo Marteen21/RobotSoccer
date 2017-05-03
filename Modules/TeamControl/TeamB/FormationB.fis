@@ -1,0 +1,81 @@
+[System]
+Name='FormationB'
+Type='mamdani'
+Version=2.0
+NumInputs=3
+NumOutputs=2
+NumRules=27
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='Role'
+Range=[0 1]
+NumMFs=3
+MF1='defence':'trapmf',[0.35347619047619 0.37147619047619 0.68447619047619 0.68547619047619]
+MF2='middle':'trapmf',[0.710179894179894 0.715179894179894 1.07010582010582 1.07317989417989]
+MF3='offence':'trapmf',[0.0119788359788364 0.0149788359788364 0.313978835978835 0.318978835978835]
+
+[Input2]
+Name='BallPosX'
+Range=[0 115]
+NumMFs=3
+MF1='defensive':'trimf',[55 115 175]
+MF2='middlefield':'trimf',[-20 40 100]
+MF3='offensive':'trimf',[-95 -35 25]
+
+[Input3]
+Name='BallPosY'
+Range=[0 74]
+NumMFs=3
+MF1='right':'trimf',[34 74 114]
+MF2='middle':'trimf',[-16 24 64]
+MF3='left':'trimf',[-66 -26 14]
+
+[Output1]
+Name='PositionX'
+Range=[0 115]
+NumMFs=3
+MF1='defensive':'trimf',[55 115 175]
+MF2='middlefield':'trimf',[-20 40 100]
+MF3='offensive':'trimf',[-95 -35 25]
+
+[Output2]
+Name='PositionY'
+Range=[0 74]
+NumMFs=3
+MF1='right':'trimf',[34 74 114]
+MF2='middle':'trimf',[-16 24 64]
+MF3='left':'trimf',[-66 -26 14]
+
+[Rules]
+1 1 1, 1 1 (1) : 1
+1 2 1, 1 1 (1) : 1
+1 3 1, 2 1 (1) : 1
+1 1 2, 1 2 (1) : 1
+1 2 2, 1 2 (1) : 1
+1 3 2, 2 2 (1) : 1
+1 1 3, 1 3 (1) : 1
+1 2 3, 1 3 (1) : 1
+1 3 3, 2 3 (1) : 1
+2 1 1, 1 2 (1) : 1
+2 1 3, 1 2 (1) : 1
+2 1 2, 1 2 (1) : 1
+2 2 1, 2 1 (1) : 1
+2 2 2, 2 2 (1) : 1
+2 2 3, 2 3 (1) : 1
+2 3 1, 3 2 (1) : 1
+2 3 2, 3 2 (1) : 1
+2 3 3, 3 2 (1) : 1
+3 1 1, 2 2 (1) : 1
+3 1 2, 2 2 (1) : 1
+3 1 3, 2 2 (1) : 1
+3 2 1, 3 3 (1) : 1
+3 2 2, 3 2 (1) : 1
+3 2 3, 3 1 (1) : 1
+3 3 1, 3 1 (1) : 1
+3 3 2, 3 2 (1) : 1
+3 3 3, 3 3 (1) : 1
