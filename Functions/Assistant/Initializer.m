@@ -6,4 +6,4 @@ SimulationData.simSpeed(1);
 Environment.xLim(115);
 Environment.yLim(74);
 Environment.goalPos(0,Environment.yLim/2);
-Environment.goalLength(Environment.xLim/20);
+Environment.goalLength(Environment.xLim/10);
