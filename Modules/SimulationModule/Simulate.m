@@ -6,20 +6,21 @@ function SimulationData = Simulate( startState, noSteps )
        error('Cannot open file');
     end
     c = [startState];
-    ControlSignal{1} = 0;
-    oldControl{1} = zeros(1,2);
-    oldControl{2} = zeros(1,2);
-    oldControl{3} = zeros(1,2);
-    CompareTarget(1) = Vector2(0,0);
-    CompareTarget(2) = Vector2(0,0);
-    CompareTarget(3) = Vector2(0,0);
+    [ControlSignalA, ControlSignalB, oldControlA, oldControlB, CompareTargetA, CompareTargetB]=initialForControls(length(c.robots));
     for i = 1:noSteps
         Own = 1;
         Opp = 1;
         c(end+1) = c(end).NextState(); % ebben van benne az aktualis collosionVector szamitas
-        %c(end).ball.Simulation.Speed
         goal = Referee.isGoal(c(end));
         c(end) = Referee.fixMyState(c(end),i);
+        
+        %Referee in progress
+        if (goal)
+            [c(end).ball, c(end).robots] = Referee.Reset(c(end).ball,c(end).robots);
+            Referee.isGoal = false;
+        else
+        end
+
         
         %EZT nem ide kéne-----
         for k=1:length(c(end).robots)
@@ -41,39 +42,62 @@ function SimulationData = Simulate( startState, noSteps )
 
         %ControlSignal 3 blokkbol allo elem, oszlopai a kulonbozo robothoz
         %tartozó controllok
-        [ControlSignal, Target] = TeamA.controlMyState(c(end),costDist,FID,teamMemberA,teamMemberB);
+        [ControlSignalA, TargetA] = TeamA.controlMyState(c(end),costDist,FID,teamMemberA,teamMemberB);
+        [ControlSignalB, TargetB] = TeamB.controlMyState(c(end),costDist,teamMemberA,teamMemberB);
         %Egymashoz kozel elhelyezkedo Targetet azonosnak tekintunk
-        for k=1:length(Target)
-            if (Distance(CompareTarget(k),Target{k}) < 5)
-                Target{k} = CompareTarget(k);
-                ControlSignal{k} = oldControl{k};
+        for k=1:length(TargetA)
+            if (Distance(CompareTargetA(k),TargetA{k}) < 5)
+                TargetA{k} = CompareTargetA(k);
+                if ~isempty(oldControlA{k})
+                    ControlSignalA{k} = oldControlA{k};
+                end
             end
-            CompareTarget(k) = Target{k};
+            CompareTargetA(k) = TargetA{k};
         end
-        [c(end), oldControl] = TeamA.calculateControls(c(end),ControlSignal, Target, FID, teamMemberA);
+        for k=1:length(TargetB)
+            if (Distance(CompareTargetB(k),TargetB{k}) < 5)
+                TargetB{k} = CompareTargetB(k);
+                if ~isempty(oldControlB{k})
+                    ControlSignalB{k} = oldControlB{k};
+                end
+            end
+            CompareTargetB(k) = TargetB{k};
+        end
+        [c(end), oldControlA] = TeamA.calculateControls(c(end),ControlSignalA, TargetA, FID, teamMemberA);
+        [c(end), oldControlB] = TeamB.calculateControls(c(end),ControlSignalB, TargetB, FID, teamMemberB);
         
         %Potential field and new orientation calculation
-%         spmd
-            [potField, robotIndexes] = buildUpPotField(c(end),teamMemberA, Target, 'TeamA');
-            if ~isnan(potField{1}(1,1))
-                oldControl = calculateNewOri(c(end), potField, oldControl, robotIndexes);
-            end
+        [potField, robotIndexes] = buildUpPotField(c(end),teamMemberA, TargetA, 'TeamA');
+        if ~isnan(potField{1}(1,1))
+            oldControlA = calculateNewOri(c(end), potField, oldControlA, robotIndexes);
+        end
+        [potField, robotIndexes] = buildUpPotField(c(end),teamMemberB, TargetB, 'TeamB');
+        if ~isnan(potField{1}(1,1))
+            oldControlB = calculateNewOri(c(end), potField, oldControlB, robotIndexes);
+        end
+        
+        
+%         c(end) = TeamB.controlMyState(c(end),costDist,teamMemberA,teamMemberB);
+        
+%         %Referee in progress
+%         if (goal)
+%             [c(end).ball, c(end).robots] = Referee.Reset(c(end).ball,c(end).robots);
+%             Referee.isGoal = false;
+%         else
 %         end
-        
-        
-        c(end) = TeamB.controlMyState(c(end),costDist);
-        
-        %Referee in progress
-        if (goal)
-            [c(end).ball, c(end).robots] = Referee.Reset(c(end).ball,c(end).robots);
-            Referee.isGoal = false;
-        else
-        end
-        if(i==18)
-            stop=0;
-        end
     end
     fclose(FID);
     SimulationData = c;
+end
+
+function [ControlSignalA, ControlSignalB, oldControlA, oldControlB, CompareTargetA, CompareTargetB] = initialForControls(count)
+    ControlSignalA{1} = 0;
+    ControlSignalB{1} = 0;
+    for i = 1:count
+        oldControlA{i} = zeros(1,2);
+        oldControlB{i} = zeros(1,2);
+        CompareTargetA(i) = Vector2(0,0);
+        CompareTargetB(i) = Vector2(0,0);
+    end
 end
 

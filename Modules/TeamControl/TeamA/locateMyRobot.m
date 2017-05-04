@@ -13,8 +13,8 @@ function [robX, robY] = locateMyRobot(Field,Robot,Target)
 
         for i =1 : size(xStep,2)-1
             for j =1 : size(yStep,2)-1
-                if (posX > xStep(1,i) && posX < xStep(1,i+1) && ...
-                        posY > yStep(1,j) && posY < yStep(1,j+1))
+                if (posX >= xStep(1,i) && posX < xStep(1,i+1) && ...
+                        posY >= yStep(1,j) && posY < yStep(1,j+1))
                     robX = i;
                     robY = j;
                 end

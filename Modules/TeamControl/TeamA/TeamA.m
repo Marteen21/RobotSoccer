@@ -45,7 +45,18 @@ classdef TeamA
             %formation 1: Offense; 2: defense; 3: middle;
             DesiredPlace{1} = [ bestShot(1,:) formation(1,:)];
             DesiredPlace{2} = [ bestShot(2,:) formation(3,:)];
-            DesiredPlace{3} = [ bestShot(3,:) formation(2,:)];
+            if formation(2,1)>3*teamAgentA(3).Radius
+                if formation(2,2)>Environment.goalPos.Y+Environment.goalLength/2+6*teamAgentA(3).Radius
+                    DesiredPlace{3} = [ bestShot(3,:), 3*teamAgentA(3).Radius,Environment.goalPos.Y+Environment.goalLength/2+6*teamAgentA(3).Radius];
+                    if formation(2,2)<Environment.goalPos.Y-Environment.goalLength/2-6*teamAgentA(3).Radius
+                        DesiredPlace{3} = [ bestShot(3,:), 3*teamAgentA(3).Radius,Environment.goalPos.Y-Environment.goalLength/2-6*teamAgentA(3).Radius];
+                    end
+                else
+                    DesiredPlace{3} = [ bestShot(3,:), 3*teamAgentA(3).Radius,formation(2,2)];
+                end
+            else
+                DesiredPlace{3} = [ bestShot(3,:) formation(2,:)];
+            end
             %!!!!!crude situation estimation. use fuzzy logic rules or simply think about
             %better way of deciding. At least come up with buffer, so that the roles
             %are not changed all the time.
@@ -95,7 +106,7 @@ classdef TeamA
                             [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex});
                             %End of moving
                             
-                        end;
+                        end
                     end
                   case 'hidefense'
                         %agent 3 - defence
@@ -121,7 +132,7 @@ classdef TeamA
                             else
                                 Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
                                 [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex});
-                            end;
+                            end
                         end
             end
             %originalState.ball.Simulation.Speed
