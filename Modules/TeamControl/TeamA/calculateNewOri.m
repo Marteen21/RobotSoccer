@@ -3,7 +3,7 @@ function newControlSignal = calculateNewOri(State, cellpotField, oldControl ,rob
     newControlSignal = oldControl;
     Field = cellpotField{1,1};
     
-    for i=1:length(oldControl)
+    for i=1:length(oldControl)-1
         Field = cellpotField{1,i};
         if isempty(oldControl{i}) || (oldControl{i}(1,1) == 0)            
             return
@@ -14,10 +14,10 @@ function newControlSignal = calculateNewOri(State, cellpotField, oldControl ,rob
                 robY = robotIndexes{1,i}(1,2);
                 [minValueIndeces(i,1) minValueIndeces(i,2) minValueIndeces(i,3)] = minAround(robX, robY, Field);
                 diff = minValueIndeces(i,1:2)-[robX robY];
-                diffPotAng = atan2(diff(1,2),diff(1,1));
+                diffPotAng = atan2(diff(1,1),diff(1,2));
                 %Changing the orient of the robot
                 if ~(isnan(diffPotAng)) && ~(isinf(diffPotAng))
-                    oldControl{i}(1,2) = 0.5*diffPotAng; %[0 diffPotAng; oldControl{i}];
+                    oldControl{i}(1,2) = 0.2*diffPotAng; %[0 diffPotAng; oldControl{i}];
                 end
 %             end
             
@@ -38,254 +38,254 @@ function [minX, minY, value] = minAround(robX,robY,Field)
     around = [];
     
         if (robX == 1)&&(robY == 1 )
-            around = [Field{robY+1, robX} Field{robY, robX+1} Field{robY+1, robX+1} Field{robY, robX}];
+            around = [Field(robY+1, robX) Field(robY, robX+1) Field(robY+1, robX+1) Field(robY, robX)];
             [row, col] = find(around == min(around));
             switch col
                 case 1
                     minX = robX;
                     minY = robY+1;
-                    value = Field{minY,minX};
+                    value = Field(minY,minX);
                     return
                 case 2
                     minX = robX+1;
                     minY = robY;
-                    value = Field{minY,minX};
+                    value = Field(minY,minX);
                     return
                 case 3
                     minX = robX+1;
                     minY = robY+1;
-                    value = Field{minY,minX};
+                    value = Field(minY,minX);
                     return
                 case 4
                     minX = robX;
                     minY = robY;
-                    value = Field{minY,minX};
+                    value = Field(minY,minX);
                     return
             end
         elseif (robX == 1)&&(robY == yLim)
-            around = [Field{robY-1, robX} Field{robY, robX+1} Field{robY-1, robX+1} Field{robY, robX}];
+            around = [Field(robY-1, robX) Field(robY, robX+1) Field(robY-1, robX+1) Field(robY, robX)];
             [row, col] = find(around == min(around));
             switch col
                 case 1
                     minX = robX;
                     minY = robY-1;
-                    value = Field{minY,minX};
+                    value = Field(minY,minX);
                     return
                 case 2
                     minX = robX+1;
                     minY = robY;
-                    value = Field{minY,minX};
+                    value = Field(minY,minX);
                     return
                 case 3
                     minX = robX+1;
                     minY = robY-1;
-                    value = Field{minY,minX};
+                    value = Field(minY,minX);
                     return
                 case 4
                     minX = robX;
                     minY = robY;
-                    value = Field{minY,minX};
+                    value = Field(minY,minX);
                     return
             end
         elseif (robX == 1)&&(robY < yLim)
-            around = [Field{robY+1,robX}, Field{robY,robX+1}, Field{robY+1,robX+1},...
-                    Field{robY-1,robX}, Field{robY-1,robX+1} Field{robY, robX}];
+            around = [Field(robY+1,robX), Field(robY,robX+1), Field(robY+1,robX+1),...
+                    Field(robY-1,robX), Field(robY-1,robX+1) Field(robY, robX)];
                 [row, col] = find(around == min(around));
                 switch col
                     case 1
                         minX = robX;   %robY+1;
                         minY = robY+1; %robX;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 2
                         minX = robX+1;
                         minY = robY;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 3
                         minX = robX+1;
                         minY = robY+1;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 4
                         minX = robX;
                         minY = robY-1;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 5
                         minX = robX+1;
                         minY = robY-1;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 6
                         minX = robX;
                         minY = robY;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                 end
         else
-            if ((robY > 1) && (robY < yLim)) && robX ~= 1 && robX ~= xLim
+            if ((robY > 1) && (robY < yLim)) && robX > 1 && robX < xLim
                 %ez után kellene breakpoint THX
-                around = [Field{robY+1,robX}, Field{robY,robX+1}, Field{robY+1,robX+1},...
-                    Field{robY-1,robX}, Field{robY-1,robX+1} Field{robY, robX} ...
-                    Field{robY-1,robX-1} Field{robY,robX-1} Field{robY+1,robX-1}];
+                around = [Field(robY+1,robX), Field(robY,robX+1), Field(robY+1,robX+1),...
+                    Field(robY-1,robX), Field(robY-1,robX+1) Field(robY, robX) ...
+                    Field(robY-1,robX-1) Field(robY,robX-1) Field(robY+1,robX-1)];
                 [row, col] = find(around == min(around));
-                switch col
+                switch col(1)
                     case 1
                         minX = robX;   %robY+1;
                         minY = robY+1; %robX;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 2
                         minX = robX+1;
                         minY = robY;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 3
                         minX = robX+1;
                         minY = robY+1;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 4
                         minX = robX;
                         minY = robY-1;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 5
                         minX = robX+1;
                         minY = robY-1;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 6
                         minX = robX;
                         minY = robY;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 7
                         minX = robX-1;
                         minY = robY-1;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 8
                         minX = robX-1;
                         minY = robY;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 9
                         minX = robX-1;
                         minY = robY+1;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                 end
             elseif (robY == 1) && robX > 1 &&robX < xLim
-                around = [Field{robY+1, robX} Field{robY, robX+1} Field{robY+1, robX+1} Field{robY, robX}...
-                    Field{robY+1, robX-1} Field{robY,robX-1}];
+                around = [Field(robY+1, robX) Field(robY, robX+1) Field(robY+1, robX+1) Field(robY, robX)...
+                    Field(robY+1, robX-1) Field(robY,robX-1)];
                 [row, col] = find(around == min(around));
                 switch col
                     case 1
                         minX = robX;
                         minY = robY+1;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 2
                         minX = robX+1;
                         minY = robY;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 3
                         minX = robX+1;
                         minY = robY+1;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 4
                         minX = robX;
                         minY = robY;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 5
                         minY = robY+1;
                         minX = robX-1;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 6
                         minY = robY;
                         minX = robX-1;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                 end
             elseif robY == yLim && robX > 1 && robX < xLim
-                around = [Field{robY-1, robX} Field{robY, robX+1} Field{robY-1, robX+1} Field{robY, robX}...
-                    Field{robY-1, robX-1} Field{robY,robX-1}];
+                around = [Field(robY-1, robX) Field(robY, robX+1) Field(robY-1, robX+1) Field(robY, robX)...
+                    Field(robY-1, robX-1) Field(robY,robX-1)];
                 [row, col] = find(around == min(around));
                 switch col
                     case 1
                         minX = robX;
                         minY = robY-1;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 2
                         minX = robX+1;
                         minY = robY;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 3
                         minX = robX-1;
                         minY = robY+1;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 4
                         minX = robX;
                         minY = robY;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 5
                         minY = robY-1;
                         minX = robX-1;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                     case 6
                         minY = robY;
                         minX = robX-1;
-                        value = Field{minY,minX};
+                        value = Field(minY,minX);
                         return
                 end 
             end
         end
         if (robX == xLim)
             
-            around = [Field{robY-1, robX} Field{robY-1, robX-1} Field{robY, robX-1} Field{robY+1, robX-1}...
-                Field{robY+1, robX} Field{robY, robX}];
+            around = [Field(robY-1, robX) Field(robY-1, robX-1) Field(robY, robX-1) Field(robY+1, robX-1)...
+                Field(robY+1, robX) Field(robY, robX)];
             [row, col] = find(around == min(around));
-            switch col
+            switch col(1)
                 case 1
                     minX = robX;
                     minY = robY-1;
-                    value = Field{minY,minX};
+                    value = Field(minY,minX);
                     return
                 case 2
                     minX = robX-1;
                     minY = robY-1;
-                    value = Field{minY,minX};
+                    value = Field(minY,minX);
                     return
                 case 3
                     minX = robX-1;
                     minY = robY;
-                    value = Field{minY,minX};
+                    value = Field(minY,minX);
                     return
                 case 4
                     minX = robX-1;
                     minY = robY+1;
-                    value = Field{minY,minX};
+                    value = Field(minY,minX);
                     return
                 case 5
                     minX = robX;
                     minY = robY+1;
-                    value = Field{minY,minX};
+                    value = Field(minY,minX);
                     return
                 case 6
                     minX = robX;
                     minY = robY;
-                    value = Field{minY,minX};
+                    value = Field(minY,minX);
                     return
             end
         end
