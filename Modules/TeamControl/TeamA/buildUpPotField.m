@@ -46,8 +46,10 @@ function [potField, robotIndexes] = buildUpPotField(State, teamMemberOwn, Target
         for l=1:length(State.robots)
 %                     if ~(State.robots(l).Position.RowForm() == teamMemberOwn(i).Position.RowForm())
                 if (contain(State.robots(l),Field))
-                    Obs = Obs+1;
-                    Obstacle(Obs) = State.robots(l);
+                    if State.robots(l)~=teamMemberOwn(i)
+                        Obs = Obs+1;
+                        Obstacle(Obs) = State.robots(l);
+                    end
                 end
 %                     end
         end
@@ -59,13 +61,15 @@ function [potField, robotIndexes] = buildUpPotField(State, teamMemberOwn, Target
                 OneMat = PlaceOne;
                 PlaceOne(:,1:2:end) = CurrentObst(1)*PlaceOne(:,1:2:end);
                 PlaceOne(:,2:2:end) = CurrentObst(2)*PlaceOne(:,2:2:end);
-                potObst{1,count} = ((((Place{i}-PlaceOne))) ./ ((sigma)^2));
+                potObst{1,count} = ((((Place{i}-PlaceOne))).^2 ./ ((sigma)^2));
             end
             Sum = zeros(size(potObst{1},1),size(potObst{1},2));
             for cObst = 1:length(potObst)
                 Sum = Sum+potObst{cObst};
             end
             potObstV = abs(Sum/cObst);
+            potObstV(:,1:size(potObstV,2)/2) = 1000*(1./sqrt(potObstV(:,1:2:end).^2+potObstV(:,2:2:end).^2));
+            potObstV(:,size(potObstV,2)/2+1:end) = [];
         else
             potObst{1}(1,1) = nan;
             robotIndexes{1,1} = [0 0;];
@@ -76,18 +80,21 @@ function [potField, robotIndexes] = buildUpPotField(State, teamMemberOwn, Target
         PlaceOne = ones(size(Place{i},1),size(Place{i},2));
         PlaceOne(:,1:2:end) = TargetPot(1)*PlaceOne(:,1:2:end);
         PlaceOne(:,2:2:end) = TargetPot(2)*PlaceOne(:,2:2:end);
-        potFieldXY = (Place{i}-PlaceOne).^2 / (sigma^2) + potObst;
+        potFieldXY = (Place{i}-PlaceOne).^2 / (sigma^2);
         OszlopInt = round(size(potFieldXY,1)/2);
         potField{i} = zeros(size(potFieldXY,1),OszlopInt);
-        potField{i}(:,1:size(potFieldXY,2)/2) = sqrt(potFieldXY(:,1:2:end)+potFieldXY(:,2:2:end));
-        
+        if ~isnan(potObst{1}(1,1))
+            potField{i}(:,1:size(potFieldXY,2)/2) = sqrt(potFieldXY(:,1:2:end).^2+potFieldXY(:,2:2:end).^2)+potObstV;
+        else
+            potField{i}(:,1:size(potFieldXY,2)/2) = sqrt(potFieldXY(:,1:2:end).^2+potFieldXY(:,2:2:end).^2);
+        end
         [robX, robY] = locateMyRobot(Field,teamMemberOwn(i));
         robotIndexes{1,i} = [robX robY;];
         
         %--For the good pictures in the documentation--
         %[robX, robY] = locateMyRobot(Field,teamMemberOwn(1));
         if ~(isnan(robX))
-        potField{1,1}(robY,robX) = potField{1,1}(robY,robX)+1;
+        potField{1,1}(robY,robX) = potField{1,1}(robY,robX)+100;
 %             for obst = 1:length(Obstacle)
 %                 [obstX, obstY] = locateMyRobot(Field,Obstacle(obst));
 %                 if ~isnan(obstX)
