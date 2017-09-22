@@ -24,7 +24,7 @@ y = robotsA(agentIndex).Position.Y;
 %array of shooting success probabilities
 
 
-for i = 1: 3 %for now do not pass to the goalie!!! 3 robots + goal
+for i = 1: length(robotsA) %for now do not pass to the goalie!!! 3 robots + goal
     switch i
         case 1   %pass to the first team mate
             if i ~= agentIndex   %do not pass to yourself

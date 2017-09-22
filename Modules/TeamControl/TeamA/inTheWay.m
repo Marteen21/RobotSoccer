@@ -1,7 +1,7 @@
 function bool = inTheWay(robot,ball,allRobot)
 if nargin == 2
     bool = false;
-    if robot.Position.X>ball.Position.X
+    if robot.Position.X<ball.Position.X
         Bx=ball.Position.X;
         By=ball.Position.Y;
         Vx=ball.Simulation.Speed.X;
@@ -10,16 +10,19 @@ if nargin == 2
         slope = Vy/Vx;
 
         %x=xLim-side coordinate under attack
-        ua = slope*(Bx-3) + By;
-        if ua > robot.Position.Y-robot.Radius && ua < robot.Position.Y+robot.Radius
+        if (Vx>0)
             bool = true;
+%             ua = slope*(Bx-3) + By;
+%             if ua > (robot.Position.Y-robot.Radius) && ua < (robot.Position.Y+robot.Radius)
+%                 bool = true;
+%             end
         end
     else
         bool = false;
     end
 else
     bool = false;
-    if ball.Position.X>robot.Position.X && robot.Position.X > Environment.xLim/2 && ball.Position.X > Environment.xLim/2 && Distance(robot.Position,bal.Position)<3*robot.Radius
+    if ball.Position.X>robot.Position.X && robot.Position.X > Environment.xLim/2 && ball.Position.X > Environment.xLim/2 && Distance(robot.Position,ball.Position)<3*robot.Radius
         for j = 1:length(allRobot)
             if allRobot(j)~=robot
                 if allRobot(j).Position.X>robot.Position.X && allRobot(j).Position.X<ball.Position.X

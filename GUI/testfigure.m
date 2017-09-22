@@ -116,6 +116,7 @@ myrobot4 = Robot(Environment.xLim/2 + 35,Environment.yLim/2 - Environment.yLim/4
 myrobot5 = Robot(Environment.xLim/2 - 50,Environment.yLim/2 + Environment.yLim/40,1,0,0,0,'TeamA');
 myrobot6 = Robot(Environment.xLim/2 + 50,Environment.yLim/2 + Environment.yLim/40,-1,0,0,0,'TeamB');
 myState = SimState(0,myball,[myrobot,myrobot2,myrobot3,myrobot4,myrobot5,myrobot6]);
+%myState = SimState(0,myball,[myrobot,myrobot2,myrobot3,myrobot5]);
 c = Simulate(myState, Steps);
 
 
@@ -131,8 +132,8 @@ plot(Environment.goalPos.X+Environment.xLim,Environment.goalPos.Y + Environment.
 
 
 %---------Rectangles-------------
-RobotDraw(1) = rectangle('Position',[c(1).robots(1).Position.X-c(1).robots(1).Radius,c(1).robots(1).Position.Y-c(1).robots(1).Radius, 2*c(1).robots(1).Radius, 2*c(1).robots(1).Radius],...
-'Curvature',[1,1], 'FaceColor','g');
+% RobotDraw(1) = rectangle('Position',[c(1).robots(1).Position.X-c(1).robots(1).Radius,c(1).robots(1).Position.Y-c(1).robots(1).Radius, 2*c(1).robots(1).Radius, 2*c(1).robots(1).Radius],...
+% 'Curvature',[1,1], 'FaceColor','g');
 
 %Target  is  Vector2 MATRIX!!!
 k = 1; %k and m is a counter
@@ -156,16 +157,26 @@ end
 % 'Curvature',[1,1], 'EdgeColor','b','LineStyle','--');
 
 % TargetLine = line([c(1).robots(1).Position.X c(1).robots(1).Target{1}.X],[c(1).robots(1).Position.Y c(1).robots(1).Target{1}.Y], 'LineStyle','--');
-RobotDraw(2) = rectangle('Position',[c(1).robots(2).Position.X-c(1).robots(2).Radius,c(1).robots(2).Position.Y-c(1).robots(2).Radius, 2*c(1).robots(2).Radius, 2*c(1).robots(2).Radius],...
-'Curvature',[1,1], 'FaceColor','r');
-RobotDraw(3) = rectangle('Position',[c(1).robots(3).Position.X-c(1).robots(3).Radius,c(1).robots(3).Position.Y-c(1).robots(3).Radius, 2*c(1).robots(3).Radius, 2*c(1).robots(3).Radius],...
-'Curvature',[1,1], 'FaceColor','g');
-RobotDraw(4) = rectangle('Position',[c(1).robots(4).Position.X-c(1).robots(4).Radius,c(1).robots(4).Position.Y-c(1).robots(4).Radius, 2*c(1).robots(4).Radius, 2*c(1).robots(4).Radius],...
-'Curvature',[1,1], 'FaceColor','r');
-RobotDraw(5) = rectangle('Position',[c(1).robots(5).Position.X-c(1).robots(5).Radius,c(1).robots(5).Position.Y-c(1).robots(5).Radius, 2*c(1).robots(5).Radius, 2*c(1).robots(5).Radius],...
-'Curvature',[1,1], 'FaceColor','g');
-RobotDraw(6) = rectangle('Position',[c(1).robots(6).Position.X-c(1).robots(6).Radius,c(1).robots(6).Position.Y-c(1).robots(6).Radius, 2*c(1).robots(6).Radius, 2*c(1).robots(6).Radius],...
-'Curvature',[1,1], 'FaceColor','r');
+for x=1:length(c(1).robots)
+    if strcmp(c(1).robots(x).Owner,'TeamA')
+        RobotDraw(x) = rectangle('Position',[c(1).robots(x).Position.X-c(1).robots(x).Radius,c(1).robots(x).Position.Y-c(1).robots(x).Radius, 2*c(1).robots(x).Radius, 2*c(1).robots(x).Radius],...
+            'Curvature',[1,1], 'FaceColor','g');
+    end
+    if strcmp(c(1).robots(x).Owner,'TeamB')
+        RobotDraw(x) = rectangle('Position',[c(1).robots(x).Position.X-c(1).robots(x).Radius,c(1).robots(x).Position.Y-c(1).robots(x).Radius, 2*c(1).robots(x).Radius, 2*c(1).robots(x).Radius],...
+            'Curvature',[1,1], 'FaceColor','r');
+    end
+end
+% RobotDraw(2) = rectangle('Position',[c(1).robots(2).Position.X-c(1).robots(2).Radius,c(1).robots(2).Position.Y-c(1).robots(2).Radius, 2*c(1).robots(2).Radius, 2*c(1).robots(2).Radius],...
+% 'Curvature',[1,1], 'FaceColor','r');
+% RobotDraw(3) = rectangle('Position',[c(1).robots(3).Position.X-c(1).robots(3).Radius,c(1).robots(3).Position.Y-c(1).robots(3).Radius, 2*c(1).robots(3).Radius, 2*c(1).robots(3).Radius],...
+% 'Curvature',[1,1], 'FaceColor','g');
+% RobotDraw(4) = rectangle('Position',[c(1).robots(4).Position.X-c(1).robots(4).Radius,c(1).robots(4).Position.Y-c(1).robots(4).Radius, 2*c(1).robots(4).Radius, 2*c(1).robots(4).Radius],...
+% 'Curvature',[1,1], 'FaceColor','r');
+% RobotDraw(5) = rectangle('Position',[c(1).robots(5).Position.X-c(1).robots(5).Radius,c(1).robots(5).Position.Y-c(1).robots(5).Radius, 2*c(1).robots(5).Radius, 2*c(1).robots(5).Radius],...
+% 'Curvature',[1,1], 'FaceColor','g');
+% RobotDraw(6) = rectangle('Position',[c(1).robots(6).Position.X-c(1).robots(6).Radius,c(1).robots(6).Position.Y-c(1).robots(6).Radius, 2*c(1).robots(6).Radius, 2*c(1).robots(6).Radius],...
+% 'Curvature',[1,1], 'FaceColor','r');
 BallDraw = rectangle('Position',[c(1).ball.Position.X-c(1).ball.Radius,c(1).ball.Position.Y-c(1).ball.Radius, 2*c(1).ball.Radius, 2*c(1).ball.Radius],...
 'Curvature',[1,1], 'FaceColor','black');
 
@@ -201,7 +212,8 @@ for i=1:Steps
         RobotTargetDraw(count).Position = [c(i).robots(teamAmember(1,count)).Target{1}.X-c(i).robots(teamAmember(1,count)).Radius,c(i).robots(teamAmember(1,count)).Target{1}.Y-c(i).robots(teamAmember(1,count)).Radius, 2*c(i).robots(teamAmember(1,count)).Radius, 2*c(i).robots(teamAmember(1,count)).Radius];
         TargetLine(count).XData = [c(i).robots(teamAmember(1,count)).Position.X c(i).robots(teamAmember(1,count)).Target{1}.X];
         TargetLine(count).YData = [c(i).robots(teamAmember(1,count)).Position.Y c(i).robots(teamAmember(1,count)).Target{1}.Y];
-        
+    end
+    for count=1:length(teamBmember)
         RobotTargetDrawB(count).Position = [c(i).robots(teamBmember(1,count)).Target{1}.X-c(i).robots(teamBmember(1,count)).Radius,c(i).robots(teamBmember(1,count)).Target{1}.Y-c(i).robots(teamBmember(1,count)).Radius, 2*c(i).robots(teamBmember(1,count)).Radius, 2*c(i).robots(teamBmember(1,count)).Radius];
         TargetLineB(count).XData = [c(i).robots(teamBmember(1,count)).Position.X c(i).robots(teamBmember(1,count)).Target{1}.X];
         TargetLineB(count).YData = [c(i).robots(teamBmember(1,count)).Position.Y c(i).robots(teamBmember(1,count)).Target{1}.Y];

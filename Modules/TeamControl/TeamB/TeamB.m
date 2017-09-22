@@ -67,16 +67,26 @@ classdef TeamB
                     Target{1} = originalState.ball.Position;
                     Target{2} = Vector2(DesiredPlace{2}(3:4));
                     Target{3} = originalState.ball.Position;
+%                     for i=1:length(teamAgentB)
+                        %Target{i} = Vector2(DesiredPlace{i}(1:2));
+                        %ControlSignal{1,i} = DifferentialEQ(teamAgentB(i),Target{i});
                     ControlSignal{1,1} = DifferentialEQ(teamAgentB(1),Target{1});
                     ControlSignal{1,2} = DifferentialEQ(teamAgentB(2),Target{2});
                     ControlSignal{1,3} = DifferentialEQ(teamAgentB(3),Target{3});
+%                     end
                 case 'defense'
                     Target{1} = originalState.ball.Position;
                     Target{2} = Vector2(DesiredPlace{2}(3:4));
                     Target{3} = Vector2(DesiredPlace{3}(3:4));
-                    ControlSignal{1,1} = DifferentialEQ(teamAgentB(1),Target{1});
-                    ControlSignal{1,2} = DifferentialEQ(teamAgentB(2),Target{2});
-                    ControlSignal{1,3} = DifferentialEQ(teamAgentB(3),Target{3});
+                    
+%                     for i=1:length(teamAgentB)
+                        
+                        %Target{i} = Vector2(DesiredPlace{i}(3:4));
+                        %ControlSignal{1,i} = DifferentialEQ(teamAgentB(i),Target{i});
+                        ControlSignal{1,1} = DifferentialEQ(teamAgentB(1),Target{1});
+                        ControlSignal{1,2} = DifferentialEQ(teamAgentB(2),Target{2});
+                        ControlSignal{1,3} = DifferentialEQ(teamAgentB(3),Target{3});
+%                     end
             end
             
             
