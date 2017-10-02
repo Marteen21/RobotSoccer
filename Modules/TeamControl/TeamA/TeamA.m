@@ -8,6 +8,7 @@ classdef TeamA
     methods (Static)
         function [ControlSignal, Target] = controlMyState(originalState,Cost,File,teamAgentA,teamAgentB)
             %originalState.ball.Simulation.Speed
+            goalShot = GoalShot;
             min = 5*10E6;
             MaxSpeed = 15;
             for i=1:length(originalState.robots)
@@ -82,6 +83,7 @@ classdef TeamA
             switch Situation
                 case 'offense'
                     for agentIndex = 1:(length(teamAgentA)-1)
+                                
 %                         CS0=zeros(CycleBatch,2);
 
                         DesiredSpeedTime=1;
@@ -93,8 +95,29 @@ classdef TeamA
                             if (inTheWay(teamAgentA(agentIndex),originalState.ball))
                                 %Target{agentIndex} = GoalShot(teamAgentA(agentIndex),originalState.ball);
                                 Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
+%                                 if agentIndex==1
+%                                     tempTarget2 = Pass(teamAgentA(agentIndex),teamAgentA(agentIndex+1), originalState.ball);
+%                                     if tempTarget2.X==-1
+%                                         Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
+%                                     else
+%                                         Target{agentIndex} = tempTarget2;
+%                                     end
+%                                 else
+%                                     tempTarget3 = Pass(teamAgentA(agentIndex),teamAgentA(agentIndex-1), originalState.ball);
+%                                     if tempTarget3.X==-1
+%                                         Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
+%                                     else
+%                                         Target{agentIndex} = tempTarget3;
+%                                     end
+%                                 end
                             else
-                                Target{agentIndex}=Pass(teamAgentA(agentIndex),teamAgentA(agentIndex+1),originalState.ball);
+                                %Target{agentIndex}=Pass(teamAgentA(agentIndex),teamAgentA(agentIndex+1),originalState.ball);
+                                tempTarget = goalShot.shotToGoal(teamAgentA(agentIndex),originalState.ball);
+                                if tempTarget.X==-1
+                                    Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
+                                else
+                                    Target{agentIndex} = tempTarget;
+                                end
                             end
                         else
                             if ~(inTheWay(teamAgentA(agentIndex),originalState.ball))
@@ -105,7 +128,12 @@ classdef TeamA
                                 if inTheWay(teamAgentA(agentIndex),originalState.ball,originalState.robots)
                                     %Target{agentIndex} = ball.Position;
                                     %Target{agentIndex} = Vector2(DesiredPlace{agentIndex}(3:4)+[0 15]);
-                                    Target{agentIndex}=Pass(teamAgentA(agentIndex),teamAgentA(agentIndex+1),originalState.ball);
+                                    tempTarget=Pass(teamAgentA(agentIndex),teamAgentA(agentIndex+1),originalState.ball);
+                                    if tempTarget.X==-1
+                                        Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
+                                    else
+                                        Target{agentIndex} = tempTarget;
+                                    end
                                 else
                                     %Noone is in the way so make a goalshot
                                     %Target{agentIndex} = GoalShot(teamAgentA(agentIndex),originalState.ball);
@@ -116,10 +144,11 @@ classdef TeamA
                             %[CS,teamAgentA(agentIndex).Target{agentIndex},teamAgentA(agentIndex).TargetSpeedTime]= getControls(agentIndex,originalState.robots,DesiredSpeedTime);
                             %Moving to the target, added agentIndex for the
                             %logFile, 
-                            [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex});
+                            %[ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex});
                             %End of moving
                             
                         end
+                        [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex});
                     end
                     agentIndex = 3;
                     DesiredSpeedTime = 1;
