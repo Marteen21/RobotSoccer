@@ -11,6 +11,7 @@ classdef Robot < handle
         ControlSignal;
         CollisionSpeed
         Owner;
+        Sector = 0;
     end
     
     methods

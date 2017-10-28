@@ -92,7 +92,7 @@ classdef GoalShot
                 %Ball's line before the ball
                 [Index, reach] = GoalShot.reachAble(Agent, Ball, linePoints, size(xPoints));
                 if reach.X==-1
-                    DesiredPlace = reach;
+                    DesiredPlace = Ball.Position;
                     return
                 end
 

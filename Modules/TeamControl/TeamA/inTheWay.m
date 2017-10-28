@@ -1,5 +1,7 @@
 function bool = inTheWay(robot,ball,allRobot)
 if nargin == 2
+    %returns true if the ball is robot elott van and it's going toward the
+    %enemy's goal
     bool = false;
     if robot.Position.X<ball.Position.X
         Bx=ball.Position.X;
@@ -21,6 +23,7 @@ if nargin == 2
         bool = false;
     end
 else
+    %returns true if there is no other robot between the agent and the ball
     bool = false;
     if ball.Position.X>robot.Position.X && robot.Position.X > Environment.xLim/2 && ball.Position.X > Environment.xLim/2 && Distance(robot.Position,ball.Position)<3*robot.Radius
         for j = 1:length(allRobot)

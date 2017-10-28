@@ -6,6 +6,7 @@ classdef Ball < handle
         Position;       %Vector2
         Simulation;     %SimulationData
         Radius;
+        Sector = 0;
     end
     
     methods

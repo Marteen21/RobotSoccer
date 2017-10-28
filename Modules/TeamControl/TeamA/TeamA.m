@@ -8,13 +8,23 @@ classdef TeamA
     methods (Static)
         function [ControlSignal, Target] = controlMyState(originalState,Cost,File,teamAgentA,teamAgentB)
             %originalState.ball.Simulation.Speed
+            eMinDist = 99;
+            eMinRob = [];
+            dist = [];
             goalShot = GoalShot;
-            min = 5*10E6;
+            MIN = 5*10E6;
             MaxSpeed = 15;
             for i=1:length(originalState.robots)
                 if(strcmp(originalState.robots(i).Owner,'TeamA'))
-                    if Cost(i)<min
-                        min = Cost(i);
+                    if Cost(i)<MIN
+                        MIN = Cost(i);
+                    end
+                else
+                    dist = [dist round(abs(originalState.robots(i).Position))];
+                    temp = min(dist);
+                    if (temp<eMinDist)
+                        eMinDist = temp;
+                        eMinRob = originalState.robots(i);
                     end
                 end
             end
@@ -59,14 +69,6 @@ classdef TeamA
             else
                 DesiredPlace{3} = [ bestShot(3,:) formation(2,:)];
             end
-            %!!!!!crude situation estimation. use fuzzy logic rules or simply think about
-            %better way of deciding. At least come up with buffer, so that the roles
-            %are not changed all the time.
-%             if originalState.ball.Simulation.Speed.X >= 0 && originalState.ball.Position.X > 50
-%                 Situation = 'offense';
-%             else
-%                 Situation = 'hidefense';
-%             end;
             %Situation with fuzzy logic
             fuz = readfis('Situation'); %if the .fis file is empty MATAB freezes THX
             SituationFuzz = evalfis([originalState.ball.Simulation.Speed.X originalState.ball.Position.X],fuz);
@@ -79,67 +81,108 @@ classdef TeamA
             %pass/shoot decision
             %if defensive - use Reacheable, try to intercept the ball and prevent
             %opponent from scoring
-
+            
+            %Defining the appropiate sector for each robot
+            defSector(teamAgentA,teamAgentB,originalState.ball);
+            %Fuzzy:
+            %fuzzy gets 3 inputs (MiddlePlayer's sector number, AttackPlayer's sector number
+            %Enemy's BaseSector) Two outputs are the roles of the middle
+            %and the attack player.
+            OffDef = 0;
             switch Situation
                 case 'offense'
+                    OffDef = 0;
+%                     DesiredPlace{1}(3:4) = ;
+%                     DesiredPlace{2}(3:4) = ;
                     for agentIndex = 1:(length(teamAgentA)-1)
                                 
 %                         CS0=zeros(CycleBatch,2);
 
                         DesiredSpeedTime=1;
-
-                        %closest to the ball gets to attack (for now)
-                        % if (kickAble(agentIndex) == max(kickAble) && max(kickAble) > 0.5) %what should be this number??? probability of successful kick..
-                        if (distToBall(agentIndex)==min)&&distToBall(agentIndex<15)% && distToBall(agentIndex) < 10)
-                            %[ControlSignal{agentIndex} ,Target{agentIndex}]= haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed,File);
-                            if (inTheWay(teamAgentA(agentIndex),originalState.ball))
-                                %Target{agentIndex} = GoalShot(teamAgentA(agentIndex),originalState.ball);
-                                Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
-%                                 if agentIndex==1
-%                                     tempTarget2 = Pass(teamAgentA(agentIndex),teamAgentA(agentIndex+1), originalState.ball);
-%                                     if tempTarget2.X==-1
-%                                         Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
-%                                     else
-%                                         Target{agentIndex} = tempTarget2;
-%                                     end
-%                                 else
-%                                     tempTarget3 = Pass(teamAgentA(agentIndex),teamAgentA(agentIndex-1), originalState.ball);
-%                                     if tempTarget3.X==-1
-%                                         Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
-%                                     else
-%                                         Target{agentIndex} = tempTarget3;
-%                                     end
-%                                 end
-                            else
-                                %Target{agentIndex}=Pass(teamAgentA(agentIndex),teamAgentA(agentIndex+1),originalState.ball);
-                                tempTarget = goalShot.shotToGoal(teamAgentA(agentIndex),originalState.ball);
-                                if tempTarget.X==-1
-                                    Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
-                                else
-                                    Target{agentIndex} = tempTarget;
-                                end
+                        
+                        if (distToBall(agentIndex)==MIN)
+                            fuz = readfis('Strategy'); %if the .fis file is empty MATAB freezes THX
+                            StrategyFuzz = evalfis([OffDef,originalState.ball.Sector,eMinRob.Sector,teamAgentA(agentIndex).Sector],fuz);
+                            switch StrategyFuzz
+                                case 1
+                                    %Shoot
+                                    Target{agentIndex} = GoalShot.shotToGoal(teamAgentA(agentIndex),originalState.ball);
+                                case 2
+                                    %pass
+                                    Target{agentIndex}=Pass(teamAgentA(agentIndex),teamAgentA(agentIndex+1),originalState.ball);
+                                case 3
+                                    %Dribbling
+                                    Target{agentIndex}=Dribbling(teamAgentA(agentIndex),originalState.ball,originalState.robots);
+                                otherwise
+                                    Target{agentIndex}=originalState.ball.Position;
                             end
                         else
-                            if ~(inTheWay(teamAgentA(agentIndex),originalState.ball))
-                                %The ball is towards our goal
-                                Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
-                                %Target{agentIndex}=Pass(teamAgentA(agentIndex),teamAgentA(agentIndex+1),originalState.ball);
-                            else
-                                if inTheWay(teamAgentA(agentIndex),originalState.ball,originalState.robots)
-                                    %Target{agentIndex} = ball.Position;
-                                    %Target{agentIndex} = Vector2(DesiredPlace{agentIndex}(3:4)+[0 15]);
-                                    tempTarget=Pass(teamAgentA(agentIndex),teamAgentA(agentIndex+1),originalState.ball);
-                                    if tempTarget.X==-1
-                                        Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
-                                    else
-                                        Target{agentIndex} = tempTarget;
-                                    end
-                                else
-                                    %Noone is in the way so make a goalshot
-                                    %Target{agentIndex} = GoalShot(teamAgentA(agentIndex),originalState.ball);
-                                    Target{agentIndex} = Vector2(DesiredPlace{agentIndex}(3:4)+[0 15]);
-                                end
+                            
+                            switch agentIndex
+                                case 1
+                                    Target{agentIndex} = Vector2(86.25, 55.5);
+                                case 2
+                                    Target{agentIndex} = Vector2(86.25, 18.5);
                             end
+                                    
+                        end
+                        
+                        %closest to the ball gets to attack (for now)
+                        % if (kickAble(agentIndex) == max(kickAble) && max(kickAble) > 0.5) %what should be this number??? probability of successful kick..
+%                         if (distToBall(agentIndex)==MIN)&&(distToBall(agentIndex)<15)% && distToBall(agentIndex) < 10)
+%                             %[ControlSignal{agentIndex} ,Target{agentIndex}]= haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed,File);
+%                             if (inTheWay(teamAgentA(agentIndex),originalState.ball))
+%                                 %Target{agentIndex} = GoalShot(teamAgentA(agentIndex),originalState.ball);
+%                                 Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
+% %                                 if agentIndex==1
+% %                                     tempTarget2 = Pass(teamAgentA(agentIndex),teamAgentA(agentIndex+1), originalState.ball);
+% %                                     if tempTarget2.X==-1
+% %                                         Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
+% %                                     else
+% %                                         Target{agentIndex} = tempTarget2;
+% %                                     end
+% %                                 else
+% %                                     tempTarget3 = Pass(teamAgentA(agentIndex),teamAgentA(agentIndex-1), originalState.ball);
+% %                                     if tempTarget3.X==-1
+% %                                         Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
+% %                                     else
+% %                                         Target{agentIndex} = tempTarget3;
+% %                                     end
+% %                                 end
+%                             else
+%                                 %Target{agentIndex}=Pass(teamAgentA(agentIndex),teamAgentA(agentIndex+1),originalState.ball);
+%                                 tempTarget = goalShot.shotToGoal(teamAgentA(agentIndex),originalState.ball);
+%                                 if tempTarget.X==-1
+%                                     Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
+%                                 else
+%                                     Target{agentIndex} = tempTarget;
+%                                 end
+%                             end
+%                         else
+%                             if (inTheWay(teamAgentA(agentIndex),originalState.ball))
+%                                 %The ball is towards our goal
+%                                 Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
+%                                 %Target{agentIndex}=Pass(teamAgentA(agentIndex),teamAgentA(agentIndex+1),originalState.ball);
+%                             else
+%                                 if inTheWay(teamAgentA(agentIndex),originalState.ball,originalState.robots)
+%                                     %Target{agentIndex} = ball.Position;
+%                                     %Target{agentIndex} = Vector2(DesiredPlace{agentIndex}(3:4)+[0 15]);
+%                                     if (originalState.ball.Speed < 5 )
+%                                         Target{agentIndex}=originalState.ball.Position;
+%                                     else
+%                                         tempTarget=Pass(teamAgentA(agentIndex),teamAgentA(agentIndex+1),originalState.ball);
+%                                         if tempTarget.X==-1
+%                                             Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
+%                                         else
+%                                             Target{agentIndex} = tempTarget;
+%                                         end
+%                                     end
+%                                 else
+%                                     %Noone is in the way so make a goalshot
+%                                     %Target{agentIndex} = GoalShot(teamAgentA(agentIndex),originalState.ball);
+%                                     Target{agentIndex} = Vector2(DesiredPlace{agentIndex}(3:4)+[0 15]);
+%                                 end
+%                             end
                              
                             %[CS,teamAgentA(agentIndex).Target{agentIndex},teamAgentA(agentIndex).TargetSpeedTime]= getControls(agentIndex,originalState.robots,DesiredSpeedTime);
                             %Moving to the target, added agentIndex for the
@@ -147,7 +190,7 @@ classdef TeamA
                             %[ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex});
                             %End of moving
                             
-                        end
+%                         end
                         [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex});
                     end
                     agentIndex = 3;
@@ -156,15 +199,21 @@ classdef TeamA
                     [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex});
                   case 'hidefense'
                         %agent 3 - defence
+%                       DesiredPlace{1}(3:4) = ;
+%                       DesiredPlace{2}(3:4) = ;
                         agentIndex = 3;
                         DesiredSpeedTime = 1;
                         target = Goalie(originalState.ball,teamAgentA(agentIndex).Radius);
                         if target > 0
-                            Target{agentIndex}=Vector2(target);
+                            if distToBall(agentIndex) <= 5
+                                Target{agentIndex}=originalState.ball.Position;
+                            else
+                                Target{agentIndex}=Vector2(target);
+                            end
                         else
-                            Target{agentIndex}=Vector2(teamAgentA(agentIndex).Radius+2,Environment.yLim/2);
+                            Target{agentIndex}=Vector2(teamAgentA(agentIndex).Radius,Environment.yLim/2);
                         end
-                        
+                        OffDef = 1;
                         %Moving to the target
                         %teamAgentA(agentIndex).Simulation.Speed = getControls(agentIndex, teamAgentA(agentIndex),teamAgentA(agentIndex).Target{agentIndex}, File,'TeamA.m hidefense');
                         [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime] = getControls(teamAgentA(agentIndex),Target{agentIndex});
@@ -173,16 +222,45 @@ classdef TeamA
                         for agentIndex = 1:(length(teamAgentA)-1)
                             %closest to the ball gets to attack (for now)
                             % if (kickAble(agentIndex) == max(kickAble) && max(kickAble) > 0.5) %what should be this number??? probability of successful kick..
-                            if (distToBall(agentIndex)==min)
-                                %try to shoot to the enemy goal
-                                %Target{agentIndex} = GoalShot(teamAgentA(agentIndex), originalState.ball);
-                                Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(1:2));
-                                [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex});
-                                %[ControlSignal{agentIndex},Target{agentIndex}, TargetSpeedTime]=haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed,File);
+                            
+                            if (distToBall(agentIndex)==MIN)
+                                fuz = readfis('Strategy'); %if the .fis file is empty MATAB freezes THX
+                                StrategyFuzz = evalfis([OffDef,originalState.ball.Sector,eMinRob.Sector,teamAgentA(agentIndex).Sector],fuz);
+                                switch StrategyFuzz
+                                    case 1
+                                        %Shoot
+                                        Target{agentIndex} = GoalShot.shotToGoal(teamAgentA(agentIndex),originalState.ball);
+                                    case 2
+                                        %pass
+                                        Target{agentIndex}=Pass(teamAgentA(agentIndex),teamAgentA(agentIndex+1),originalState.ball);
+                                    case 3
+                                        %Dribbling
+                                        Target{agentIndex}=Dribbling(teamAgentA(agentIndex),originalState.ball,originalState.robots);
+                                    otherwise
+                                        Target{agentIndex}=originalState.ball.Position;
+                                end
                             else
-                                Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
-                                [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex});
+                                switch agentIndex
+                                    case 1
+                                        Target{agentIndex} = Vector2(28.75, 55.5);
+                                    case 2
+                                        Target{agentIndex} = Vector2(28.75, 18.5);
+                                end
+
                             end
+                        [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex});
+                            
+                            
+%                             if (distToBall(agentIndex)==MIN)
+%                                 %try to shoot to the enemy goal
+%                                 %Target{agentIndex} = GoalShot(teamAgentA(agentIndex), originalState.ball);
+%                                 Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(1:2));
+%                                 [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex});
+%                                 %[ControlSignal{agentIndex},Target{agentIndex}, TargetSpeedTime]=haromszog(agentIndex,originalState.robots,originalState.ball,DesiredPlace{agentIndex},MaxSpeed,File);
+%                             else
+%                                 Target{agentIndex}=Vector2(DesiredPlace{agentIndex}(3:4));
+%                                 [ControlSignal{agentIndex}, Target{agentIndex}, TargetSpeedTime]  = getControls(teamAgentA(agentIndex), Target{agentIndex});
+%                             end
                         end
             end
             %originalState.ball.Simulation.Speed

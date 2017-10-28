@@ -1,14 +1,43 @@
-function DesiredPlace = Dribbling( Agent, ball )
+function DesiredPlace = Dribbling( Agent, ball, allRobot)
 %Gives back the target where should the robot go
-    goalX = Environment.xLim;
-    goalY = Agent.Position.Y;
+    
+
+    if (round(abs(ball.Simulation.Speed))<3)
+        DesiredPlace = ball.Position;
+        return;
+    end
+
+    %The aim where should the ball go depends on if there is an other robot
+    %in the way
+    if (inTheWay(Agent, ball, allRobot))
+        for i=1:length(teamA)
+            if (Agent ~= allRobot(i))
+                robPos = allRobot(i).Position;
+                agPos = Agent.Position;
+                radius = Agent.Radius;
+                if (robPos.X>agPos.X && robPos.Y>(agPos.Y-radius))
+                    %shoot under
+                    goalY=agPos.Y-(radius*1.5);
+                    goalX = agPos.X;
+                elseif (robPos.X>agPos.X && robPos.Y<(agPos.Y+radius))
+                    %shoot above
+                    goalY=agPos.Y+(radius*1.5);
+                    goalX = agPos.X;
+                end
+            end
+        end
+    else
+        goalX = Environment.xLim;
+        goalY = Agent.Position.Y;
+    end
+    
     
     Rx = Agent.Position.X;
     Ry = Agent.Position.Y;
-    Bx=Ball.Position.X;
-    By=Ball.Position.Y;
-    Vx = Ball.Simulation.Speed.X;
-    Vy = Ball.Simulation.Speed.Y;
+    Bx=ball.Position.X;
+    By=ball.Position.Y;
+    Vx = ball.Simulation.Speed.X;
+    Vy = ball.Simulation.Speed.Y;
     q=SimulationData.friction;
     
     point = Vector2(goalX, goalY);
@@ -43,18 +72,18 @@ function DesiredPlace = Dribbling( Agent, ball )
     %enemy's goal. We just have to choose the right one.
     %First find the nearest point for the robot it can reach alongside the
     %Ball's line before the ball
-    [Index, reach] = GoalShot.reachAble(Agent, Ball, linePoints, size(xPoints));
+    [Index, reach] = GoalShot.reachAble(Agent, ball, linePoints, size(xPoints));
     if reach.X==-1
-        DesiredPlace = reach;
+        DesiredPlace = ball.Position;
         return
     end
     
     BvelNew = Vector2(newSpeedOri(1,Index),newSpeedOri(2,Index));
         
-    alpha = abs(atan2(Ball.Simulation.Speed.Y,Ball.Simulation.Speed.X));
+    alpha = abs(atan2(ball.Simulation.Speed.Y,ball.Simulation.Speed.X));
     beta = abs(atan2(BvelNew.Y,BvelNew.X));
     theta = (alpha+beta)/2;
-    BallSpeed = Ball.Simulation.Speed.RowForm();
+    BallSpeed = ball.Simulation.Speed.RowForm();
     wall = ((BvelNew.RowForm()/(norm(BallSpeed)))+BallSpeed)/(2*cos(theta));
     wall = Vector2(wall);
     Position = wall.D2NVector+reach;

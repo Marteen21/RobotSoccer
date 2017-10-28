@@ -19,17 +19,32 @@ function target = Goalie(Ball,Radius)
     
     %x=0-side coordinate under attack
     %ua = slope*(Bx) + By;
-    
-    ua = solution/(-1*Vx);
+    if Vx==0
+        ua = solution;
+    else
+        ua = solution/(-1*Vx);
+    end
     
     if (sign(Vx)<0)
         if (ua < (Environment.goalPos.Y + Environment.goalLength)) && (ua > (Environment.goalPos.Y - Environment.goalLength))
             %if ball is aimed at the goal - catch it!
             target = [Radius, ua];
         elseif ua <= Environment.goalPos.Y - Environment.goalLength
-            target = [Radius, Environment.goalPos.Y - Environment.goalLength];
+            %ha nagyon meredeke jon arra a pontra akkor ezzel a beallassal
+            %pont maganak lovi be a labdat. Ellenkezo oldalra kell allnia
+%             if Vx < 2
+%                 target = [Radius, Environment.goalPos.Y + Environment.goalLength];
+%             else
+                target = [Radius, Environment.goalPos.Y - Environment.goalLength];
+%             end
         elseif ua >= Environment.goalPos.Y + Environment.goalLength
-            target = [Radius, Environment.goalPos.Y + Environment.goalLength];
+            %ha nagyon meredeke jon arra a pontra akkor ezzel a beallassal
+            %pont maganak lovi be a labdat. Ellenkezo oldalra kell allnia
+%             if Vx < 2
+%                 target = [Radius, Environment.goalPos.Y - Environment.goalLength];
+%             else
+                target = [Radius, Environment.goalPos.Y + Environment.goalLength];
+%             end
         else
             target = 0;
         end
